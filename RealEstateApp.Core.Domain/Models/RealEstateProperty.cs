@@ -1,6 +1,6 @@
 ﻿namespace RealEstateApp.Core.Domain.Models
 {
-    public class Property
+    public class RealEstateProperty
     {
         public string Guid { get; set; }
         public string Description { get; set; }
