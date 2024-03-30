@@ -4,7 +4,7 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 
 namespace RealEstateApp.Infrastructure.Persistence.Repositories
 {
-    public class RealEstatePropertyRepository : GenericRepository<RealEstateProperty>, IRealStatePropertyRepository
+    public class RealEstatePropertyRepository : GenericRepository<RealEstateProperty>, IRealEstatePropertyRepository
     {
         public RealEstatePropertyRepository(ApplicationContext context) : base(context)
         {
