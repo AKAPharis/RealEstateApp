@@ -11,19 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{C8B092D3-D844-4A6E-9FF0-C5F2DD0CEF61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.Core.Domain", "RealEstateApp.Core.Domain\RealEstateApp.Core.Domain.csproj", "{F8DDC1E1-CCD8-423F-BE26-577EEAC73D84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.Core.Domain", "RealEstateApp.Core.Domain\RealEstateApp.Core.Domain.csproj", "{F8DDC1E1-CCD8-423F-BE26-577EEAC73D84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.Core.Application", "RealEstateApp.Core.Application\RealEstateApp.Core.Application.csproj", "{F9F0AA93-DB26-4806-AA27-E1E79FEDF0F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.Core.Application", "RealEstateApp.Core.Application\RealEstateApp.Core.Application.csproj", "{F9F0AA93-DB26-4806-AA27-E1E79FEDF0F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.Infrastructure.Identity", "RealEstateApp.Infrastructure.Identity\RealEstateApp.Infrastructure.Identity.csproj", "{F816F615-6DB3-438B-8645-8EFE427465A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.Infrastructure.Identity", "RealEstateApp.Infrastructure.Identity\RealEstateApp.Infrastructure.Identity.csproj", "{F816F615-6DB3-438B-8645-8EFE427465A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.Infrastructure.Persistence", "RealEstateApp.Infrastructure.Persistence\RealEstateApp.Infrastructure.Persistence.csproj", "{556AF1BC-3709-4012-9BBE-3C24E8A538AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.Infrastructure.Persistence", "RealEstateApp.Infrastructure.Persistence\RealEstateApp.Infrastructure.Persistence.csproj", "{556AF1BC-3709-4012-9BBE-3C24E8A538AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.Infrastructure.Shared", "RealEstateApp.Infrastructure.Shared\RealEstateApp.Infrastructure.Shared.csproj", "{8A3EB187-4937-485E-9AB4-B25D103237BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.Infrastructure.Shared", "RealEstateApp.Infrastructure.Shared\RealEstateApp.Infrastructure.Shared.csproj", "{8A3EB187-4937-485E-9AB4-B25D103237BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.WebApp", "RealEstateApp.WebApp\RealEstateApp.WebApp.csproj", "{E697D77A-AAFE-43E7-9FA1-17851C154D4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.WebApp", "RealEstateApp.WebApp\RealEstateApp.WebApp.csproj", "{E697D77A-AAFE-43E7-9FA1-17851C154D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApp.WebApi", "RealEstateApp.WebApi\RealEstateApp.WebApi.csproj", "{4A3E6BAF-FF49-49B0-ACF3-A2DCFA6A8D6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealEstateApp.WebApi", "RealEstateApp.WebApi\RealEstateApp.WebApi.csproj", "{4A3E6BAF-FF49-49B0-ACF3-A2DCFA6A8D6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
