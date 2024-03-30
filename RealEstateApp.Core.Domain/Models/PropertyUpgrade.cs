@@ -5,6 +5,6 @@
         public int PropertyId { get; set; }
         public RealEstateProperty Property { get; set; }
         public int UpgradeId { get; set; }
-        public Upgrade Upgrades { get; set; }
+        public Upgrade Upgrade { get; set; }
     }
 }
