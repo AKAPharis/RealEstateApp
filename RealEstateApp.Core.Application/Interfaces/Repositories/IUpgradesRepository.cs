@@ -2,7 +2,7 @@
 
 namespace RealEstateApp.Core.Application.Interfaces.Repositories
 {
-    public interface IUpgradesRepository : IGenericRepository<Upgrades>
+    public interface IUpgradesRepository : IGenericRepository<Upgrade>
     {
     }
 }
