@@ -1,4 +1,6 @@
 
+using RealEstateApp.Infrastructure.Identity;
+
 namespace RealEstateApp.WebApi
 {
     public class Program
@@ -12,6 +14,7 @@ namespace RealEstateApp.WebApi
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddIdentityInfrastructure(builder.Configuration);
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
