@@ -2,9 +2,9 @@
 
 namespace RealEstateApp.WebApi.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
-    public class BaseApiControllerController : ControllerBase
+    public class AccountController : ControllerBase
     {
         
     }
