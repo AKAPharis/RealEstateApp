@@ -400,7 +400,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         }
         private async Task<string> SendForgotPasswordUri(InternalUser user, string origin)
         {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var code = await _userManager.GenerateUserTokenAsync(user, "InternalProvider", UserManager<InternalUser>.ResetPasswordTokenPurpose);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ResetPassword";
             var Uri = new Uri(string.Concat($"{origin}/", route));

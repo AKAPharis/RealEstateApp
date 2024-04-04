@@ -161,10 +161,8 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.FirsName = request.FirstName;
             user.LastName = request.LastName;
             user.PhoneNumber = request.PhoneNumber;
-            if(request.UserImage != null)
-            {
-                //Logica de guardado de imagen
-            }
+            user.UserImagePath = request.UserImagePath;
+
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
@@ -317,12 +315,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 response.Error = $"The role {request.Role} do not exist";
                 return response;
             }
-            if (request.UserImage == null)
-            {
-                response.HasError = true;
-                response.Error = $"You must have a profile image";
-                return response;
-            }
 
 
             var user = new Customer
@@ -470,25 +462,24 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
         private async Task<string> SendVerificationEmailUri(Customer user, string origin)
         {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+
+            var code = await _userManager.GenerateUserTokenAsync(user, "CustomerProvider", UserManager<Customer>.ConfirmEmailTokenPurpose);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ConfirmEmail";
             var Uri = new Uri(string.Concat($"{origin}/", route));
             var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "userId", user.Id.ToString());
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "token", code);
-
             return verificationUri;
         }
         private async Task<string> SendForgotPasswordUri(Customer user, string origin)
         {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var code = await _userManager.GenerateUserTokenAsync(user,"CustomerProvider", UserManager<Customer>.ResetPasswordTokenPurpose);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ResetPassword";
             var Uri = new Uri(string.Concat($"{origin}/", route));
             var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "token", code);
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "username", user.UserName);
-
-
             return verificationUri;
         }
     }
