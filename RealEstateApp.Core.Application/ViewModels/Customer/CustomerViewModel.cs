@@ -14,7 +14,7 @@ namespace RealEstateApp.Core.Application.ViewModels.Customer
         public string PhoneNumber { get; set; }
         public string? UserImagePath { get; set; }
         public List<string> Roles { get; set; }
-        public bool IsActived { get; set; }
+        public bool IsActive { get; set; }
 
 
     }
