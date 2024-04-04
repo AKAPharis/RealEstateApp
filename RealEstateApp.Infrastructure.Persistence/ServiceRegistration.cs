@@ -27,6 +27,7 @@ namespace RealEstateApp.Infrastructure.Persistence
                 });
             }
             #endregion
+
             #region Repositories
             services.AddTransient<IPropertyUpgradeRepository, PropertyUpgradeRepository>();
             services.AddTransient<IRealEstatePropertyRepository, RealEstatePropertyRepository>();

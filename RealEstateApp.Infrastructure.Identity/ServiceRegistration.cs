@@ -40,13 +40,11 @@ namespace RealEstateApp.Infrastructure.Identity
             }
             #endregion
 
-
             #region Mapings
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 
             #endregion
-
 
             #region Identity
             services.AddIdentityCore<Customer>()
@@ -125,6 +123,7 @@ namespace RealEstateApp.Infrastructure.Identity
 
             //});
             #endregion
+
             #region Services
             //services.AddTransient<IAccountService, AccountService>();
 
