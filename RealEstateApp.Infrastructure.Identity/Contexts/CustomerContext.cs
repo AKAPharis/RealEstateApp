@@ -16,13 +16,13 @@ namespace RealEstateApp.Infrastructure.Identity.Contexts
             //FLUENT API
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Customer>().ToTable("Customers");
-            modelBuilder.Entity<IdentityRole>().ToTable("CustomerRoles");
+            modelBuilder.Entity<CustomerRole>().ToTable("CustomerRoles");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("CustomerUserRoles");
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("CustomerUserLogins");
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("CustomerRoleClaims");
             modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("AspNetCustomerClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("AspNetCustomerTokens");
-
+            modelBuilder.HasDefaultSchema("Customers");
 
 
 
