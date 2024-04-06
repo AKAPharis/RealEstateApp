@@ -1,4 +1,4 @@
-﻿namespace RealEstateApp.Core.Application.Dtos.Account.Generals
+﻿namespace RealEstateApp.Core.Application.Dtos.Account
 {
     public class ForgotPasswordRequest
     {

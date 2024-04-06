@@ -2,7 +2,7 @@
 
 namespace RealEstateApp.Infrastructure.Identity.Models
 {
-    public class Customer : IdentityUser
+    public class RealEstateUser : IdentityUser
     {
         public string FirsName { get; set; }
         public string LastName { get; set; }

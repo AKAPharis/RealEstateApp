@@ -7,6 +7,7 @@ using System.Reflection;
 using RealEstateApp.Infrastructure.Identity.Contexts;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Infrastructure.Identity.Models;
+using RealEstateApp.Infrastructure.Identity.Services;
 
 namespace RealEstateApp.Infrastructure.Identity
 {
@@ -19,24 +20,18 @@ namespace RealEstateApp.Infrastructure.Identity
             #region Contexts
             if (config.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<CustomerContext>(options => options.UseInMemoryDatabase("CustomerDB"));
-                services.AddDbContext<InternalUserContext>(options => options.UseInMemoryDatabase("InternalDB"));
+                services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDB"));
 
             }
             else
             {
-                services.AddDbContext<CustomerContext>(options =>
+                services.AddDbContext<IdentityContext>(options =>
                 {
                     options.EnableSensitiveDataLogging();
                     options.UseSqlServer(config.GetConnectionString("IdentityConnection"),
-                    m => m.MigrationsAssembly(typeof(CustomerContext).Assembly.FullName));
+                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
                 });
-                services.AddDbContext<InternalUserContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseSqlServer(config.GetConnectionString("IdentityConnection"),
-                    m => m.MigrationsAssembly(typeof(InternalUserContext).Assembly.FullName));
-                });
+
             }
             #endregion
 
@@ -47,21 +42,9 @@ namespace RealEstateApp.Infrastructure.Identity
             #endregion
 
             #region Identity
-            services.AddIdentityCore<Customer>()
-                .AddUserManager<UserManager<Customer>>()
-                .AddRoles<CustomerRole>()
-                .AddRoleManager<RoleManager<CustomerRole>>()
-                .AddSignInManager<SignInManager<Customer>>()
-                .AddEntityFrameworkStores<CustomerContext>()
-                .AddTokenProvider<EmailTokenProvider<Customer>>("CustomerProvider");
-
-            services.AddIdentityCore<InternalUser>()
-              .AddUserManager<UserManager<InternalUser>>()
-              .AddRoles<InternalUserRole>()
-              .AddRoleManager<RoleManager<InternalUserRole>>()
-              .AddSignInManager<SignInManager<InternalUser>>()
-              .AddEntityFrameworkStores<InternalUserContext>()
-              .AddTokenProvider<EmailTokenProvider<InternalUser>>("InternalProvider");
+            services.AddIdentity<RealEstateUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -125,18 +108,16 @@ namespace RealEstateApp.Infrastructure.Identity
             #endregion
 
             #region Services
-            //services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, AccountService>();
 
             #endregion
         }
         public static void AddIdentityInfrastructureTesting(this IServiceCollection services)
         {
-            //Configurar el appsettings.json
 
             #region Contexts
 
-            services.AddDbContext<CustomerContext>(options => options.UseInMemoryDatabase("CustomerDB"));
-            services.AddDbContext<InternalUserContext>(options => options.UseInMemoryDatabase("InternalDB"));
+            services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDB"));
 
 
             #endregion
@@ -150,30 +131,12 @@ namespace RealEstateApp.Infrastructure.Identity
 
 
             #region Identity
-            //services.AddIdentity<Customer, CustomerRole>()
-            //    .AddUserManager<UserManager<Customer>>()
-            //    .AddEntityFrameworkStores<CustomerContext>()
-            //    .AddDefaultTokenProviders();
-            //services.AddIdentity<InternalUser, InternalUserRole>()
-            //    .AddUserManager<UserManager<InternalUser>>()
-            //    .AddEntityFrameworkStores<InternalUserContext>()
-            //    .AddDefaultTokenProviders();
+            services.AddIdentity<RealEstateUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddIdentityCore<Customer>()
-                .AddUserManager<UserManager<Customer>>()
-                .AddRoles<CustomerRole>()
-                .AddRoleManager<RoleManager<CustomerRole>>()
-                .AddSignInManager<SignInManager<Customer>>()
-                .AddEntityFrameworkStores<CustomerContext>()
-                .AddTokenProvider<EmailTokenProvider<Customer>>("CustomerProvider");
 
-            services.AddIdentityCore<InternalUser>()
-              .AddUserManager<UserManager<InternalUser>>()
-              .AddRoles<InternalUserRole>()
-              .AddRoleManager<RoleManager<InternalUserRole>>()
-              .AddSignInManager<SignInManager<InternalUser>>()
-              .AddEntityFrameworkStores<InternalUserContext>()
-              .AddTokenProvider<EmailTokenProvider<InternalUser>>("InternalProvider");
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/User";
@@ -234,9 +197,8 @@ namespace RealEstateApp.Infrastructure.Identity
 
             //});
             #endregion
-            #region Services
+            services.AddTransient<IAccountService, AccountService>();
 
-            #endregion
         }
     }
 }

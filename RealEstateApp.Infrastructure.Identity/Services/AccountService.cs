@@ -2,21 +2,19 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using RealEstateApp.Core.Application.Dtos.Account.Customer;
-using RealEstateApp.Core.Application.Dtos.Account.Generals;
+using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.ViewModels.Customer;
+using RealEstateApp.Core.Application.ViewModels.Account;
 using RealEstateApp.Infrastructure.Identity.Models;
-using System.Data;
 using System.Text;
 
 namespace RealEstateApp.Infrastructure.Identity.Services
 {
-    public class CustomerService : ICustomerService
+    public class AccountService : IAccountService
     {
-        private readonly UserManager<Customer> _userManager;
-        private readonly SignInManager<Customer> _signInManager;
+        private readonly UserManager<RealEstateUser> _userManager;
+        private readonly SignInManager<RealEstateUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
@@ -24,7 +22,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         //Faltan muchas cosas. Hay que tener el cuenta el guardado de imagenes y demas cosas a la hora de editar y crear, pero eso son todo el problema
 
 
-        public CustomerService(UserManager<Customer> userManager, SignInManager<Customer> signInManager, IEmailService emailService, IMapper mapper)
+        public AccountService(UserManager<RealEstateUser> userManager, SignInManager<RealEstateUser> signInManager, IEmailService emailService, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -33,7 +31,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         }
         public async Task ActivateUser(string id)
         {
-            Customer user = await _userManager.FindByIdAsync(id);
+            RealEstateUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.IsActive = true;
@@ -41,9 +39,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             }
         }
 
-        public async Task<CustomerAuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+        public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
-            CustomerAuthenticationResponse response = new();
+            AuthenticationResponse response = new();
 
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null)
@@ -110,7 +108,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
         public async Task DeactivateUser(string id)
         {
-            Customer user = await _userManager.FindByIdAsync(id);
+            RealEstateUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.IsActive = false;
@@ -118,39 +116,30 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             }
         }
         //Pendiente
-        public async Task<CustomerEditResponse> EditUserAsync(CustomerEditRequest request, string origin)
+        public async Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin)
         {
-            CustomerEditResponse response = new()
+            UserEditResponse response = new()
             {
                 HasError = false
             };
 
-            //var userWithSameUserName = await _userManager.FindByNameAsync(request.Username);
-            //if (userWithSameUserName != null && userWithSameUserName.Id != request.Id)
-            //{
-            //    response.HasError = true;
-            //    response.Error = $"username '{request.Username}' is already taken.";
-            //    return response;
-            //}
+            if (!Enum.IsDefined(typeof(UserRoles), request.Role))
+            {
 
-            //var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
-            //if (userWithSameEmail != null && userWithSameEmail.Id != request.Id)
-            //{
-            //    response.HasError = true;
-            //    response.Error = $"Email '{request.Email}' is already registered.";
-            //    return response;
-            //}
+                response.HasError = true;
+                response.Error = $"The role {request.Role} do not exist";
+                return response;
+            }
 
-            //if (request.Role != Roles.Customer.ToString() && request.Role != Roles.Admin.ToString())
-            //{
-            //    response.HasError = true;
-            //    response.Error = $"The role {request.Role} do not exist";
-            //    return response;
-            //}
+            if(request.Role == nameof(UserRoles.Admin) || request.Role == nameof(UserRoles.Developer))
+            {
+                response = await EditInternalUsersValidations(request);
+                if(response.HasError)
+                    return response;
+            }
 
 
-
-            Customer user = await _userManager.FindByIdAsync(request.Id);
+            RealEstateUser user = await _userManager.FindByIdAsync(request.Id);
             if (user == null)
             {
                 response.HasError = true;
@@ -158,10 +147,12 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
 
             }
-            user.FirsName = request.FirstName;
-            user.LastName = request.LastName;
-            user.PhoneNumber = request.PhoneNumber;
-            user.UserImagePath = request.UserImagePath;
+            user.FirsName = request.FirstName ?? user.FirsName;
+            user.LastName = request.LastName ?? user.LastName;
+            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+            user.DocumentId = request.DocumentId ?? user.DocumentId;
+            user.UserName = request.Username ?? user.UserName;
+            user.UserImagePath = request.UserImagePath ?? user.UserImagePath;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -216,13 +207,13 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return users.Count();
         }
 
-        public async Task<List<CustomerViewModel>> GetAll()
+        public async Task<List<UserViewModel>> GetAll()
         {
             var users = await _userManager.Users.ToListAsync();
-            var usersVm = _mapper.Map<List<CustomerViewModel>>(users);
+            var usersVm = _mapper.Map<List<UserViewModel>>(users);
             if (users != null && users.Count > 0)
             {
-                foreach (CustomerViewModel user in usersVm)
+                foreach (UserViewModel user in usersVm)
                 {
                     var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
                     user.Roles = roles.ToList();
@@ -237,10 +228,10 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return usersVm;
         }
 
-        public async Task<CustomerViewModel> GetByIdAsync(string id)
+        public async Task<UserViewModel> GetByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<CustomerViewModel>(user);
+            var userVm = _mapper.Map<UserViewModel>(user);
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
@@ -249,22 +240,22 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return userVm;
         }
 
-        public async Task<CustomerSaveViewModel> GetByIdSaveViewModelAsync(string id)
+        public async Task<SaveUserViewModel> GetByIdSaveViewModelAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<CustomerSaveViewModel>(user);
+            var userVm = _mapper.Map<SaveUserViewModel>(user);
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                userVm.Role = roles.FirstOrDefault(x => x == CustomerRoles.Customer.ToString() || x == CustomerRoles.RealEstateAgent.ToString());
+                userVm.Role = roles.First();
             }
             return userVm;
         }
 
-        public async Task<CustomerViewModel> GetByUsernameAsync(string username)
+        public async Task<UserViewModel> GetByUsernameAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
-            var userVm = _mapper.Map<CustomerViewModel>(user);
+            var userVm = _mapper.Map<UserViewModel>(user);
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
@@ -279,9 +270,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return users.Count();
         }
         //pendiente
-        public async Task<CustomerRegisterResponse> RegisterUserAsync(CustomerRegisterRequest request, string origin)
+        public async Task<UserRegisterResponse> RegisterUserAsync(UserRegisterRequest request, string origin)
         {
-            CustomerRegisterResponse response = new()
+            UserRegisterResponse response = new()
             {
                 HasError = false
             };
@@ -302,22 +293,27 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
             }
             var userWithSameDocumentId = await _userManager.Users.FirstOrDefaultAsync(x => x.DocumentId == request.DocumentId);
-            if (userWithSameEmail != null)
+            if (userWithSameDocumentId != null)
             {
                 response.HasError = true;
                 response.Error = $"The document id '{request.DocumentId}' is already registered.";
                 return response;
             }
 
-            if (request.Role != CustomerRoles.Customer.ToString() && request.Role != CustomerRoles.RealEstateAgent.ToString())
+
+
+
+
+            if (!Enum.IsDefined(typeof(UserRoles),request.Role))
             {
+                
                 response.HasError = true;
                 response.Error = $"The role {request.Role} do not exist";
                 return response;
             }
 
 
-            var user = new Customer
+            var user = new RealEstateUser
             {
                 Email = request.Email,
                 FirsName = request.FirstName,
@@ -327,39 +323,27 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 PhoneNumber = request.PhoneNumber,
                 PhoneNumberConfirmed = true,
                 //Añadir logica para guardado de imagen
-                
+
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
 
-                switch (request.Role)
+                await _userManager.AddToRoleAsync(user, request.Role);
+
+                if (request.Role != nameof(UserRoles.Admin) && request.Role != nameof(UserRoles.Developer))
                 {
-                    case nameof(CustomerRoles.Customer):
 
-                        await _userManager.AddToRoleAsync(user, CustomerRoles.Customer.ToString());
+                    var verificationUri = await SendVerificationEmailUri(user, origin);
 
-
-                        break;
-                    case nameof(CustomerRoles.RealEstateAgent):
-
-                        await _userManager.AddToRoleAsync(user, CustomerRoles.RealEstateAgent.ToString());
-
-
-                        break;
-
-
+                    await _emailService.SendAsync(new Core.Application.Dtos.Email.EmailRequest()
+                    {
+                        To = user.Email,
+                        Body = $"Please confirm your account visiting this URL {verificationUri}",
+                        Subject = "Confirm registration"
+                    });
                 }
-
-                var verificationUri = await SendVerificationEmailUri(user, origin);
-
-                await _emailService.SendAsync(new Core.Application.Dtos.Email.EmailRequest()
-                {
-                    To = user.Email,
-                    Body = $"Please confirm your account visiting this URL {verificationUri}",
-                    Subject = "Confirm registration"
-                });
             }
             else
             {
@@ -405,6 +389,49 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+        public async Task<List<UserViewModel>> GetAllByRoleViewModel(string role)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var usersVm = _mapper.Map<List<UserViewModel>>(users);
+            if (users != null && users.Count > 0)
+            {
+                foreach (UserViewModel user in usersVm)
+                {
+                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+
+                //usersVm.ForEach(async x =>
+                //{
+                //    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == x.Id));
+                //    x.Roles = roles.ToList();
+                //});
+            }
+            usersVm = usersVm.Where(x => x.Roles.Contains(role)).ToList();
+            return usersVm;
+        }
+
+        public async Task<List<UserDTO>> GetAllByRoleDTO(string role)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var usersDtos = _mapper.Map<List<UserDTO>>(users);
+            if (users != null && users.Count > 0)
+            {
+                foreach (UserDTO user in usersDtos)
+                {
+                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+
+                //usersVm.ForEach(async x =>
+                //{
+                //    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == x.Id));
+                //    x.Roles = roles.ToList();
+                //});
+            }
+            usersDtos = usersDtos.Where(x => x.Roles.Contains(role)).ToList();
+            return usersDtos;
         }
         //private async Task<JwtSecurityToken> GenerateJWToken(BankingUser user)
         //{
@@ -459,12 +486,42 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         //    return BitConverter.ToString(ramdomBytes).Replace("-", "");
         //}
 
+        private async Task<UserEditResponse> EditInternalUsersValidations(UserEditRequest request)
+        {
+            UserEditResponse response = new()
+            {
+                HasError = false
+            };
+            var userWithSameUserName = await _userManager.FindByNameAsync(request.Username);
+            if (userWithSameUserName != null && userWithSameUserName.Id != request.Id)
+            {
+                response.HasError = true;
+                response.Error = $"username '{request.Username}' is already taken.";
+                return response;
+            }
 
-        private async Task<string> SendVerificationEmailUri(Customer user, string origin)
+            var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+            if (userWithSameEmail != null && userWithSameEmail.Id != request.Id)
+            {
+                response.HasError = true;
+                response.Error = $"Email '{request.Email}' is already registered.";
+                return response;
+            }
+            var userWithSameDocumentId = await _userManager.Users.FirstOrDefaultAsync(x => x.DocumentId == request.DocumentId);
+            if (userWithSameDocumentId != null && userWithSameDocumentId.Id != request.Id)
+            {
+                response.HasError = true;
+                response.Error = $"The document id '{request.DocumentId}' is already registered.";
+                return response;
+            }
+
+            return response;
+        }
+        private async Task<string> SendVerificationEmailUri(RealEstateUser user, string origin)
         {
 
 
-            var code = await _userManager.GenerateUserTokenAsync(user, "CustomerProvider", UserManager<Customer>.ConfirmEmailTokenPurpose);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ConfirmEmail";
             var Uri = new Uri(string.Concat($"{origin}/", route));
@@ -472,9 +529,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "token", code);
             return verificationUri;
         }
-        private async Task<string> SendForgotPasswordUri(Customer user, string origin)
+        private async Task<string> SendForgotPasswordUri(RealEstateUser user, string origin)
         {
-            var code = await _userManager.GenerateUserTokenAsync(user,"CustomerProvider", UserManager<Customer>.ResetPasswordTokenPurpose);
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ResetPassword";
             var Uri = new Uri(string.Concat($"{origin}/", route));
@@ -482,5 +539,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "username", user.UserName);
             return verificationUri;
         }
+
     }
 }

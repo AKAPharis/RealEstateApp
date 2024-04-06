@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
-
-namespace RealEstateApp.Core.Application.Dtos.Account.Customer
+﻿namespace RealEstateApp.Core.Application.Dtos.Account
 {
-    public class CustomerEditRequest
+    public class UserDTO
     {
         public string? Id { get; set; }
         public string Email { get; set; }
@@ -13,9 +10,7 @@ namespace RealEstateApp.Core.Application.Dtos.Account.Customer
         public string DocumentId { get; set; }
         public string PhoneNumber { get; set; }
         public string? UserImagePath { get; set; }
-        public IFormFile? UserImage { get; set; }
-        public string? Password { get; set; }
-        public string? ConfirmPassword { get; set; }
-        public string Role { get; set; }
+        public List<string> Roles { get; set; }
+        public bool IsActive { get; set; }
     }
 }

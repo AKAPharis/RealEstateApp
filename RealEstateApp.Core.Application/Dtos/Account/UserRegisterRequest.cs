@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 
-namespace RealEstateApp.Core.Application.ViewModels.Customer
+namespace RealEstateApp.Core.Application.Dtos.Account
 {
-    public class CustomerViewModel
+    public class UserRegisterRequest
     {
         public string? Id { get; set; }
         public string Email { get; set; }
@@ -12,10 +11,11 @@ namespace RealEstateApp.Core.Application.ViewModels.Customer
         public string LastName { get; set; }
         public string DocumentId { get; set; }
         public string PhoneNumber { get; set; }
-        public string? UserImagePath { get; set; }
-        public List<string> Roles { get; set; }
-        public bool IsActive { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public string Role { get; set; }
 
+        public string? UserImagePath { get; set; }
 
     }
 }

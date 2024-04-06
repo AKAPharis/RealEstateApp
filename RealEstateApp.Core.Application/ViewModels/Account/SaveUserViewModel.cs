@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace RealEstateApp.Core.Application.ViewModels.Customer
+namespace RealEstateApp.Core.Application.ViewModels.Account
 {
-    public class CustomerSaveViewModel
+    public class SaveUserViewModel
     {
         public string? Id { get; set; }
 
@@ -49,5 +49,8 @@ namespace RealEstateApp.Core.Application.ViewModels.Customer
 
         public bool HasError { get; set; }
         public string? Error { get; set; }
+
+
+    
     }
 }
