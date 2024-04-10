@@ -7,31 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\PropertyRealState\Commands\CreatePropertyRealState\" />
-    <Folder Include="Features\PropertyRealState\Commands\DeletePropertyRealState\" />
-    <Folder Include="Features\PropertyRealState\Commands\UpdatePropertyRealState\" />
-    <Folder Include="Features\PropertyRealState\Queries\GetAllProperties\" />
-    <Folder Include="Features\PropertyRealState\Queries\GetPropertyById\" />
-    <Folder Include="Features\TypeOfSale\Commands\CreateTypeOfSale\" />
-    <Folder Include="Features\TypeOfSale\Commands\DeleteTypeOfSale\" />
-    <Folder Include="Features\TypeOfSale\Commands\UpdateTypeOfSale\" />
-    <Folder Include="Features\TypeOfSale\Queries\GetAllTypeOfSale\" />
-    <Folder Include="Features\TypeOfSale\Queries\GetTypeOfSaleById\" />
-    <Folder Include="Features\TypeProperty\Commands\CreateTypeProperty\" />
-    <Folder Include="Features\TypeProperty\Commands\DeleteTypeProperty\" />
-    <Folder Include="Features\TypeProperty\Commands\UpdateTypeProperty\" />
-    <Folder Include="Features\TypeProperty\Queries\GetAllProperties\" />
-    <Folder Include="Features\TypeProperty\Queries\GetTypePropertyById\" />
+    <Folder Include="Features\PropertyRealEstate\Commands\CreatePropertyRealEstate\" />
+    <Folder Include="Features\PropertyRealEstate\Commands\DeletePropertyRealEstate\" />
+    <Folder Include="Features\PropertyRealEstate\Commands\UpdatePropertyRealEstate\" />
+    <Folder Include="Features\PropertyRealEstate\Queries\GetAllProperties\" />
+    <Folder Include="Features\PropertyRealEstate\Queries\GetPropertyById\" />
+    <Folder Include="Features\TypeProperties\Commands\CreateTypeProperty\" />
+    <Folder Include="Features\TypeProperties\Commands\DeleteTypeProperty\" />
+    <Folder Include="Features\TypeProperties\Commands\UpdateTypeProperty\" />
+    <Folder Include="Features\TypeProperties\Queries\GetAllProperties\" />
+    <Folder Include="Features\TypeProperties\Queries\GetTypePropertyById\" />
     <Folder Include="Features\Upgrade\Commands\CreateUpgrade\" />
     <Folder Include="Features\Upgrade\Commands\DeleteUpgrade\" />
     <Folder Include="Features\Upgrade\Commands\UpdateUpgrade\" />
     <Folder Include="Features\Upgrade\Queries\GetAllUpgrades\" />
     <Folder Include="Features\Upgrade\Queries\GetUpgradeById\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Mappings\" />
     <Folder Include="Services\" />
-    <Folder Include="Wrappers\" />
-    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>

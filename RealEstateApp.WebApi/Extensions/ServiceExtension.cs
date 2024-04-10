@@ -24,7 +24,7 @@ namespace RealEstateApp.WebApi.Extensions
                         Url = new Uri("https://www.itla.edu.do")
                     }
                 });
-
+                options.EnableAnnotations();
                 options.DescribeAllParametersInCamelCase();
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
