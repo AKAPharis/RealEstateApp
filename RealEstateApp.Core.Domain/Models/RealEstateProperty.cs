@@ -16,7 +16,7 @@ namespace RealEstateApp.Core.Domain.Models
         public int TypeOfSaleId { get; set; }
         public TypeOfSale TypeOfSale { get; set; }
         public int TypePropertyId { get; set; }
-        public TypeProperty TypeProperty { get; set; }
+        public TypeOfProperty TypeProperty { get; set; }
         public ICollection<PropertyUpgrade> Upgrades { get; set; }
 
 
