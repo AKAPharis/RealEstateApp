@@ -18,7 +18,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Agents()
         {
             return View();
         }
