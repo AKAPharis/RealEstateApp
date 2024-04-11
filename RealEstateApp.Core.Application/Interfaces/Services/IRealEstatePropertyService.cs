@@ -6,5 +6,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IRealEstatePropertyService : IGenericService<SaveRealEstatePropertyViewModel, RealEstatePropertyViewModel, RealEstateProperty>
     {
+        Task<List<RealEstatePropertyViewModel>> GetByAgentAsync(string agentId);
+
     }
 }
