@@ -1,28 +1,36 @@
 ﻿using MediatR;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.Wrappers;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.TypesOfSales.Commands.DeleteTypeOfSaleById
 {
-    public class DeleteTypeOfSaleByIdCommand : IRequest<int>
+    /// <summary>
+    /// Parámetros para la eliminación de un tipo de venta
+    /// </summary>
+    public class DeleteTypeOfSaleByIdCommand : IRequest<Response<int>>
     {
+        [SwaggerParameter(Description = "El id del tipo de venta que se desea eliminar")]
         public int Id { get; set; }
     }
 
-    public class DeleteTypeOfSaleByIdCommandHandler : IRequestHandler<DeleteTypeOfSaleByIdCommand, int>
+    public class DeleteTypeOfSaleByIdCommandHandler : IRequestHandler<DeleteTypeOfSaleByIdCommand, Response<int>>
     {
-        private readonly ITypeOfSaleRepository _typeSaleRepository;
+        private readonly ITypeOfSaleRepository _repository;
 
-        public DeleteTypeOfSaleByIdCommandHandler(ITypeOfSaleRepository typeSaleRepository)
+        public DeleteTypeOfSaleByIdCommandHandler(ITypeOfSaleRepository repository)
         {
-            _typeSaleRepository = typeSaleRepository;
+            _repository = repository;
         }
 
-        public async Task<int> Handle(DeleteTypeOfSaleByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Response<int>> Handle(DeleteTypeOfSaleByIdCommand request, CancellationToken cancellationToken)
         {
-            var typeSale = await _typeSaleRepository.GetByIdAsync(request.Id);
-            if (typeSale == null) throw new Exception($"Type of Sale Not Found");
-            await _typeSaleRepository.DeleteAsync(typeSale);
-            return request.Id;
+            var typeSale = await _repository.GetByIdAsync(request.Id);
+            if (typeSale == null) throw new ApiException($"Type of Sale Not Found.", (int)HttpStatusCode.NotFound);
+            await _repository.DeleteAsync(typeSale);
+            return new Response<int>(request.Id);
         }
     }
 }

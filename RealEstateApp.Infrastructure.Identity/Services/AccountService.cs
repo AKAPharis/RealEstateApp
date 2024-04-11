@@ -2,12 +2,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.Account;
+using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infrastructure.Identity.Models;
+using System.Security.Cryptography;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace RealEstateApp.Infrastructure.Identity.Services
 {
@@ -17,17 +23,15 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         private readonly SignInManager<RealEstateUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
+        private readonly JWTSettings _jwtSettings;
 
-
-        //Faltan muchas cosas. Hay que tener el cuenta el guardado de imagenes y demas cosas a la hora de editar y crear, pero eso son todo el problema
-
-
-        public AccountService(UserManager<RealEstateUser> userManager, SignInManager<RealEstateUser> signInManager, IEmailService emailService, IMapper mapper)
+        public AccountService(UserManager<RealEstateUser> userManager, SignInManager<RealEstateUser> signInManager, IEmailService emailService, IMapper mapper, IOptions<JWTSettings> jwtSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
             _mapper = mapper;
+            _jwtSettings = jwtSettings.Value;
         }
         public async Task ActivateUser(string id)
         {
@@ -71,17 +75,20 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
             }
 
+            JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
+
             response.Id = user.Id;
             response.Email = user.Email;
             response.Username = user.UserName;
             response.UserImagePath = user.UserImagePath;
 
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+
             response.Roles = rolesList.ToList();
-
-
-
             response.IsVerified = user.EmailConfirmed;
+            response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var refreshToken = GenerateRefreshToken();
+            response.RefreshToken = refreshToken.Token;
 
             return response;
         }
@@ -115,7 +122,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 await _userManager.UpdateAsync(user);
             }
         }
-        
+
         public async Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin)
         {
             UserEditResponse response = new()
@@ -218,12 +225,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                     var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
                     user.Roles = roles.ToList();
                 }
-
-                //usersVm.ForEach(async x =>
-                //{
-                //    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == x.Id));
-                //    x.Roles = roles.ToList();
-                //});
             }
             return usersVm;
         }
@@ -269,7 +270,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             var users = await _userManager.Users.Where(x => !x.IsActive).ToArrayAsync();
             return users.Count();
         }
-        //pendiente
+
         public async Task<UserRegisterResponse> RegisterUserAsync(UserRegisterRequest request, string origin)
         {
             UserRegisterResponse response = new()
@@ -300,10 +301,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
             }
 
-
-
-
-
             if (!Enum.IsDefined(typeof(UserRoles),request.Role))
             {
                 
@@ -322,7 +319,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 DocumentId = request.DocumentId,
                 PhoneNumber = request.PhoneNumber,
                 PhoneNumberConfirmed = true,
-                //Añadir logica para guardado de imagen
 
             };
 
@@ -347,7 +343,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             }
             else
             {
-                //agregar logica para borrado de la imagen guardada
                 response.HasError = true;
                 response.Error = $"An error occurred trying to register the user.";
                 return response;
@@ -401,12 +396,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                     var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
                     user.Roles = roles.ToList();
                 }
-
-                //usersVm.ForEach(async x =>
-                //{
-                //    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == x.Id));
-                //    x.Roles = roles.ToList();
-                //});
             }
             usersVm = usersVm.Where(x => x.Roles.Contains(role)).ToList();
             return usersVm;
@@ -423,68 +412,63 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                     var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
                     user.Roles = roles.ToList();
                 }
-
-                //usersVm.ForEach(async x =>
-                //{
-                //    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == x.Id));
-                //    x.Roles = roles.ToList();
-                //});
             }
             usersDtos = usersDtos.Where(x => x.Roles.Contains(role)).ToList();
             return usersDtos;
         }
-        //private async Task<JwtSecurityToken> GenerateJWToken(BankingUser user)
-        //{
-        //    var userClaims = await _userManager.GetClaimsAsync(user);
-        //    var roles = await _userManager.GetRolesAsync(user);
 
-        //    var roleClaims = new List<Claim>();
+        private async Task<JwtSecurityToken> GenerateJWToken(RealEstateUser user)
+        {
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
-        //    foreach (var role in roles)
-        //    {
-        //        roleClaims.Add(new Claim("roles", role));
-        //    }
+            var roleClaims = new List<Claim>();
 
-        //    var claims = new[]
-        //    {
-        //        new Claim(JwtRegisteredClaimNames.Sub,user.UserName),
-        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        //        new Claim(JwtRegisteredClaimNames.Email,user.Email),
-        //        new Claim("uid", user.Id)
-        //    }
-        //    .Union(userClaims)
-        //    .Union(roleClaims);
+            foreach (var role in roles)
+            {
+                roleClaims.Add(new Claim("roles", role));
+            }
 
-        //    var symmectricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        //    var signingCredetials = new SigningCredentials(symmectricSecurityKey, SecurityAlgorithms.HmacSha256);
-        //    var jwtSecurityToken = new JwtSecurityToken(
-        //        issuer: _jwtSettings.Issuer,
-        //        audience: _jwtSettings.Audience,
-        //        claims: claims,
-        //        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-        //        signingCredentials: signingCredetials);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub,user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email,user.Email),
+                new Claim("uid", user.Id)
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
 
-        //    return jwtSecurityToken;
-        //}
+            var symmectricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+            var signingCredetials = new SigningCredentials(symmectricSecurityKey, SecurityAlgorithms.HmacSha256);
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                signingCredentials: signingCredetials);
 
-        //private RefreshToken GenerateRefreshToken()
-        //{
-        //    return new RefreshToken
-        //    {
-        //        Token = RandomTokenString(),
-        //        Expires = DateTime.UtcNow.AddDays(7),
-        //        Created = DateTime.UtcNow
-        //    };
-        //}
+            return jwtSecurityToken;
+        }
 
-        //private string RandomTokenString()
-        //{
-        //    using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
-        //    var ramdomBytes = new byte[40];
-        //    rngCryptoServiceProvider.GetBytes(ramdomBytes);
+        private RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken
+            {
+                Token = RandomTokenString(),
+                Expires = DateTime.UtcNow.AddDays(7),
+                Created = DateTime.UtcNow
+            };
+        }
 
-        //    return BitConverter.ToString(ramdomBytes).Replace("-", "");
-        //}
+        private string RandomTokenString()
+        {
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var ramdomBytes = new byte[40];
+            rngCryptoServiceProvider.GetBytes(ramdomBytes);
+
+            return BitConverter.ToString(ramdomBytes).Replace("-", "");
+        }
 
         private async Task<UserEditResponse> EditInternalUsersValidations(UserEditRequest request)
         {

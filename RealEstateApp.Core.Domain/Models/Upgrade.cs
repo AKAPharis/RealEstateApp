@@ -6,7 +6,7 @@ namespace RealEstateApp.Core.Domain.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<PropertyUpgrade> Properties { get; set; }
+        public ICollection<PropertyUpgrade>? Properties { get; set; }
 
     }
 }
