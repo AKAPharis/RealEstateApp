@@ -11,10 +11,14 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
         public DbSet<RealEstateProperty> Properties { get; set; }
+        public DbSet<PropertyImage> PropertyImages { get; set; }
+
         public DbSet<TypeOfSale> TypeOfSales { get; set; }
         public DbSet<TypeProperty> TypeProperties { get; set; }
         public DbSet<Upgrade> Upgrades { get; set; }
         public DbSet<PropertyUpgrade> PropertyUpgrades { get; set; }
+        public DbSet<FavoriteProperty> FavoriteProperties { get; set; }
+
 
 
 
@@ -24,6 +28,11 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<RealEstateProperty>(opt =>
             {
                 opt.ToTable("Properties");
+                opt.HasKey(x => x.Id);
+            });
+            modelBuilder.Entity<PropertyImage>(opt =>
+            {
+                opt.ToTable("PropertyImages");
                 opt.HasKey(x => x.Id);
             });
             modelBuilder.Entity<TypeOfSale>(opt =>
@@ -46,6 +55,11 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 opt.ToTable("PropertyUpgrades");
                 opt.HasKey(x => new { x.PropertyId, x.UpgradeId});
             });
+            modelBuilder.Entity<FavoriteProperty>(opt =>
+            {
+                opt.ToTable("FavoriteProperties");
+                opt.HasKey(x => x.Id);
+            });
             #endregion
 
             #region Relationships
@@ -56,6 +70,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .WithOne(x => x.Property)
                 .HasForeignKey(x => x.PropertyId)
                 .HasConstraintName("FK_RealEstateProperty_PropertyUpgrade");
+            //RealStateProperty - ImageProperty
+            modelBuilder.Entity<RealEstateProperty>()
+                .HasMany(x => x.Images)
+                .WithOne(x => x.Property)
+                .HasForeignKey(x => x.PropertyId)
+                .HasConstraintName("FK_RealEstateProperty_ImageProperty");
             //RealStateProperty - TypeProperty
             modelBuilder.Entity<RealEstateProperty>()
                 .HasOne(x => x.TypeProperty)
@@ -74,6 +94,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .WithOne(x => x.Upgrade)
                 .HasForeignKey(x => x.UpgradeId)
                 .HasConstraintName("FK_Upgrade_PropertyUpgrade");
+            //FavoriteProperties - RealStateProperty
+            modelBuilder.Entity<FavoriteProperty>()
+                .HasOne(x => x.Property)
+                .WithMany(x => x.FavoriteProperties)
+                .HasForeignKey(x => x.PropertyId)
+                .HasConstraintName("FK_FavoriteProperties_RealEstateProperty");
 
             #endregion
 
