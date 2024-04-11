@@ -12,10 +12,11 @@ using System.Net.Mime;
 namespace RealEstateApp.WebApi.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [SwaggerTag("Mantenimientos de los tipos de ventas")]
     public class TypeOfSaleController : BaseApiController
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [SwaggerOperation(
             Summary = "Creación de un tipo de venta",
@@ -35,6 +36,7 @@ namespace RealEstateApp.WebApi.Controllers.v1
             return Ok(await Mediator.Send(command));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [SwaggerOperation(
                Summary = "Actualizacion de un tipo de venta",
@@ -58,6 +60,7 @@ namespace RealEstateApp.WebApi.Controllers.v1
             return Ok(await Mediator.Send(command));
         }
 
+        [Authorize(Roles = "Admin, Developer")]
         [HttpGet]
         [SwaggerOperation(
            Summary = "Listado de tipo de ventas",
@@ -72,6 +75,7 @@ namespace RealEstateApp.WebApi.Controllers.v1
             return Ok(await Mediator.Send(new GetAllTypesOfSalesQuery()));
         }
 
+        [Authorize(Roles = "Admin, Developer")]
         [HttpGet("{id}")]
         [SwaggerOperation(
             Summary = "Tipo de venta por id",
@@ -86,6 +90,7 @@ namespace RealEstateApp.WebApi.Controllers.v1
             return Ok(await Mediator.Send(new GetTypeOfSaleByIdQuery { Id = id }));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [SwaggerOperation(
             Summary = "Eliminar un tipo de venta",

@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Entities.TypeProperty;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
+using RealEstateApp.Core.Application.Features.TypeOfProperties.Commands.CreateTypeProperty;
+using RealEstateApp.Core.Application.Features.TypeOfProperties.Commands.UpdateTypeProperty;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.CreateTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.UpdateTypeOfSale;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
@@ -25,6 +28,10 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<TypeOfProperty, TypeOfPropertyViewModel>()
                 .ReverseMap();
+
+            CreateMap<TypeOfProperty, TypePropertyRequest>()
+                .ReverseMap()
+                .ForMember(x => x.Properties, opt => opt.Ignore());
 
             #endregion
 
@@ -52,6 +59,8 @@ namespace RealEstateApp.Core.Application.Mappings
 
             #region CQRS
 
+            #region CQRS TypeOfSale
+
             CreateMap<CreateTypeOfSaleCommand, TypeOfSale>()
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
@@ -63,6 +72,28 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<TypeOfSaleUpdateResponse, TypeOfSale>()
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
+
+            #endregion
+
+            #region CQRS TypeOfProperty
+
+            CreateMap<CreateTypeOfPropertyCommand, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<UpdateTypeOfPropertyCommand, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<TypeOfPropertyUpdateResponse, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            #endregion
+
+            #region CQRS Upgrade
+
+            #endregion
 
             #endregion
         }

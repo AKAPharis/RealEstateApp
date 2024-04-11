@@ -3,7 +3,6 @@ using MediatR;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
 using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
-using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 using RealEstateApp.Core.Application.Wrappers;
 using System.Net;
 
