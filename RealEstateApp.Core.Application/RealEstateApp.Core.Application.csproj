@@ -22,6 +22,7 @@
     <Folder Include="Features\Upgrade\Commands\UpdateUpgrade\" />
     <Folder Include="Features\Upgrade\Queries\GetAllUpgrades\" />
     <Folder Include="Features\Upgrade\Queries\GetUpgradeById\" />
+    <Folder Include="Helpers\" />
     <Folder Include="Mappings\" />
     <Folder Include="Wrappers\" />
     <Folder Include="Exceptions\" />

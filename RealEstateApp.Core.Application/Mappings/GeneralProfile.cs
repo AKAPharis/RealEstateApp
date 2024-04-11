@@ -1,7 +1,13 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Entities.TypeProperty;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
+using RealEstateApp.Core.Application.Dtos.Entities.Upgrade;
+using RealEstateApp.Core.Application.Features.TypeOfProperties.Commands.CreateTypeProperty;
+using RealEstateApp.Core.Application.Features.TypeOfProperties.Commands.UpdateTypeProperty;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.CreateTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.UpdateTypeOfSale;
+using RealEstateApp.Core.Application.Features.Upgrades.Commands.CreateUpgrade;
+using RealEstateApp.Core.Application.Features.Upgrades.Commands.UpdateUpgrade;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Application.ViewModels.TypeOfProperty;
 using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
@@ -26,6 +32,10 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<TypeOfProperty, TypeOfPropertyViewModel>()
                 .ReverseMap();
 
+            CreateMap<TypeOfProperty, TypePropertyRequest>()
+                .ReverseMap()
+                .ForMember(x => x.Properties, opt => opt.Ignore());
+
             #endregion
 
             #region TypeOfSaleProfile
@@ -44,6 +54,10 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<Upgrade, UpgradeViewModel>()
                 .ReverseMap();
 
+            CreateMap<Upgrade, UpgradeRequest>()
+                .ReverseMap()
+                .ForMember(x => x.Properties, opt => opt.Ignore());
+
             #endregion
 
             #region PropertyUpgradeProfile
@@ -51,6 +65,14 @@ namespace RealEstateApp.Core.Application.Mappings
             #endregion
 
             #region CQRS
+
+            #region CQRS RealEstateProperty
+
+
+
+            #endregion
+
+            #region CQRS TypeOfSale
 
             CreateMap<CreateTypeOfSaleCommand, TypeOfSale>()
                 .ForMember(x => x.Properties, opt => opt.Ignore())
@@ -63,6 +85,40 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<TypeOfSaleUpdateResponse, TypeOfSale>()
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
+
+            #endregion
+
+            #region CQRS TypeOfProperty
+
+            CreateMap<CreateTypeOfPropertyCommand, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<UpdateTypeOfPropertyCommand, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<TypeOfPropertyUpdateResponse, TypeOfProperty>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            #endregion
+
+            #region CQRS Upgrade
+
+            CreateMap<CreateUpgradeCommand, Upgrade>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<UpdateUpgradeCommand, Upgrade>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<UpgradeUpdateResponse, Upgrade>()
+                .ForMember(x => x.Properties, opt => opt.Ignore())
+                .ReverseMap();
+
+            #endregion
 
             #endregion
         }
