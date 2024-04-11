@@ -1,0 +1,9 @@
+﻿using RealEstateApp.Core.Application.ViewModels.TypeOfProperty;
+using RealEstateApp.Core.Domain.Models;
+
+namespace RealEstateApp.Core.Application.Interfaces.Services
+{
+    public interface ITypeOfPropertyService : IGenericService<SaveTypeOfPropertyViewModel, TypeOfPropertyViewModel, TypeProperty>
+    {
+    }
+}

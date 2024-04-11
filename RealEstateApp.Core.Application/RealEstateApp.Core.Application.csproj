@@ -29,7 +29,6 @@
     <Folder Include="Features\Upgrade\Queries\GetUpgradeById\" />
     <Folder Include="Helpers\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Services\" />
     <Folder Include="Wrappers\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
