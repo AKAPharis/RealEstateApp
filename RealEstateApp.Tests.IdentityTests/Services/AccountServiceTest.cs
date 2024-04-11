@@ -697,7 +697,7 @@ namespace RealEstateApp.Tests.IdentityTests.Services
                             IsActive = true,
                             PhoneNumber = $"3333{i}9966{i}",
                             PhoneNumberConfirmed = true,
-                            FirsName = "Admin",
+                            FirstName = "Admin",
                             LastName = "User",
 
 
@@ -720,7 +720,7 @@ namespace RealEstateApp.Tests.IdentityTests.Services
                             IsActive = true,
                             PhoneNumber = $"1111{i}9966{i}",
                             PhoneNumberConfirmed = true,
-                            FirsName = "Customer",
+                            FirstName = "Customer",
                             LastName = "User",
                             UserImagePath = $"customerimage{i}.jpg"
 
@@ -743,7 +743,7 @@ namespace RealEstateApp.Tests.IdentityTests.Services
                             IsActive = true,
                             PhoneNumber = $"2222{i}9966{i}",
                             PhoneNumberConfirmed = true,
-                            FirsName = "Developer",
+                            FirstName = "Developer",
                             LastName = "User",
 
 
@@ -766,7 +766,7 @@ namespace RealEstateApp.Tests.IdentityTests.Services
                             IsActive = true,
                             PhoneNumber = $"4444{i}9966{i}",
                             PhoneNumberConfirmed = true,
-                            FirsName = "Agent",
+                            FirstName = "Agent",
                             LastName = "User",
                             UserImagePath = $"agentimage{i}.jpg"
 

@@ -147,7 +147,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
 
             }
-            user.FirsName = request.FirstName ?? user.FirsName;
+            user.FirstName = request.FirstName ?? user.FirstName;
             user.LastName = request.LastName ?? user.LastName;
             user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
             user.DocumentId = request.DocumentId ?? user.DocumentId;
@@ -316,7 +316,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             var user = new RealEstateUser
             {
                 Email = request.Email,
-                FirsName = request.FirstName,
+                FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.Username,
                 DocumentId = request.DocumentId,
