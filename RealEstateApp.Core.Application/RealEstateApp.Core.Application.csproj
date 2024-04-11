@@ -12,11 +12,6 @@
     <Folder Include="Features\PropertyRealEstate\Commands\UpdatePropertyRealEstate\" />
     <Folder Include="Features\PropertyRealEstate\Queries\GetAllProperties\" />
     <Folder Include="Features\PropertyRealEstate\Queries\GetPropertyById\" />
-    <Folder Include="Features\TypeOfProperties\Commands\CreateTypeProperty\" />
-    <Folder Include="Features\TypeOfProperties\Commands\DeleteTypeProperty\" />
-    <Folder Include="Features\TypeOfProperties\Commands\UpdateTypeProperty\" />
-    <Folder Include="Features\TypeOfProperties\Queries\GetAllProperties\" />
-    <Folder Include="Features\TypeOfProperties\Queries\GetTypePropertyById\" />
     <Folder Include="Features\Upgrade\Commands\CreateUpgrade\" />
     <Folder Include="Features\Upgrade\Commands\DeleteUpgrade\" />
     <Folder Include="Features\Upgrade\Commands\UpdateUpgrade\" />
