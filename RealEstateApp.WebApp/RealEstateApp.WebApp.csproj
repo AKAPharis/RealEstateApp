@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <Folder Include="Middlewares\" />
+    <Folder Include="Views\SalesType\" />
+    <Folder Include="Views\Upgrade\" />
+    <Folder Include="Views\PropertyType\" />
   </ItemGroup>
 
   <ItemGroup>

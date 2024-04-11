@@ -27,5 +27,10 @@ namespace RealEstateApp.WebApp.Controllers
         {
             return View();
         }
+
+        public IActionResult ClientHome()
+        {
+            return View();
+        }
     }
 }
