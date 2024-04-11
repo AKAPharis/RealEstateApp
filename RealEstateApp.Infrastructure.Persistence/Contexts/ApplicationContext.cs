@@ -14,7 +14,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
         public DbSet<PropertyImage> PropertyImages { get; set; }
 
         public DbSet<TypeOfSale> TypeOfSales { get; set; }
-        public DbSet<TypeProperty> TypeProperties { get; set; }
+        public DbSet<TypeOfProperty> TypeOfProperties { get; set; }
         public DbSet<Upgrade> Upgrades { get; set; }
         public DbSet<PropertyUpgrade> PropertyUpgrades { get; set; }
         public DbSet<FavoriteProperty> FavoriteProperties { get; set; }
@@ -40,9 +40,9 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 opt.ToTable("TypeOfSales");
                 opt.HasKey(x => x.Id);
             });
-            modelBuilder.Entity<TypeProperty>(opt =>
+            modelBuilder.Entity<TypeOfProperty>(opt =>
             {
-                opt.ToTable("TypeProperties");
+                opt.ToTable("TypeOfProperties");
                 opt.HasKey(x => x.Id);
             });
             modelBuilder.Entity<Upgrade>(opt =>
@@ -77,6 +77,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .HasForeignKey(x => x.PropertyId)
                 .HasConstraintName("FK_RealEstateProperty_ImageProperty");
             //RealStateProperty - TypeProperty
+            //RealStateProperty - TypeOfProperty
             modelBuilder.Entity<RealEstateProperty>()
                 .HasOne(x => x.TypeProperty)
                 .WithMany(x => x.Properties)

@@ -2,7 +2,7 @@
 
 namespace RealEstateApp.Core.Domain.Models
 {
-    public class TypeProperty : BaseEntity
+    public class TypeOfProperty : BaseEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

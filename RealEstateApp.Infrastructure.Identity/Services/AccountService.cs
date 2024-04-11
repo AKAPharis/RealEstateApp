@@ -115,7 +115,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 await _userManager.UpdateAsync(user);
             }
         }
-        //Pendiente
+        
         public async Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin)
         {
             UserEditResponse response = new()
