@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace RealEstateApp.Core.Application
@@ -9,6 +10,7 @@ namespace RealEstateApp.Core.Application
         {
             #region Mapping
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             #endregion
 
             #region Servies
