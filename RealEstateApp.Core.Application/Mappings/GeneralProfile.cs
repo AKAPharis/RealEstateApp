@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.CreateTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.UpdateTypeOfSale;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
@@ -31,6 +32,10 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<TypeOfSale, TypeOfSaleViewModel>()
                 .ReverseMap();
+
+            CreateMap<TypeOfSale, TypeSaleRequest>()
+                .ReverseMap()
+                .ForMember(x => x.Properties, opt => opt.Ignore());
 
             #endregion
 
