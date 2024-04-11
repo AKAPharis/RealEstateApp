@@ -10,7 +10,6 @@ namespace RealEstateApp.Core.Domain.Models
         public double Size { get; set; }
         public int NumberOfBedrooms { get; set; }
         public int NumberOfBathrooms { get; set; }
-        public List<string> Images { get; set; }
         public string AgentId { get; set; }
         public string AgentName { get; set; }
         public int TypeOfSaleId { get; set; }
@@ -18,6 +17,8 @@ namespace RealEstateApp.Core.Domain.Models
         public int TypePropertyId { get; set; }
         public TypeProperty TypeProperty { get; set; }
         public ICollection<PropertyUpgrade> Upgrades { get; set; }
+        public ICollection<PropertyImage> Images { get; set; }
+        public ICollection<FavoriteProperty> FavoriteProperties { get; set;}
 
 
     }
