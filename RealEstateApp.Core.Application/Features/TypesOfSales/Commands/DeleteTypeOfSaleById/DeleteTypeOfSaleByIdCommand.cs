@@ -28,7 +28,7 @@ namespace RealEstateApp.Core.Application.Features.TypesOfSales.Commands.DeleteTy
         public async Task<Response<int>> Handle(DeleteTypeOfSaleByIdCommand request, CancellationToken cancellationToken)
         {
             var typeSale = await _repository.GetByIdAsync(request.Id);
-            if (typeSale == null) throw new ApiException($"Type of Sale Not Found.", (int)HttpStatusCode.NotFound);
+            if (typeSale == null) throw new ApiException($"Type of sale not found.", (int)HttpStatusCode.NotFound);
             await _repository.DeleteAsync(typeSale);
             return new Response<int>(request.Id);
         }

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeProperty;
-using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
 using RealEstateApp.Core.Application.Exceptions;
-using RealEstateApp.Core.Application.Features.TypesOfSales.Queries.GetTypeOfSaleId;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
@@ -12,7 +10,7 @@ using System.Net;
 namespace RealEstateApp.Core.Application.Features.TypeOfProperties.Queries.GetTypeOfPropertyById
 {
     /// <summary>
-    /// Parámetros para obener un tipo de propiedad por su id
+    /// Parámetros para obtener un tipo de propiedad por su id
     /// </summary>
     public class GetTypeOfPropertyByIdQuery : IRequest<Response<TypePropertyRequest>>
     {

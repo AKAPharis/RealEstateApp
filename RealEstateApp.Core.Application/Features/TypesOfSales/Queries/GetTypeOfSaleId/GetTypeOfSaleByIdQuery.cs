@@ -5,17 +5,12 @@ using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RealEstateApp.Core.Application.Features.TypesOfSales.Queries.GetTypeOfSaleId
 {
     /// <summary>
-    /// Parámetros para obener un tipo de venta por su id
+    /// Parámetros para obtener un tipo de venta por su id
     /// </summary>
     public class GetTypeOfSaleByIdQuery : IRequest<Response<TypeSaleRequest>>
     {
