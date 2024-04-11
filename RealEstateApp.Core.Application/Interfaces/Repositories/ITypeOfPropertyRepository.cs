@@ -2,7 +2,7 @@
 
 namespace RealEstateApp.Core.Application.Interfaces.Repositories
 {
-    public interface ITypePropertyRepository : IGenericRepository<TypeOfProperty>
+    public interface ITypeOfPropertyRepository : IGenericRepository<TypeOfProperty>
     {
     }
 }

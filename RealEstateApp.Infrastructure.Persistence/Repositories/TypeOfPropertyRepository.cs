@@ -4,9 +4,9 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 
 namespace RealEstateApp.Infrastructure.Persistence.Repositories
 {
-    public class TypePropertyRepository : GenericRepository<TypeOfProperty>, ITypePropertyRepository
+    public class TypeOfPropertyRepository : GenericRepository<TypeOfProperty>, ITypeOfPropertyRepository
     {
-        public TypePropertyRepository(ApplicationContext context) : base(context)
+        public TypeOfPropertyRepository(ApplicationContext context) : base(context)
         {
         }
     }
