@@ -28,7 +28,7 @@ namespace RealEstateApp.WebApp
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Administrator}/{action=Index}/{id?}");
 
             app.Run();
         }
