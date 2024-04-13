@@ -1,0 +1,38 @@
+﻿@using RealEstateApp.Core.Application.ViewModels.Account;
+@model LoginViewModel;
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container p-2 px-5">
+    <div class="row">
+        <h2 class="p-0 text-center">Welcome back!</h2>
+        <div class="d-flex justify-content-center">
+            <div class="py-4 px-5 col-6">
+                <form method="post" asp-controller="User" asp-action="Index">
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label darkBlueText fw-bold">Username</label>
+                        <input asp-for="Username" class="form-control">
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label darkBlueText fw-bold">Password</label>
+                        <input asp-for="Password" class="form-control" id="exampleFormControlInput2">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn darkBlueBg btn-dark fw-bold w-100">Login</button>
+                    </div>
+                </form>
+                @if (Model.HasError)
+                {
+                    <div class="alert alert-danger alert-dismissible mt-3 fade show" role="alert">
+                        <p class="mb-0">@Model.Error</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
