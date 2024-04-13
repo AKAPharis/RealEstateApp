@@ -19,6 +19,7 @@ namespace RealEstateApp.Core.Application.Services
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
         {
             string guid = GuidHelper.Guid();
+            SaveRealEstatePropertyViewModel result = new();
             RealEstateProperty propertyWithSameGuid;
             do
             {
@@ -29,18 +30,24 @@ namespace RealEstateApp.Core.Application.Services
 
 
 
-            var result = await base.CreateAsync(viewModel);
-            if (result != null && result.Id != null)
+            var createdProperty = await _repository.CreateAsync(_mapper.Map<RealEstateProperty>(viewModel));
+            if (createdProperty != null && createdProperty.Id != null)
             {
                 if (viewModel.Images != null)
                 {
 
                     foreach (var image in viewModel.Images)
                     {
-                        var imagePath = UploadHelper.UploadFile(image, result.Id.Value, nameof(UploadEntities.RealEstateProperty));
-                        
+                        var imagePath = UploadHelper.UploadFile(image, createdProperty.Id, nameof(UploadEntities.RealEstateProperty));
+                        createdProperty.Images.Add(new PropertyImage
+                        {
+                            ImagePath = imagePath,
+                            PropertyId = createdProperty.Id
+                        });
                     }
+                    result = _mapper.Map<SaveRealEstatePropertyViewModel>(await _repository.UpdateAsync(createdProperty, createdProperty.Id));
                 }
+
             }
 
             return result;

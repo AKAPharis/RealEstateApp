@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using RealEstateApp.Core.Application.ViewModels.TypeOfProperty;
+using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
+using RealEstateApp.Core.Application.ViewModels.Upgrade;
 using RealEstateApp.Core.Domain.Models;
 
 namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
@@ -19,6 +22,11 @@ namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
         public List<int> Upgrades { get; set; }
         public List<IFormFile>? Images { get; set; }
         public List<string>? ImagesPath { get; set; }
+
+        public List<UpgradeViewModel>? UpgradeList { get; set; }
+        public List<TypeOfPropertyViewModel>? TypeOfPropertyList { get; set; }
+        public List<TypeOfSaleViewModel>? TypeOfSaleList { get; set; }
+
 
     }
 }
