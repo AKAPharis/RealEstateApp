@@ -37,5 +37,23 @@ namespace RealEstateApp.Infrastructure.Persistence
 
             #endregion
         }
+
+        public static void AddPersistenceLayerTest(this IServiceCollection services)
+        {
+            #region Contexts
+
+            services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("RealEstateDB"));
+
+            #endregion
+
+            #region Repositories
+            services.AddTransient<IPropertyUpgradeRepository, PropertyUpgradeRepository>();
+            services.AddTransient<IRealEstatePropertyRepository, RealEstatePropertyRepository>();
+            services.AddTransient<ITypeOfSaleRepository, TypeOfSaleRepository>();
+            services.AddTransient<ITypeOfPropertyRepository, TypeOfPropertyRepository>();
+            services.AddTransient<IUpgradeRepository, UpgradeRepository>();
+
+            #endregion
+        }
     }
 }

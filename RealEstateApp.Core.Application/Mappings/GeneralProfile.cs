@@ -24,6 +24,18 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<RealEstateProperty, RealEstatePropertyViewModel>()
                 .ReverseMap();
+            CreateMap<RealEstateProperty, SaveRealEstatePropertyViewModel>()
+                .ForMember(x => x.ImagesPath, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath).ToList()))
+                .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => src.Upgrades.Select(x => x.UpgradeId).ToList()))
+                .ForMember(x => x.Images, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => MapUpgrades(src)))
+                .ForMember(x => x.Images, opt => opt.MapFrom(src => MapImages(src)));
+
+            #endregion
+
+            #region PropertyImage
+
 
             #endregion
 
@@ -53,6 +65,12 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<Upgrade, UpgradeViewModel>()
                 .ReverseMap();
+
+            CreateMap<PropertyUpgrade, UpgradeViewModel>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Upgrade.Id))
+                .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Upgrade.Name))
+                .ForMember(x => x.Description, opt => opt.MapFrom(src => src.Upgrade.Description))
+                .ForMember(x => x.Properties, opt => opt.Ignore());
 
             CreateMap<Upgrade, UpgradeRequest>()
                 .ReverseMap()
@@ -121,6 +139,45 @@ namespace RealEstateApp.Core.Application.Mappings
             #endregion
 
             #endregion
+        }
+
+        private ICollection<PropertyImage> MapImages(SaveRealEstatePropertyViewModel source)
+        {
+            var images = new List<PropertyImage>();
+
+            if (source.ImagesPath != null)
+            {
+                foreach (var imagePath in source.ImagesPath)
+                {
+                    var image = new PropertyImage
+                    {
+                        ImagePath = imagePath,
+                        PropertyId = source.Id ?? 0
+                    };
+                    images.Add(image);
+                }
+            }
+
+            return images;
+        }
+        private ICollection<PropertyUpgrade> MapUpgrades(SaveRealEstatePropertyViewModel source)
+        {
+            var upgrades = new List<PropertyUpgrade>();
+
+            if (source.Upgrades != null)
+            {
+                foreach (var upgradeId in source.Upgrades)
+                {
+                    var upgrade = new PropertyUpgrade
+                    {
+                        UpgradeId = upgradeId,
+                        PropertyId = source.Id ?? 0
+                    };
+                    upgrades.Add(upgrade);
+                }
+            }
+
+            return upgrades;
         }
     }
 }
