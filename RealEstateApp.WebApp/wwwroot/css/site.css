@@ -48,6 +48,10 @@ body {
     border: none;
 }
 
+.table > :not(caption) > * > * {
+    background-color: #262A2F;
+}
+
 .inputBackground {
     background-color: #262A2F;
 }

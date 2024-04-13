@@ -8,5 +8,10 @@ namespace RealEstateApp.WebApp.Controllers
         {
             return View();
         }
+
+        public IActionResult AdminHome()
+        {
+            return View();
+        }
     }
 }
