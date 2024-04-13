@@ -1,5 +1,8 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
 using System.Reflection;
 
 namespace RealEstateApp.Core.Application
@@ -14,7 +17,7 @@ namespace RealEstateApp.Core.Application
             #endregion
 
             #region Servies
-
+            services.AddTransient<IRealEstatePropertyService, RealEstatePropertyService>();
             #endregion
         }
     }
