@@ -1,4 +1,6 @@
-﻿@{
+﻿@using RealEstateApp.Core.Application.ViewModels.Account;
+@model SaveUserViewModel;
+@{
     ViewData["Title"] = "Save Admin";
 }
 
@@ -34,9 +36,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="DocumentID" class="form-label fw-bold">DocumentID</label>
-                                    <input asp-for="DocumentID" class="form-control" />
-                                    <span asp-validation-for="DocumentID" class="text-danger"></span>
+                                    <label asp-for="DocumentId" class="form-label fw-bold">DocumentID</label>
+                                    <input asp-for="DocumentId" class="form-control" />
+                                    <span asp-validation-for="DocumentId" class="text-danger"></span>
                                 </div>
 
                                 <div class="mb-3">
