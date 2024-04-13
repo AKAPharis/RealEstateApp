@@ -22,6 +22,10 @@ body {
     font-family: "Inter", sans-serif;
 }
 
+.table > :not(caption) > * > * {
+    background-color: #262A2F !important;
+}
+
 .principalBlue {
     background-color: #47FFE9;
 }
@@ -46,10 +50,6 @@ body {
 .btnPrincipalBlueHover:hover {
     background-color: #8BFFF1;
     border: none;
-}
-
-.table > :not(caption) > * > * {
-    background-color: #262A2F;
 }
 
 .inputBackground {
@@ -91,7 +91,7 @@ body {
     background-color: #47FFE9;
     border-radius: 10px;
     width: 87px;
-    height: 35px; /* Brr? */
+    height: 35;
 }
 
 .cardCustomize {
@@ -120,3 +120,4 @@ body {
 .cardColorText {
     color: #AEADAD;
 }
+
