@@ -1,20 +1,12 @@
-﻿using FluentAssertions.Common;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application;
-using RealEstateApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
-using RealEstateApp.Core.Domain.Models;
+using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-using System.IO;
-using FluentAssertions;
+using RealEstateApp.Core.Domain.Models;
+using RealEstateApp.Infrastructure.Persistence;
 
 namespace RealEstateApp.Tests.ApplicationTest.Services
 {
@@ -35,6 +27,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
 
             SaveRealEstatePropertyViewModel vm = new SaveRealEstatePropertyViewModel()
             {
+                Id = 444,
                 AgentId = "1",
                 NumberOfBathrooms = 1,
                 NumberOfBedrooms = 2,
@@ -42,11 +35,55 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
                 AgentName = "juan",
                 Description = "Description",
                 Price = 2000000,
-                TypeOfSaleId = 1,
-                TypePropertyId = 1,
-                Images = new List<IFormFile> 
+                TypeOfSaleId = 2,
+                TypePropertyId = 2,
+                Images = new List<IFormFile>
                 {
                       GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot 2023-03-17 065624.png"),
+                      GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot 2024-02-08 194134.png"),
+                      GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot_20221226_020447.png"),
+                      GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot_20230225_054808.png"),
+
+                      /*
+                       * 
+                       * C:\Users\oscar\Desktop\ITLA\c5\P3\Proyectos\RealEstateApp\RealEstateApp.Tests.ApplicationTest\bin\Debug\net7.0\TestImages\Screenshot 2023-03-17 065624.png'.'
+                       */
+
+
+                },
+                Upgrades = new List<int>
+                {
+                    2,
+                    3
+                },
+
+
+            };
+            var result = await _realEstatePropertyService.CreateAsync(vm);
+            var check = await _realEstatePropertyRepository.GetByIdAsync(result.Id.Value);
+            result.Should().BeOfType<SaveRealEstatePropertyViewModel>();
+            result.ImagesPath.Should().HaveCount(check.Images.Count());
+            result.Upgrades.Should().HaveCount(check.Upgrades.Count());
+            result.Id.Should().Be(check.Id);
+        }
+        [Fact]
+        public async void RealEstateProperty_UpdateAsync_ReturnSaveRealEstatePropertyViewModel()
+        {
+
+            SaveRealEstatePropertyViewModel vm = new SaveRealEstatePropertyViewModel()
+            {
+                Id = 1,
+                AgentId = "34",
+                NumberOfBathrooms = 55,
+                NumberOfBedrooms = 55,
+                Size = 3,
+                AgentName = "juan34",
+                Description = "Description222222",
+                Price = 1,
+                TypeOfSaleId = 2,
+                TypePropertyId = 2,
+                Images = new List<IFormFile>
+                {
                       GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot 2024-02-08 194134.png"),
                       GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot_20221226_020447.png"),
                       GetFormFile("../../../../RealEstateApp.Tests.ApplicationTest/TestImages/Screenshot_20230225_054808.png"),
@@ -63,17 +100,16 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
                     1,
                     2
                 },
-                
-                
+
+
             };
-            var result = await _realEstatePropertyService.CreateAsync(vm);
+            var result = await _realEstatePropertyService.UpdateAsync(vm, vm.Id.Value);
             var check = await _realEstatePropertyRepository.GetByIdAsync(result.Id.Value);
             result.Should().BeOfType<SaveRealEstatePropertyViewModel>();
             result.ImagesPath.Should().HaveCount(check.Images.Count());
             result.Upgrades.Should().HaveCount(check.Upgrades.Count());
             result.Id.Should().Be(check.Id);
         }
-
         private async void Setup()
         {
             // Build service colection to create identity UserManager and RoleManager.           
@@ -106,7 +142,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             var serviceProvider = _services.BuildServiceProvider();
             _realEstatePropertyService = serviceProvider.GetRequiredService<IRealEstatePropertyService>();
             _realEstatePropertyRepository = serviceProvider.GetRequiredService<IRealEstatePropertyRepository>();
-            
+
             await PropertySeeds();
 
 
@@ -126,35 +162,38 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
 
         private async Task PropertySeeds()
         {
-
-            for (int i = 1; i <= 10; i++)
+            var properties = await _realEstatePropertyRepository.GetAllAsync();
+            if (properties == null || properties.Count() == 0)
             {
-                var property = new RealEstateProperty
+
+                for (int i = 1; i <= 10; i++)
                 {
-                    Id = i,
-                    AgentId = $"{i}",
-                    AgentName = $"Juan{i}",
-                    Description = "A property",
-                    Size = 10+i,
-                    Guid = $"00033{i}",
-                    NumberOfBathrooms = i,
-                    NumberOfBedrooms = i,
-                    TypeOfSale = new TypeOfSale
-                    {
-                        Id= i,
-                        Name = "type of sale",
-                        Description = "a type of sale"
-                    },
-                    TypeOfSaleId = i,
-                    TypeProperty = new TypeOfProperty
+                    var property = new RealEstateProperty
                     {
                         Id = i,
-                        Name = "type of property",
-                        Description = "a type of property"
-                    },
-                    TypePropertyId = i,
-                    Price = 20000*i,
-                    Upgrades = new List<PropertyUpgrade>
+                        AgentId = $"{i}",
+                        AgentName = $"Juan{i}",
+                        Description = "A property",
+                        Size = 10 + i,
+                        Guid = $"00033{i}",
+                        NumberOfBathrooms = i,
+                        NumberOfBedrooms = i,
+                        TypeOfSale = new TypeOfSale
+                        {
+                            Id = i,
+                            Name = "type of sale",
+                            Description = "a type of sale"
+                        },
+                        TypeOfSaleId = i,
+                        TypeProperty = new TypeOfProperty
+                        {
+                            Id = i,
+                            Name = "type of property",
+                            Description = "a type of property"
+                        },
+                        TypePropertyId = i,
+                        Price = 20000 * i,
+                        Upgrades = new List<PropertyUpgrade>
                     {
                         new PropertyUpgrade
                         {
@@ -168,23 +207,25 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
                             }
                         }
                     },
-                    Images = new List<PropertyImage>
+                        Images = new List<PropertyImage>
                     {
                         new PropertyImage
                         {
+                            Id = i,
                             PropertyId = i,
-                            ImagePath = "image.jpeg"
+                            ImagePath = $"image{i}.jpeg"
                         }
                     },
-                    
 
 
-                };
-                
-                await _realEstatePropertyRepository.CreateAsync(property);
+
+                    };
+
+                    await _realEstatePropertyRepository.CreateAsync(property);
+
+                }
 
             }
-
 
         }
 

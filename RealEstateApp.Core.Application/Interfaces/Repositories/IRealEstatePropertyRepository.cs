@@ -6,6 +6,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
     {
         Task<List<RealEstateProperty>> GetByAgentAsync(string agentId);
         Task<RealEstateProperty> GetByGuid(string guid);
+        Task<RealEstateProperty> GetByIdWithIncludeAsync(int id, List<string> properties);
 
     }
 }

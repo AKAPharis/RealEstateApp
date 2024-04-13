@@ -20,6 +20,7 @@ namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
         public int TypeOfSaleId { get; set; }
         public int TypePropertyId { get; set; }
         public List<int> Upgrades { get; set; }
+        
         public List<IFormFile>? Images { get; set; }
         public List<string>? ImagesPath { get; set; }
 

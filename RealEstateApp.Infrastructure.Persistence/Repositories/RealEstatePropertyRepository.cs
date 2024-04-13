@@ -20,5 +20,14 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         {
             return await _dbSet.FirstOrDefaultAsync(x => x.Guid == guid);
         }
+        public virtual async Task<RealEstateProperty> GetByIdWithIncludeAsync(int id,List<string> properties)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var property in properties)
+            {
+                query = query.Include(property);
+            }
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
