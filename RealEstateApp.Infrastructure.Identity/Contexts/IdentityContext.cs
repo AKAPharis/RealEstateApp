@@ -9,8 +9,6 @@ namespace RealEstateApp.Infrastructure.Identity.Contexts
     {
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options) { }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //FLUENT API
@@ -19,9 +17,6 @@ namespace RealEstateApp.Infrastructure.Identity.Contexts
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-
-
-
 
 
         }

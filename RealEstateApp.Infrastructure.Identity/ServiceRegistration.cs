@@ -44,8 +44,6 @@ namespace RealEstateApp.Infrastructure.Identity
 
             #region Mapings
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-
             #endregion
 
             #region Identity
@@ -114,7 +112,6 @@ namespace RealEstateApp.Infrastructure.Identity
 
             #region Services
             services.AddTransient<IAccountService, AccountService>();
-
             #endregion
         }
         public static void AddIdentityInfrastructureTesting(this IServiceCollection services)
@@ -124,12 +121,11 @@ namespace RealEstateApp.Infrastructure.Identity
 
             services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDB"));
 
-
             #endregion
 
             #region Mapings
+            
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
 
             #endregion
 
@@ -137,7 +133,6 @@ namespace RealEstateApp.Infrastructure.Identity
             services.AddIdentity<RealEstateUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
-
 
 
             services.ConfigureApplicationCookie(options =>

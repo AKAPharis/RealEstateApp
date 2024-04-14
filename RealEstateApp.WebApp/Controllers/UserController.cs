@@ -11,6 +11,12 @@ namespace RealEstateApp.WebApp.Controllers
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _contextAccessor;
 
+        public UserController(IUserService userService, IHttpContextAccessor contextAccessor)
+        {
+            _userService = userService;
+            _contextAccessor = contextAccessor;
+        }
+
         public IActionResult Index()
         {
             return View(new LoginViewModel());
@@ -49,6 +55,13 @@ namespace RealEstateApp.WebApp.Controllers
                 return View(vm);
             }
 
+        }
+
+        public async Task<IActionResult> LogOutAsync()
+        {
+            await _userService.SignOutAsync();
+            HttpContext.Session.Remove("user");
+            return RedirectToRoute(new { controller = "User", action = "Index" });
         }
     }
 }

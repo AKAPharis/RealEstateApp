@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeProperty;
 using RealEstateApp.Core.Application.Dtos.Entities.TypeSale;
 using RealEstateApp.Core.Application.Dtos.Entities.Upgrade;
@@ -8,6 +9,7 @@ using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.CreateTypeOf
 using RealEstateApp.Core.Application.Features.TypesOfSales.Commands.UpdateTypeOfSale;
 using RealEstateApp.Core.Application.Features.Upgrades.Commands.CreateUpgrade;
 using RealEstateApp.Core.Application.Features.Upgrades.Commands.UpdateUpgrade;
+using RealEstateApp.Core.Application.ViewModels.Account;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Application.ViewModels.TypeOfProperty;
 using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
@@ -31,6 +33,9 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap()
                 .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => MapUpgrades(src)))
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => MapImages(src)));
+
+            CreateMap<LoginViewModel, AuthenticationRequest>()
+                .ReverseMap();
 
             #endregion
 

@@ -16,8 +16,9 @@ namespace RealEstateApp.Core.Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             #endregion
 
-            #region Servies
+            #region Services
             services.AddTransient<IRealEstatePropertyService, RealEstatePropertyService>();
+            services.AddTransient<IUserService, UserService>();
             #endregion
         }
     }

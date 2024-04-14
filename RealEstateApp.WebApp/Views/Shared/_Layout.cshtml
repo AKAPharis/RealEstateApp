@@ -1,4 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@using RealEstateApp.Core.Application.Helpers;
+@using RealEstateApp.Core.Application.Dtos.Account;
+@using RealEstateApp.Core.Application.ViewModels.Account
+@using RealEstateApp.Core.Application.Interfaces.Services;
+@inject IHttpContextAccessor httpContextAccessor;
+@inject IUserService userService;
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null ? User.Roles.Any(r => r == "Admin") : false;
+    var isCustomer = User != null ? User.Roles.Any(r => r == "Customer") : false;
+    var isAgent = User != null ? User.Roles.Any(r => r == "RealEstateAgent") : false;
+}
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
@@ -14,33 +27,116 @@
 <body>
     <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
 
-        <div class="container mb-auto">
-            <header class="d-flex justify-content-center py-3">
-                <ul class="nav nav-pills">
-                    <li class="nav-item navlinks">
-                        <a asp-controller="Home" asp-action="Index"
-                           class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
-                            <img src="~/assets/images/IconHouse.png"
-                                 alt="house icon"
-                                 height="25" />Danderi
-                        </a>
-                    </li>
-                    <li class="nav-item navlinks">
-                        <a asp-controller="Home" asp-action="Index" class="nav-link text-white">Home</a>
-                    </li>
-                    <li class="nav-item navlinks">
-                        <a asp-controller="Home" asp-action="Agents" class="nav-link text-white">Agents</a>
-                    </li>
-                    <li class="nav-item navlinks">
-                        <a href="#" class="nav-link text-white">Join the App</a>
-                    </li>
-                    <li class="nav-item navlinks">
-                        <a href="#" class="nav-link text-white">Log in</a>
-                    </li>
-                </ul>
-            </header>
-        </div>
-
+        @if (User != null)
+        {
+            <div class="container">
+                <header class="d-flex justify-content-center py-3">
+                    <ul class="nav nav-pills">
+                        @if (isCustomer)
+                        {
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Home" asp-action="CustomerHome"
+                                   class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
+                                    <img src="~/assets/images/IconHouse.png"
+                                         alt="house icon"
+                                         height="25" />Danderi
+                                </a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Home" asp-action="CustomerHome" class="nav-link text-white">Home</a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Home" asp-action="Agents" class="nav-link text-white">Agents</a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Home" asp-action="" class="nav-link text-white">My properties</a>
+                            </li>
+                        }
+                        else if (isAdmin)
+                        {
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Administrator" asp-action="AdminHome"
+                                   class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
+                                    <img src="~/assets/images/IconHouse.png"
+                                         alt="house icon"
+                                         height="25" />Danderi
+                                </a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Administrator" asp-action="AdminHome" class="nav-link text-white">Home</a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a href="#" class="nav-link text-white">Agents</a>
+                            </li>
+                            <li class="nav-item navlinks dropdown">
+                                <a href="#" class="dropdown-toggle nav-link text-white" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Maintenances
+                                </a>
+                                <ul class="dropdown-menu shadow">
+                                    <li><a asp-controller="Administrator" asp-action="Index" class="dropdown-item small text-white">Administrators</a></li>
+                                    <li><a class="dropdown-item small text-white" href="#">Developers</a></li>
+                                    <li><a class="dropdown-item small text-white" href="#">Type of Properties</a></li>
+                                    <li><a class="dropdown-item small text-white" href="#">Type of Sales</a></li>
+                                    <li><a class="dropdown-item small text-white" href="#">Upgrades</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Agent" asp-action="AgentHome"
+                                   class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
+                                    <img src="~/assets/images/IconHouse.png"
+                                         alt="house icon"
+                                         height="25" />Danderi
+                                </a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Agent" asp-action="AgentHome" class="nav-link text-white">Home</a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a asp-controller="Agent" asp-action="AgentPropertyMaintenance" class="nav-link text-white">Property maintenance</a>
+                            </li>
+                            <li class="nav-item navlinks">
+                                <a href="#" class="nav-link text-white">My profile</a>
+                            </li>
+                        }
+                        <li class="nav-item navlinks">
+                            <a asp-controller="User" asp-action="LogOut" class="nav-link text-danger fw-bold">Log out</a>
+                        </li>
+                    </ul>
+                </header>
+            </div>
+        }
+        else
+        {
+            <div class="container mb-auto">
+                <header class="d-flex justify-content-center py-3">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item navlinks">
+                            <a asp-controller="Home" asp-action="Index"
+                               class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
+                                <img src="~/assets/images/IconHouse.png"
+                                     alt="house icon"
+                                     height="25" />Danderi
+                            </a>
+                        </li>
+                        <li class="nav-item navlinks">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link text-white">Home</a>
+                        </li>
+                        <li class="nav-item navlinks">
+                            <a asp-controller="Home" asp-action="Agents" class="nav-link text-white">Agents</a>
+                        </li>
+                        <li class="nav-item navlinks">
+                            <a href="#" class="nav-link text-white">Join the App</a>
+                        </li>
+                        <li class="nav-item navlinks">
+                            <a asp-controller="User" asp-action="Index" class="nav-link text-white">Log in</a>
+                        </li>
+                    </ul>
+                </header>
+            </div>
+        }
         <div class="container-fluid p-0">
             <main role="main" class="pb-5">
                 @RenderBody()
