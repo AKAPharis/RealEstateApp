@@ -6,10 +6,25 @@ using RealEstateApp.Core.Domain.Models;
 
 namespace RealEstateApp.Core.Application.Services
 {
-    internal class UpgradeService : GenericService<SaveUpgradeViewModel, UpgradeViewModel, Upgrade>, IUpgradeService
+    public class UpgradeService : GenericService<SaveUpgradeViewModel, UpgradeViewModel, Upgrade>, IUpgradeService
     {
-        public UpgradeService(IUpgradeRepository repo, IMapper mapper) : base(repo, mapper)
+        private readonly IPropertyUpgradeRepository _propertyUpgradeRepository;
+        public UpgradeService(IUpgradeRepository repo, IMapper mapper, IPropertyUpgradeRepository propertyUpgradeRepository) : base(repo, mapper)
         {
+            _propertyUpgradeRepository = propertyUpgradeRepository;
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var propertyUpgrades = await _propertyUpgradeRepository.GetAllByUpgrade(id);
+            if(propertyUpgrades != null && propertyUpgrades.Count() > 0)
+            {
+                for (int i = 0; i < propertyUpgrades.Count(); i++)
+                {
+                    await _propertyUpgradeRepository.DeleteAsync(propertyUpgrades[i]);
+                }
+            }
+            await base.DeleteAsync(id);
         }
     }
 }

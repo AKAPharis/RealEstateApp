@@ -12,7 +12,7 @@ using RealEstateApp.Infrastructure.Persistence.Contexts;
 namespace RealEstateApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240414065918_InitialMigration")]
+    [Migration("20240414163558_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -258,7 +258,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                     b.HasOne("RealEstateApp.Core.Domain.Models.Upgrade", "Upgrade")
                         .WithMany("Properties")
                         .HasForeignKey("UpgradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_Upgrade_PropertyUpgrade");
 

@@ -155,8 +155,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Migrations
                         name: "FK_Upgrade_PropertyUpgrade",
                         column: x => x.UpgradeId,
                         principalTable: "Upgrades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

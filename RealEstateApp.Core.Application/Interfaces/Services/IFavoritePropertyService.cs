@@ -8,6 +8,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<CreateFavoriteResponse> CreateSaveFavoriteAsync(CreateFavoritePropertyViewModel vm);
         Task<DeleteFavoriteResponse> DeleteAsync(int favoriteId);
         Task<List<RealEstatePropertyViewModel>> GetAllByUser(string userId);
-        Task<List<string>> GetAllByProperty(int propertyId);
+        Task<List<string>> GetAllUserIdByProperty(int propertyId);
     }
 }
