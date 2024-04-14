@@ -37,6 +37,24 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<LoginViewModel, AuthenticationRequest>()
                 .ReverseMap();
 
+            CreateMap<PropertyUpgrade, RealEstatePropertyViewModel>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Property.Id))
+                .ForMember(x => x.Guid, opt => opt.MapFrom(src => src.Property.Guid))
+                .ForMember(x => x.Updated, opt => opt.MapFrom(src => src.Property.Updated))
+                .ForMember(x => x.Created, opt => opt.MapFrom(src => src.Property.Created))
+                .ForMember(x => x.NumberOfBathrooms, opt => opt.MapFrom(src => src.Property.NumberOfBathrooms))
+                .ForMember(x => x.NumberOfBedrooms, opt => opt.MapFrom(src => src.Property.NumberOfBedrooms))
+                .ForMember(x => x.AgentId, opt => opt.MapFrom(src => src.Property.AgentId))
+                .ForMember(x => x.AgentName, opt => opt.MapFrom(src => src.Property.AgentName))
+                .ForMember(x => x.Description, opt => opt.MapFrom(src => src.Property.Description))
+                .ForMember(x => x.TypePropertyId, opt => opt.MapFrom(src => src.Property.TypePropertyId))
+                .ForMember(x => x.TypeOfSaleId, opt => opt.MapFrom(src => src.Property.TypeOfSaleId))
+                .ForMember(x => x.Price, opt => opt.MapFrom(src => src.Property.Price))
+                .ForMember(x => x.Size, opt => opt.MapFrom(src => src.Property.Size))
+                .ForMember(x => x.Upgrades, opt => opt.Ignore())
+                .ForMember(x => x.TypeOfSale, opt => opt.Ignore())
+                .ForMember(x => x.TypeProperty, opt => opt.Ignore());
+
             #endregion
 
             #region TypeOfPropertyProfile
@@ -85,6 +103,11 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap()
                 .ForMember(x => x.Properties, opt => opt.Ignore());
 
+            #endregion
+
+            #region FavoritePropertyProfile
+            CreateMap<FavoriteProperty, CreateFavoritePropertyViewModel>()
+                .ReverseMap();
             #endregion
 
             #region PropertyUpgradeProfile
