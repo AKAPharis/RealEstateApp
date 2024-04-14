@@ -128,7 +128,7 @@
                             <a asp-controller="Home" asp-action="Agents" class="nav-link text-white">Agents</a>
                         </li>
                         <li class="nav-item navlinks">
-                            <a href="#" class="nav-link text-white">Join the App</a>
+                            <a asp-controller="User" asp-action="Create" class="nav-link text-white">Join the App</a>
                         </li>
                         <li class="nav-item navlinks">
                             <a asp-controller="User" asp-action="Index" class="nav-link text-white">Log in</a>
@@ -137,8 +137,9 @@
                 </header>
             </div>
         }
+
         <div class="container-fluid p-0">
-            <main role="main" class="pb-5">
+            <main role="main" class="pb-5 mb-5">
                 @RenderBody()
             </main>
         </div>

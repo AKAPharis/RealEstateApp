@@ -1,15 +1,23 @@
 ﻿@using RealEstateApp.Core.Application.ViewModels.Account;
+@using RealEstateApp.Core.Application.Enums.Roles;
 @model SaveUserViewModel;
 @{
     ViewData["Title"] = "Sign Up";
 }
 
-<div class="container p-2 px-5">
+<div class="container p-2 px-5 d-flex justify-content-center">
     <div class="row inputBackground py-5 rounded border">
         <h2 class="p-0 text-center principalBlueText">Register</h2>
         <div class="d-flex justify-content-center">
-            <div class="py-4 px-5 col-6">
-                <form method="post" enctype="multipart/form-data" asp-controller="User" asp-action="Register">
+            <div class="py-4 px-5 col-7">
+                <form method="post" enctype="multipart/form-data" asp-controller="User" asp-action="Create">
+                    @if (Model.HasError)
+                    {
+                        <div class="alert alert-danger alert-dismissible mt-3 fade show" role="alert">
+                            <p class="mb-0">@Model.Error</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
                     <div class="mb-4 d-flex justify-content-center gap-4">
                         <div class="col-8">
                             <div class="mb-3">
@@ -29,13 +37,20 @@
                                 <input asp-for="PhoneNumber" class="form-control inputCustomize" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
-                        </div>
-                        <div class="col-8">
+
+                            <div class="mb-3">
+                                <label asp-for="DocumentId" class="form-label fw-bold">Document ID</label>
+                                <input asp-for="DocumentId" class="form-control inputCustomize" />
+                                <span asp-validation-for="DocumentId" class="text-danger"></span>
+                            </div>
+
                             <div class="mb-3">
                                 <label asp-for="UserImage" class="form-label fw-bold">Photo</label>
                                 <input required asp-for="UserImage" type="file" class="form-control" />
                                 <span asp-validation-for="UserImage" class="text-danger"></span>
                             </div>
+                        </div>
+                        <div class="col-8">
 
                             <div class="mb-3">
                                 <label asp-for="Username" class="form-label fw-bold">Username</label>
@@ -48,8 +63,7 @@
                                 <input asp-for="Email" class="form-control inputCustomize" />
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
-                        </div>
-                        <div class="col-8">
+
                             <div class="mb-3">
                                 <label asp-for="Password" class="form-label fw-bold me-2">Password</label>
                                 <span href="#" id="chuleria" class="text-secondary" data-bs-toggle="tooltip" data-bs-html="true"
@@ -75,11 +89,12 @@
                                 <label for="roles" class="fw-bold form-label">Select a role:</label>
                                 <select class="form-select" asp-for="Role" id="roles">
                                     <option value="0">Choose one...</option>
-                                    <option value="Client">Client</option>
-                                    <option value="Agent">Agent</option>
+                                    <option value="@nameof(UserRoles.Customer)">Customer</option>
+                                    <option value="@nameof(UserRoles.RealEstateAgent)">Agent</option>
                                 </select>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="d-flex justify-content-center">

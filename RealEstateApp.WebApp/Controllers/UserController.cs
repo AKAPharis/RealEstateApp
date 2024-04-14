@@ -63,5 +63,32 @@ namespace RealEstateApp.WebApp.Controllers
             HttpContext.Session.Remove("user");
             return RedirectToRoute(new { controller = "User", action = "Index" });
         }
+
+        public IActionResult Create() => View("SaveUser", new SaveUserViewModel());
+
+        [HttpPost]
+        public async Task<IActionResult> Create(SaveUserViewModel vm)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("SaveUser", vm);
+            }
+            var origin = Request.Headers["origin"];
+            UserRegisterResponse response = await _userService.RegisterUserAsync(vm, origin);
+            
+            if (response.HasError)
+            {
+                vm.HasError = response.HasError;
+                vm.Error = response.Error;
+                return View("SaveUser", vm);
+            }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            string response = await _userService.ConfirmAccountAsync(userId, token);
+            return View("ConfirmEmail");
+        }
     }
 }
