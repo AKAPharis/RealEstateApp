@@ -39,14 +39,12 @@ namespace RealEstateApp.Core.Application.Mappings
 
             #endregion
 
-            #region PropertyImage
-
-
-            #endregion
-
             #region TypeOfPropertyProfile
 
             CreateMap<TypeOfProperty, TypeOfPropertyViewModel>()
+                .ReverseMap();
+
+            CreateMap<TypeOfProperty, SaveTypeOfPropertyViewModel>()
                 .ReverseMap();
 
             CreateMap<TypeOfProperty, TypePropertyRequest>()
@@ -60,6 +58,9 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<TypeOfSale, TypeOfSaleViewModel>()
                 .ReverseMap();
 
+            CreateMap<TypeOfSale, SaveTypeOfSaleViewModel>()
+                .ReverseMap();
+
             CreateMap<TypeOfSale, TypeSaleRequest>()
                 .ReverseMap()
                 .ForMember(x => x.Properties, opt => opt.Ignore());
@@ -69,6 +70,9 @@ namespace RealEstateApp.Core.Application.Mappings
             #region UpgradeProfile
 
             CreateMap<Upgrade, UpgradeViewModel>()
+                .ReverseMap();
+
+            CreateMap<Upgrade, SaveUpgradeViewModel>()
                 .ReverseMap();
 
             CreateMap<PropertyUpgrade, UpgradeViewModel>()

@@ -4,8 +4,10 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
 {
     public interface IFavoritePropertyRepository : IGenericRepository<FavoriteProperty>
     {
-        Task<List<RealEstateProperty>> GetAllByUser(string userId);
-        Task<List<string>> GetAllByProperty(int propertyId);
+        Task<List<RealEstateProperty>> GetAllPropertyByUser(string userId);
+        Task<List<FavoriteProperty>> GetAllByProperty(int propertyId);
+
+        Task<List<string>> GetAllUserIdByProperty(int propertyId);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using RealEstateApp.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Domain.Models;
 using RealEstateApp.Infrastructure.Persistence.Contexts;
 
@@ -8,6 +9,10 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
     {
         public PropertyUpgradeRepository(ApplicationContext context) : base(context)
         {
+        }
+        public async Task<List<PropertyUpgrade>> GetAllByProperty(int propertyId)
+        {
+            return await _dbSet.Where(x => x.PropertyId == propertyId).ToListAsync();
         }
     }
 }

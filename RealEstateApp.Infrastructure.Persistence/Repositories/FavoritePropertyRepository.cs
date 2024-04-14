@@ -12,7 +12,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<List<string>> GetAllByProperty(int propertyId)
+        public async Task<List<string>> GetAllUserIdByProperty(int propertyId)
         {
             return await _dbSet
                 .Where(x => x.PropertyId == propertyId)
@@ -20,12 +20,19 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<RealEstateProperty>> GetAllByUser(string userId)
+        public async Task<List<RealEstateProperty>> GetAllPropertyByUser(string userId)
         {
             return await _dbSet
                 .Include(x => x.Property)
                 .Where(x => x.UserId == userId)
                 .Select(x => x.Property)
+                .ToListAsync();
+        }
+
+        public async Task<List<FavoriteProperty>> GetAllByProperty(int propertyId)
+        {
+            return await _dbSet
+                .Where(x => x.PropertyId == propertyId)
                 .ToListAsync();
         }
     }
