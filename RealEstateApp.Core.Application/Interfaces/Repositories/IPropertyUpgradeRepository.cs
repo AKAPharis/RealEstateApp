@@ -4,5 +4,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
 {
     public interface IPropertyUpgradeRepository : IGenericRepository<PropertyUpgrade>
     {
+        Task<List<PropertyUpgrade>> GetAllByProperty(int propertyId);
     }
 }

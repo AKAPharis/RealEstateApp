@@ -10,10 +10,19 @@ using RealEstateApp.Infrastructure.Persistence;
 
 namespace RealEstateApp.Tests.ApplicationTest.Services
 {
-    public class RealEstatePropertyServiceTest
+    [CollectionDefinition("RealEstatePropertyServiceTest")]
+    public class RealEstatePropertyServiceTestFixtureCollection : ICollectionFixture<RealEstatePropertyServiceTest>
+    {
+        // Esta clase no tiene contenido, pero es necesaria para definir la colección.
+    }
+
+    [Collection("RealEstatePropertyServiceTest")]
+    public class RealEstatePropertyServiceTest : IDisposable
     {
         private IRealEstatePropertyService _realEstatePropertyService;
         private IRealEstatePropertyRepository _realEstatePropertyRepository;
+        private IPropertyImageRepository _propertyImageRepository;
+        private IPropertyUpgradeRepository _propertyUpgradeRepository;
         private IServiceCollection _services;
         private string path;
         public RealEstatePropertyServiceTest()
@@ -64,7 +73,28 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             result.Should().BeOfType<SaveRealEstatePropertyViewModel>();
             result.ImagesPath.Should().HaveCount(check.Images.Count());
             result.Upgrades.Should().HaveCount(check.Upgrades.Count());
+            check.Should().NotBeNull();
             result.Id.Should().Be(check.Id);
+        }
+        [Fact]
+        public async void RealEstateProperty_DeleteAsync()
+        {
+
+
+
+
+            int propertyId = 3;
+            await _realEstatePropertyService.DeleteAsync(propertyId);
+            var propertyResult = await _realEstatePropertyRepository.GetByIdAsync(propertyId);
+            var imagesResult = await _propertyImageRepository.GetAllAsync();
+            imagesResult = imagesResult.Where(x => x.PropertyId == propertyId).ToList();
+            var upgradesResult = await _propertyUpgradeRepository.GetAllAsync();
+            upgradesResult = upgradesResult.Where(x => x.PropertyId == propertyId).ToList();
+
+            propertyResult.Should().BeNull();
+            imagesResult.Should().BeNullOrEmpty();
+            upgradesResult.Should().BeNullOrEmpty();
+
         }
         [Fact]
         public async void RealEstateProperty_UpdateAsync_ReturnSaveRealEstatePropertyViewModel()
@@ -142,6 +172,8 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             var serviceProvider = _services.BuildServiceProvider();
             _realEstatePropertyService = serviceProvider.GetRequiredService<IRealEstatePropertyService>();
             _realEstatePropertyRepository = serviceProvider.GetRequiredService<IRealEstatePropertyRepository>();
+            _propertyUpgradeRepository = serviceProvider.GetRequiredService<IPropertyUpgradeRepository>();
+            _propertyImageRepository = serviceProvider.GetRequiredService<IPropertyImageRepository>();
 
             await PropertySeeds();
 
@@ -229,5 +261,9 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
 
         }
 
+        public void Dispose()
+        {
+            
+        }
     }
 }

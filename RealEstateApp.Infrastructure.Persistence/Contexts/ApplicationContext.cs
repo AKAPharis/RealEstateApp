@@ -69,14 +69,16 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .HasMany(x => x.Upgrades)
                 .WithOne(x => x.Property)
                 .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_RealEstateProperty_PropertyUpgrade");
             //RealStateProperty - ImageProperty
             modelBuilder.Entity<RealEstateProperty>()
                 .HasMany(x => x.Images)
                 .WithOne(x => x.Property)
                 .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_RealEstateProperty_ImageProperty");
-            //RealStateProperty - TypeProperty
+
             //RealStateProperty - TypeOfProperty
             modelBuilder.Entity<RealEstateProperty>()
                 .HasOne(x => x.TypeProperty)
@@ -94,12 +96,15 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .HasMany(x => x.Properties)
                 .WithOne(x => x.Upgrade)
                 .HasForeignKey(x => x.UpgradeId)
+                .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_Upgrade_PropertyUpgrade");
+            
             //FavoriteProperties - RealStateProperty
             modelBuilder.Entity<FavoriteProperty>()
                 .HasOne(x => x.Property)
                 .WithMany(x => x.FavoriteProperties)
                 .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FavoriteProperties_RealEstateProperty");
 
             #endregion
