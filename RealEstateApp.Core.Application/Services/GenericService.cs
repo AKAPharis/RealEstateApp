@@ -48,7 +48,8 @@ namespace RealEstateApp.Core.Application.Services
 
         public virtual async Task<ViewModel> GetByIdAsync(int id)
         {
-            return _mapper.Map<ViewModel>(await _repo.GetByIdAsync(id));
+            var entity = await _repo.GetByIdAsync(id);
+            return _mapper.Map<ViewModel>(entity);
         }
 
         public virtual async Task<SaveViewModel> UpdateAsync(SaveViewModel viewModel, int id)

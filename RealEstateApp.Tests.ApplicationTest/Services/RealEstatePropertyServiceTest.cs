@@ -4,30 +4,28 @@ using Microsoft.Extensions.DependencyInjection;
 using RealEstateApp.Core.Application;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
 using RealEstateApp.Infrastructure.Persistence;
+using RealEstateApp.Infrastructure.Persistence.Repositories;
+using RealEstateApp.Tests.ApplicationTest.Collections;
+using RealEstateApp.Tests.ApplicationTest.Fixtures;
 
 namespace RealEstateApp.Tests.ApplicationTest.Services
 {
-    [CollectionDefinition("RealEstatePropertyServiceTest")]
-    public class RealEstatePropertyServiceTestFixtureCollection : ICollectionFixture<RealEstatePropertyServiceTest>
-    {
-        // Esta clase no tiene contenido, pero es necesaria para definir la colección.
-    }
-
-    [Collection("RealEstatePropertyServiceTest")]
-    public class RealEstatePropertyServiceTest : IDisposable
+    [Collection(nameof(TestCollectionDefinition))]
+    public class RealEstatePropertyServiceTest : IClassFixture<ApplicationFixture>
     {
         private IRealEstatePropertyService _realEstatePropertyService;
         private IRealEstatePropertyRepository _realEstatePropertyRepository;
         private IPropertyImageRepository _propertyImageRepository;
         private IPropertyUpgradeRepository _propertyUpgradeRepository;
-        private IServiceCollection _services;
         private string path;
-        public RealEstatePropertyServiceTest()
+        private readonly ApplicationFixture _fixture;
+        public RealEstatePropertyServiceTest(ApplicationFixture fixture)
         {
-            _services = new ServiceCollection();
+            _fixture = fixture;
             Setup();
         }
         [Fact]
@@ -81,9 +79,9 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
         {
 
 
+            var all = await _realEstatePropertyRepository.GetAllAsync();
 
-
-            int propertyId = 3;
+            int propertyId = 1;
             await _realEstatePropertyService.DeleteAsync(propertyId);
             var propertyResult = await _realEstatePropertyRepository.GetByIdAsync(propertyId);
             var imagesResult = await _propertyImageRepository.GetAllAsync();
@@ -99,6 +97,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
         [Fact]
         public async void RealEstateProperty_UpdateAsync_ReturnSaveRealEstatePropertyViewModel()
         {
+            var all = await _realEstatePropertyRepository.GetAllAsync();
 
             SaveRealEstatePropertyViewModel vm = new SaveRealEstatePropertyViewModel()
             {
@@ -142,15 +141,6 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
         }
         private async void Setup()
         {
-            // Build service colection to create identity UserManager and RoleManager.           
-            _services.AddLogging();
-            _services.AddDistributedMemoryCache();
-            _services.AddSession();
-
-            // Add ASP.NET Core Identity database in memory.
-
-            _services.AddApplicationLayer();
-            _services.AddPersistenceLayerTest();
             path = "./wwwroot";
 
             if (Directory.Exists(path))
@@ -168,14 +158,17 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
 
                 Directory.Delete(path);
             }
+            _propertyImageRepository = new PropertyImageRepository(_fixture.Context);
+            _propertyUpgradeRepository = new PropertyUpgradeRepository(_fixture.Context);
+            _realEstatePropertyRepository = new RealEstatePropertyRepository(_fixture.Context);
 
-            var serviceProvider = _services.BuildServiceProvider();
-            _realEstatePropertyService = serviceProvider.GetRequiredService<IRealEstatePropertyService>();
-            _realEstatePropertyRepository = serviceProvider.GetRequiredService<IRealEstatePropertyRepository>();
-            _propertyUpgradeRepository = serviceProvider.GetRequiredService<IPropertyUpgradeRepository>();
-            _propertyImageRepository = serviceProvider.GetRequiredService<IPropertyImageRepository>();
+            _realEstatePropertyService = new RealEstatePropertyService(_realEstatePropertyRepository
+                ,_fixture.Mapper
+                , _propertyImageRepository
+                , _propertyUpgradeRepository
+                , new FavoritePropertyRepository(_fixture.Context));
 
-            await PropertySeeds();
+            //await PropertySeeds();
 
 
 
@@ -192,78 +185,74 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             return formFile;
         }
 
-        private async Task PropertySeeds()
-        {
-            var properties = await _realEstatePropertyRepository.GetAllAsync();
-            if (properties == null || properties.Count() == 0)
-            {
+        //private async Task PropertySeeds()
+        //{
+        //    var properties = await _realEstatePropertyRepository.GetAllAsync();
+        //    if (properties == null || properties.Count() == 0)
+        //    {
 
-                for (int i = 1; i <= 10; i++)
-                {
-                    var property = new RealEstateProperty
-                    {
-                        Id = i,
-                        AgentId = $"{i}",
-                        AgentName = $"Juan{i}",
-                        Description = "A property",
-                        Size = 10 + i,
-                        Guid = $"00033{i}",
-                        NumberOfBathrooms = i,
-                        NumberOfBedrooms = i,
-                        TypeOfSale = new TypeOfSale
-                        {
-                            Id = i,
-                            Name = "type of sale",
-                            Description = "a type of sale"
-                        },
-                        TypeOfSaleId = i,
-                        TypeProperty = new TypeOfProperty
-                        {
-                            Id = i,
-                            Name = "type of property",
-                            Description = "a type of property"
-                        },
-                        TypePropertyId = i,
-                        Price = 20000 * i,
-                        Upgrades = new List<PropertyUpgrade>
-                    {
-                        new PropertyUpgrade
-                        {
-                            PropertyId = i,
-                            UpgradeId = i,
-                            Upgrade = new Upgrade
-                            {
-                                Id = i,
-                                Description = "upgrade description",
-                                Name = "upgrade"
-                            }
-                        }
-                    },
-                        Images = new List<PropertyImage>
-                    {
-                        new PropertyImage
-                        {
-                            Id = i,
-                            PropertyId = i,
-                            ImagePath = $"image{i}.jpeg"
-                        }
-                    },
+        //        for (int i = 1; i <= 10; i++)
+        //        {
+        //            var property = new RealEstateProperty
+        //            {
+        //                Id = i,
+        //                AgentId = $"{i}",
+        //                AgentName = $"Juan{i}",
+        //                Description = "A property",
+        //                Size = 10 + i,
+        //                Guid = $"00033{i}",
+        //                NumberOfBathrooms = i,
+        //                NumberOfBedrooms = i,
+        //                TypeOfSale = new TypeOfSale
+        //                {
+        //                    Id = i,
+        //                    Name = "type of sale",
+        //                    Description = "a type of sale"
+        //                },
+        //                TypeOfSaleId = i,
+        //                TypeProperty = new TypeOfProperty
+        //                {
+        //                    Id = i,
+        //                    Name = "type of property",
+        //                    Description = "a type of property"
+        //                },
+        //                TypePropertyId = i,
+        //                Price = 20000 * i,
+        //                Upgrades = new List<PropertyUpgrade>
+        //            {
+        //                new PropertyUpgrade
+        //                {
+        //                    PropertyId = i,
+        //                    UpgradeId = i,
+        //                    Upgrade = new Upgrade
+        //                    {
+        //                        Id = i,
+        //                        Description = "upgrade description",
+        //                        Name = "upgrade"
+        //                    }
+        //                }
+        //            },
+        //                Images = new List<PropertyImage>
+        //            {
+        //                new PropertyImage
+        //                {
+        //                    Id = i,
+        //                    PropertyId = i,
+        //                    ImagePath = $"image{i}.jpeg"
+        //                }
+        //            },
 
 
 
-                    };
+        //            };
 
-                    await _realEstatePropertyRepository.CreateAsync(property);
+        //            await _realEstatePropertyRepository.CreateAsync(property);
 
-                }
+        //        }
 
-            }
+        //    }
 
-        }
+        //}
 
-        public void Dispose()
-        {
-            
-        }
     }
 }
