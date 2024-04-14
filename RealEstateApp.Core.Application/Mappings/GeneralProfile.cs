@@ -33,10 +33,11 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap()
                 .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => MapUpgrades(src)))
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => MapImages(src)));
+            #endregion
 
-            CreateMap<LoginViewModel, AuthenticationRequest>()
+            #region User
+            CreateMap<SaveUserViewModel, UserRegisterRequest>()
                 .ReverseMap();
-
             #endregion
 
             #region PropertyImage
