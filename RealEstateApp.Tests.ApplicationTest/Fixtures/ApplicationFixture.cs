@@ -27,13 +27,17 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
             var serviceProvider = services.BuildServiceProvider();
             Context = serviceProvider.GetRequiredService<ApplicationContext>();
             Mapper = serviceProvider.GetRequiredService<IMapper>();
-
+            Seeds();
 
         }
 
         public void Dispose()
         {
-            //codigo para limpiar la base de datos
+            var a = Context.Properties.ToList();
+            Context.Database.EnsureDeleted();
+            var e = Context.Properties.ToList();
+
+
         }
 
         private void Seeds()
@@ -42,21 +46,25 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
             {
                 new Upgrade()
                 {
+                    Id = 1,
                     Name = "yacuzzi",
                     Description = "this is a yacuzzi"
                 },
                 new Upgrade()
                 {
+                    Id = 2,
                     Name = "terrace",
                     Description = "this is a terrace"
                 },
                 new Upgrade()
                 {
+                    Id = 3,
                     Name = "barbecue",
                     Description = "this is a barbecue"
                 },
                 new Upgrade()
                 {
+                    Id = 4,
                     Name = "Basement",
                     Description = "this is a Basement"
                 }
@@ -64,25 +72,31 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
             };
 
             Context.Upgrades.AddRange(upgrades);
+
             List<TypeOfProperty> typeOfProperties = new List<TypeOfProperty>()
             {
                 new TypeOfProperty()
                 {
+                    Id= 1,
                     Name = "apartment",
                     Description = "this is a apartment"
                 },
                 new TypeOfProperty()
                 {
+                    Id = 2,
                     Name = "house",
                     Description = "this is a house"
                 },
                 new TypeOfProperty()
                 {
+                    Id = 3,
                     Name = "penthouse",
                     Description = "this is a penthouse"
                 },
                 new TypeOfProperty()
                 {
+
+                    Id = 4,
                     Name = "building",
                     Description = "this is a building"
                 }
@@ -95,21 +109,25 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
             {
                 new TypeOfSale()
                 {
+                    Id = 1,
                     Name = "rent",
                     Description = "this is a rent"
                 },
                 new TypeOfSale()
                 {
+                    Id = 2,
                     Name = "Standard",
                     Description = "this is a Standard"
                 },
                 new TypeOfSale()
                 {
+                    Id = 3,
                     Name = "Short",
                     Description = "this is a Short"
                 },
                 new TypeOfSale()
                 {
+                    Id = 4,
                     Name = "REO",
                     Description = "this is a REO"
                 }
@@ -118,6 +136,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
 
 
             Context.TypeOfSales.AddRange(typeOfSales);
+
             List<RealEstateProperty> realEstateProperties = new List<RealEstateProperty>()
             {
                 new RealEstateProperty
@@ -137,6 +156,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
                     {
                         new PropertyUpgrade
                         {
+                            
                             PropertyId = 1,
                             UpgradeId = 1,
 
@@ -146,6 +166,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
                     {
                         new PropertyImage
                         {
+                            Id = 1,
                             PropertyId = 1,
                             ImagePath = $"image1.jpeg"
                         }
@@ -171,6 +192,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
                     {
                         new PropertyUpgrade
                         {
+                            
                             PropertyId = 2,
                             UpgradeId = 3,
 
@@ -186,6 +208,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
                     {
                         new PropertyImage
                         {
+                            Id = 2,
                             PropertyId = 2,
                             ImagePath = $"image2.jpeg"
                         }
@@ -220,6 +243,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
                     {
                         new PropertyImage
                         {
+                            Id = 3,
                             PropertyId = 3,
                             ImagePath = $"image3.jpeg"
                         }
@@ -231,7 +255,53 @@ namespace RealEstateApp.Tests.ApplicationTest.Fixtures
             };
             Context.Properties.AddRange(realEstateProperties);
 
+            List<FavoriteProperty> favoriteProperties = new List<FavoriteProperty>()
+            {
+                new FavoriteProperty
+                {
+                    Id= 1,
+                    PropertyId = 1,
+                    UserId = "1",
+                },
+                new FavoriteProperty
+                {
+                    Id= 2,
+                    PropertyId = 1,
+                    UserId = "1",
+                },
+                new FavoriteProperty
+                {
+                    Id= 3,
+                    PropertyId = 2,
+                    UserId = "1",
+                },
+                new FavoriteProperty
+                {
+                    Id= 4,
+                    PropertyId = 3,
+                    UserId = "1",
+                }
+
+            };
+            Context.FavoriteProperties.AddRange(favoriteProperties);
+            try
+            {
+
+                Context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
     }
+    //[CollectionDefinition("ApplicationCollection")]
+    //public class ApplicationCollection : ICollectionFixture<ApplicationFixture>
+    //{
+    //    // This class has no code, and is never created. Its purpose is simply
+    //    // to be the place to apply [CollectionDefinition] and all the
+    //    // ICollectionFixture<> interfaces.
+    //}
+
 }

@@ -9,10 +9,12 @@ using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
 using RealEstateApp.Infrastructure.Persistence;
 using RealEstateApp.Infrastructure.Persistence.Repositories;
+using RealEstateApp.Tests.ApplicationTest.Collections;
 using RealEstateApp.Tests.ApplicationTest.Fixtures;
 
 namespace RealEstateApp.Tests.ApplicationTest.Services
 {
+    [Collection(nameof(TestCollectionDefinition))]
     public class RealEstatePropertyServiceTest : IClassFixture<ApplicationFixture>
     {
         private IRealEstatePropertyService _realEstatePropertyService;
@@ -77,9 +79,9 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
         {
 
 
+            var all = await _realEstatePropertyRepository.GetAllAsync();
 
-
-            int propertyId = 3;
+            int propertyId = 1;
             await _realEstatePropertyService.DeleteAsync(propertyId);
             var propertyResult = await _realEstatePropertyRepository.GetByIdAsync(propertyId);
             var imagesResult = await _propertyImageRepository.GetAllAsync();
@@ -95,6 +97,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
         [Fact]
         public async void RealEstateProperty_UpdateAsync_ReturnSaveRealEstatePropertyViewModel()
         {
+            var all = await _realEstatePropertyRepository.GetAllAsync();
 
             SaveRealEstatePropertyViewModel vm = new SaveRealEstatePropertyViewModel()
             {
