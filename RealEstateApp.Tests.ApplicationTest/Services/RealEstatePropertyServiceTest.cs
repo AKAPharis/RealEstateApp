@@ -75,6 +75,22 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             result.Id.Should().Be(check.Id);
         }
         [Fact]
+        public async void RealEstatePropertyService_GetAllByFilter_returnListRealEstatePropertyViewModel()
+        {
+            RealEstatePropertyFilterViewModel filter = new RealEstatePropertyFilterViewModel()
+            {
+                MaxPrice = 406350,
+                MinPrice = 100,
+                NumberOfBathrooms = 1,
+                NumberOfBedrooms = 2,
+                TypeOfProperty = 1,
+            };
+
+            var result = await _realEstatePropertyService.GetAllByFilter(filter);
+            result.Should().NotBeNullOrEmpty();
+
+        }
+        [Fact]
         public async void RealEstateProperty_DeleteAsync()
         {
 
