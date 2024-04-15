@@ -32,7 +32,7 @@ namespace RealEstateApp.Core.Application.Features.Upgrades.Queries.GetUpgradeByI
         public async Task<Response<UpgradeRequest>> Handle(GetUpgradeByIdQuery request, CancellationToken cancellationToken)
         {
             var upgrade = _mapper.Map<UpgradeRequest>(await _repository.GetByIdAsync(request.Id));
-            if (upgrade == null) throw new ApiException($"Upgrades not found.", (int)HttpStatusCode.NotFound);
+            if (upgrade == null) throw new ApiException($"Upgrades not found.", (int)HttpStatusCode.NoContent);
             return new Response<UpgradeRequest>(upgrade);
         }
     }

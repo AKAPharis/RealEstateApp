@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfProperties.Queries.GetAl
         public async Task<Response<IEnumerable<TypePropertyRequest>>> Handle(GetAllTypesOfPropertiesQuery request, CancellationToken cancellationToken)
         {
             var typeProperty = _mapper.Map<List<TypePropertyRequest>>(await _repository.GetAllAsync());
-            if (typeProperty.Count is 0) throw new ApiException($"There are no properties types.", (int)HttpStatusCode.NotFound);
+            if (typeProperty.Count is 0) throw new ApiException($"There are no properties types.", (int)HttpStatusCode.NoContent);
             return new Response<IEnumerable<TypePropertyRequest>>(typeProperty);
         }
     }

@@ -7,23 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\TypeOfProperties\Queries\GetAllProperties\**" />
+    <Compile Remove="Features\TypeOfProperties\Queries\GetTypePropertyById\**" />
     <Compile Remove="Features\Upgrade\**" />
+    <EmbeddedResource Remove="Features\TypeOfProperties\Queries\GetAllProperties\**" />
+    <EmbeddedResource Remove="Features\TypeOfProperties\Queries\GetTypePropertyById\**" />
     <EmbeddedResource Remove="Features\Upgrade\**" />
+    <None Remove="Features\TypeOfProperties\Queries\GetAllProperties\**" />
+    <None Remove="Features\TypeOfProperties\Queries\GetTypePropertyById\**" />
     <None Remove="Features\Upgrade\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\PropertiesRealEstates\" />
-    <Folder Include="Features\PropertiesRealEstates\Commands\CreatePropertyRealEstate\" />
-    <Folder Include="Features\PropertiesRealEstates\Commands\DeletePropertyRealEstate\" />
-    <Folder Include="Features\PropertiesRealEstates\Commands\UpdatePropertyRealEstate\" />
-    <Folder Include="Features\PropertiesRealEstates\Queries\GetAllProperties\" />
-    <Folder Include="Features\PropertiesRealEstates\Queries\GetPropertyById\" />
     <Folder Include="Features\TypeOfProperties\Commands\CreateTypeProperty\" />
     <Folder Include="Features\TypeOfProperties\Commands\DeleteTypeProperty\" />
     <Folder Include="Features\TypeOfProperties\Commands\UpdateTypeProperty\" />
-    <Folder Include="Features\TypeOfProperties\Queries\GetAllProperties\" />
-    <Folder Include="Features\TypeOfProperties\Queries\GetTypePropertyById\" />
     <Folder Include="Helpers\" />
     <Folder Include="Mappings\" />
     <Folder Include="Wrappers\" />

@@ -32,7 +32,7 @@ namespace RealEstateApp.Core.Application.Features.TypesOfSales.Queries.GetTypeOf
         public async Task<Response<TypeSaleRequest>> Handle(GetTypeOfSaleByIdQuery request, CancellationToken cancellationToken)
         {
             var typeSale = _mapper.Map<TypeSaleRequest>(await _repository.GetByIdAsync(request.Id));
-            if (typeSale == null) throw new ApiException($"Type of sale not found.", (int)HttpStatusCode.NotFound);
+            if (typeSale == null) throw new ApiException($"Type of sale not found.", (int)HttpStatusCode.NoContent);
             return new Response<TypeSaleRequest>(typeSale);
         }
     }
