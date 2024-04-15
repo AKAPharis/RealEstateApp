@@ -36,11 +36,9 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => MapUpgrades(src)))
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => MapImages(src)));
 
-<<<<<<< HEAD
             CreateMap<RealEstateProperty, RealEstateRequest>()
                 .ReverseMap();
 
-=======
             CreateMap<RealEstatePropertyFilterViewModel,RealEstatePropertyFilterDTO>()
                 .ReverseMap();
 
@@ -62,7 +60,6 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.TypeOfSale, opt => opt.Ignore())
                 .ForMember(x => x.TypeProperty, opt => opt.Ignore());
 
->>>>>>> Testing
             #endregion
 
             #region User
@@ -121,18 +118,11 @@ namespace RealEstateApp.Core.Application.Mappings
 
             #endregion
 
-<<<<<<< HEAD
-=======
             #region FavoritePropertyProfile
             CreateMap<FavoriteProperty, CreateFavoritePropertyViewModel>()
                 .ReverseMap();
             #endregion
 
-            #region PropertyUpgradeProfile
-
-            #endregion
-
->>>>>>> Testing
             #region CQRS
 
             #region CQRS RealEstateProperty

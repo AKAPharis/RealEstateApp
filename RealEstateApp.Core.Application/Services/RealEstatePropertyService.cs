@@ -6,12 +6,6 @@ using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
-<<<<<<< HEAD
-=======
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using static System.Net.Mime.MediaTypeNames;
->>>>>>> Testing
 
 namespace RealEstateApp.Core.Application.Services
 {
