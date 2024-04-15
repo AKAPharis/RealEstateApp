@@ -12,13 +12,13 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentPropert
     /// <summary>
     /// Parámetros para obtener las propiedades por su agente
     /// </summary>
-    public class GetAgentPropertyQuery : IRequest<Response<RealEstateRequest>>
+    public class GetAgentPropertyQuery : IRequest<Response<IEnumerable<RealEstateRequest>>>
     {
         [SwaggerParameter(Description = "El id del agente para encontrar las propiedades")]
         public string Id { get; set; }
     }
 
-    public class GetAgentPropertyQueryHandler : IRequestHandler<GetAgentPropertyQuery, Response<RealEstateRequest>>
+    public class GetAgentPropertyQueryHandler : IRequestHandler<GetAgentPropertyQuery, Response<IEnumerable<RealEstateRequest>>>
     {
         private readonly IRealEstatePropertyRepository _realEstatePropertyRepository;
         private readonly IMapper _mapper;
@@ -29,11 +29,11 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentPropert
             _mapper = mapper;
         }
 
-        public async Task<Response<RealEstateRequest>> Handle(GetAgentPropertyQuery request, CancellationToken cancellationToken)
+        public async Task<Response<IEnumerable<RealEstateRequest>>> Handle(GetAgentPropertyQuery request, CancellationToken cancellationToken)
         {
-            var properties = _mapper.Map<RealEstateRequest>(await _realEstatePropertyRepository.GetByAgentAsync(request.Id));
+            var properties = _mapper.Map<List<RealEstateRequest>>(await _realEstatePropertyRepository.GetByAgentAsync(request.Id));
             if (properties == null) throw new ApiException($"There are no properties from this agent.", (int)HttpStatusCode.NoContent);
-            return new Response<RealEstateRequest>(properties);
+            return new Response<IEnumerable<RealEstateRequest>>(properties);
         }
     }
 }

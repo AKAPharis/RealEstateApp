@@ -32,7 +32,7 @@ namespace RealEstateApp.Core.Application.Features.Agents.Queries.GetAgentById
 
         public async Task<Response<UserDTO>> Handle(GetAgentByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<UserDTO>(await _accountService.GetByIdAsync(request.Id));
+            var user = _mapper.Map<UserDTO>(await _accountService.GetByIdAsyncDTO(request.Id));
             if (user == null && user.Roles.Contains(UserRoles.RealEstateAgent.ToString())) throw new ApiException($"Agent not found.", (int)HttpStatusCode.NoContent);
             return new Response<UserDTO>(user);
         }

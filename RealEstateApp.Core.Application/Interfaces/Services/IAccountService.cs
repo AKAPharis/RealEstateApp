@@ -6,6 +6,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
     public interface IAccountService
     {
         Task<UserViewModel> GetByIdAsync(string id);
+        Task<UserDTO> GetByIdAsyncDTO(string id);
         Task<List<UserViewModel>> GetAllByRoleViewModel(string Role);
         Task<List<UserDTO>> GetAllByRoleDTO(string Role);
 

@@ -31,7 +31,7 @@ namespace RealEstateApp.Core.Application.Features.PropertiesRealEstates.Queries.
 
         public async Task<Response<RealEstateRequest>> Handle(GetPropertyByCodeQuery request, CancellationToken cancellationToken)
         {
-            var property = _mapper.Map<RealEstateRequest>(await _repositorty.GetByGuid(request.Guid));
+            var property = _mapper.Map<RealEstateRequest>(await _repositorty.GetByGuidAsync(request.Guid));
             if (property == null) throw new ApiException($"Property not found.", (int)HttpStatusCode.NoContent);
             return new Response<RealEstateRequest>(property);
         }
