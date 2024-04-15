@@ -74,10 +74,10 @@
                                 </a>
                                 <ul class="dropdown-menu shadow">
                                     <li><a asp-controller="Administrator" asp-action="Index" class="dropdown-item small text-white">Administrators</a></li>
-                                    <li><a class="dropdown-item small text-white" href="#">Developers</a></li>
-                                    <li><a class="dropdown-item small text-white" href="#">Type of Properties</a></li>
-                                    <li><a class="dropdown-item small text-white" href="#">Type of Sales</a></li>
-                                    <li><a class="dropdown-item small text-white" href="#">Upgrades</a></li>
+                                    <li><a asp-controller="Developer" asp-action="Index" class="dropdown-item small text-white">Developers</a></li>
+                                    <li><a asp-controller="PropertyType" asp-action="Index" class="dropdown-item small text-white">Type of Properties</a></li>
+                                    <li><a asp-controller="SalesType" asp-action="Index" class="dropdown-item small text-white">Type of Sales</a></li>
+                                    <li><a asp-controller="Upgrade" asp-action="Index" class="dropdown-item small text-white">Upgrades</a></li>
                                 </ul>
                             </li>
                         }
