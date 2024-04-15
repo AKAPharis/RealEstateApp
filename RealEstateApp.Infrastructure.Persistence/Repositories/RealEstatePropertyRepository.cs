@@ -17,7 +17,7 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
             return await _dbSet.Where(x => x.AgentId == agentId).ToListAsync();
         }
 
-        public async Task<RealEstateProperty> GetByGuid(string guid)
+        public async Task<RealEstateProperty> GetByGuidAsync(string guid)
         {
             return await _dbSet.FirstOrDefaultAsync(x => x.Guid == guid);
         }
