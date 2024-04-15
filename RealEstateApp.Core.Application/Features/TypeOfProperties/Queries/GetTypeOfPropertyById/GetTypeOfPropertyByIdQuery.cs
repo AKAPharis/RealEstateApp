@@ -32,7 +32,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfProperties.Queries.GetTy
         public async Task<Response<TypePropertyRequest>> Handle(GetTypeOfPropertyByIdQuery request, CancellationToken cancellationToken)
         {
             var typeProperty = _mapper.Map<TypePropertyRequest>(await _repository.GetByIdAsync(request.Id));
-            if (typeProperty == null) throw new ApiException($"Type of Property not found.", (int)HttpStatusCode.NotFound);
+            if (typeProperty == null) throw new ApiException($"Type of Property not found.", (int)HttpStatusCode.NoContent);
             return new Response<TypePropertyRequest>(typeProperty);
         }
     }

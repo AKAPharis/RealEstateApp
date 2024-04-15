@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.TypesOfSales.Queries.GetAllTyp
         public async Task<Response<IEnumerable<TypeSaleRequest>>> Handle(GetAllTypesOfSalesQuery request, CancellationToken cancellationToken)
         {
             var typeSales = _mapper.Map<List<TypeSaleRequest>>(await _repository.GetAllAsync());
-            if (typeSales.Count is 0) throw new ApiException($"There are no sales types.", (int)HttpStatusCode.NotFound);
+            if (typeSales.Count is 0) throw new ApiException($"There are no sales types.", (int)HttpStatusCode.NoContent);
             return new Response<IEnumerable<TypeSaleRequest>>(typeSales);
         }
     }

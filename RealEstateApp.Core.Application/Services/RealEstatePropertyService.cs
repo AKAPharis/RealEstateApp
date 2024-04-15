@@ -6,9 +6,6 @@ using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RealEstateApp.Core.Application.Services
 {

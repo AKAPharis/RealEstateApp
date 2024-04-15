@@ -241,6 +241,18 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return userVm;
         }
 
+        public async Task<UserDTO> GetByIdAsyncDTO(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<UserDTO>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
         public async Task<SaveUserViewModel> GetByIdSaveViewModelAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -257,6 +269,18 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         {
             var user = await _userManager.FindByNameAsync(username);
             var userVm = _mapper.Map<UserViewModel>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
+        public async Task<UserDTO> GetByIdRoleAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<UserDTO>(user);
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);

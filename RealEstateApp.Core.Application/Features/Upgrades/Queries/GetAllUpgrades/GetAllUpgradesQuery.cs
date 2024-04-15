@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.Upgrades.Queries.GetAllUpgrade
         public async Task<Response<IEnumerable<UpgradeRequest>>> Handle(GetAllUpgradesQuery request, CancellationToken cancellationToken)
         {
             var typeSales = _mapper.Map<List<UpgradeRequest>>(await _repository.GetAllAsync());
-            if (typeSales.Count is 0) throw new ApiException($"There are no upgrades.", (int)HttpStatusCode.NotFound);
+            if (typeSales.Count is 0) throw new ApiException($"There are no upgrades.", (int)HttpStatusCode.NoContent);
             return new Response<IEnumerable<UpgradeRequest>>(typeSales);
         }
     }
