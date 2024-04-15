@@ -11,104 +11,85 @@ using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 using RealEstateApp.Core.Domain.Models;
 using RealEstateApp.Infrastructure.Persistence;
 using RealEstateApp.Infrastructure.Persistence.Repositories;
+using RealEstateApp.Tests.ApplicationTest.Collections;
+using RealEstateApp.Tests.ApplicationTest.Fixtures;
 
 namespace RealEstateApp.Tests.ApplicationTest.Services
 {
-    public class TypeOfPropertyServiceTest
+    [Collection(nameof(TestCollectionDefinition))]
+    public class TypeOfPropertyServiceTest : IClassFixture<ApplicationFixture>
     {
-        private IServiceCollection _services;
         private ITypeOfPropertyRepository _typeOfPropertyRepository;
         private ITypeOfPropertyService _typeOfPropertyService;
         private IRealEstatePropertyRepository _realEstatePropertyRepository;
-        public TypeOfPropertyServiceTest()
+        private readonly ApplicationFixture _fixture;
+        public TypeOfPropertyServiceTest(ApplicationFixture fixture)
         {
-            _services = new ServiceCollection();
-            //Setup();
+            _fixture = fixture;
+            Setup();
         }
-        //[Fact]
-        //public async void TypeOfPropertyService_CreateAsync_ReturnSaveTypeOfPropertyViewModel()
-        //{
-        //    SaveTypeOfPropertyViewModel viewModel = new SaveTypeOfPropertyViewModel()
-        //    {
-        //        Name = "Apartment",
-        //        Description = "Description",
-        //    };
+        [Fact]
+        public async void TypeOfPropertyService_CreateAsync_ReturnSaveTypeOfPropertyViewModel()
+        {
+            SaveTypeOfPropertyViewModel viewModel = new SaveTypeOfPropertyViewModel()
+            {
+                Name = "Apartment",
+                Description = "Description",
+            };
 
 
-        //    var result = await _typeOfPropertyService.CreateAsync(viewModel);
-        //    var check = await _typeOfPropertyService.GetByIdAsync(result.Id.Value);
-        //    result.Should().BeOfType<SaveTypeOfPropertyViewModel>();
-        //    check.Should().NotBeNull();
-        //    result.Id.Should().Be(check.Id);
+            var result = await _typeOfPropertyService.CreateAsync(viewModel);
+            var check = await _typeOfPropertyService.GetByIdAsync(result.Id.Value);
+            result.Should().BeOfType<SaveTypeOfPropertyViewModel>();
+            check.Should().NotBeNull();
+            result.Id.Should().Be(check.Id);
 
-        //}
-        //[Fact]
-        //public async void TypeOfPropertyService_DeleteAsync()
-        //{
-
-
-        //    int typeOfPropertyId = 25;
-        //    await _typeOfPropertyService.DeleteAsync(typeOfPropertyId);
-        //    var typeOfPropertyResult = await _realEstatePropertyRepository.GetByIdAsync(typeOfPropertyId);
-        //    var properties = await _realEstatePropertyRepository.GetAllAsync();
-        //    properties = properties.Where(x => x.TypePropertyId == typeOfPropertyId).ToList();
-
-        //    typeOfPropertyResult.Should().BeNull();
-        //    properties.Should().BeNullOrEmpty();
+        }
+        [Fact]
+        public async void TypeOfPropertyService_DeleteAsync()
+        {
 
 
-        //}
-        //[Fact]
-        //public async void TypeOfPropertyService_UpdateAsync_ReturnSaveTypeOfPropertyViewModel()
-        //{
+            int typeOfPropertyId = 2;
+            await _typeOfPropertyService.DeleteAsync(typeOfPropertyId);
+            var typeOfPropertyResult = await _typeOfPropertyRepository.GetByIdAsync(typeOfPropertyId);
+            var properties = await _realEstatePropertyRepository.GetAllAsync();
+            properties = properties.Where(x => x.TypePropertyId == typeOfPropertyId).ToList();
 
-          
-        //}
-        //private async void Setup()
-        //{
-        //    // Build service colection to create identity UserManager and RoleManager.           
-        //    _services.AddLogging();
-        //    _services.AddDistributedMemoryCache();
-        //    _services.AddSession();
-
-        //    // Add ASP.NET Core Identity database in memory.
-
-        //    _services.AddApplicationLayer();
-        //    _services.AddPersistenceLayerTest();
+            typeOfPropertyResult.Should().BeNull();
+            properties.Should().BeNullOrEmpty();
 
 
-        //    var serviceProvider = _services.BuildServiceProvider();
-        //    _realEstatePropertyRepository = serviceProvider.GetRequiredService<IRealEstatePropertyRepository>();
-        //    _typeOfPropertyService = serviceProvider.GetRequiredService<ITypeOfPropertyService>();
-        //    _typeOfPropertyRepository = serviceProvider.GetRequiredService<ITypeOfPropertyRepository>();
-        //    await TypeOfPropertySeeds();
+        }
+        [Fact]
+        public async void TypeOfPropertyService_UpdateAsync_ReturnSaveTypeOfPropertyViewModel()
+        {
+            SaveTypeOfPropertyViewModel viewModel = new SaveTypeOfPropertyViewModel()
+            {
+                Id = 1,
+                Name = "Apartment",
+                Description = "Description",
+            };
+
+
+            var result = await _typeOfPropertyService.UpdateAsync(viewModel, viewModel.Id.Value);
+            var check = await _typeOfPropertyService.GetByIdAsync(viewModel.Id.Value);
+            result.Should().BeOfType<SaveTypeOfPropertyViewModel>();
+            check.Should().NotBeNull();
+            result.Should().BeEquivalentTo(viewModel);
+
+
+        }
+        private void Setup()
+        {
+            _typeOfPropertyRepository = new TypeOfPropertyRepository(_fixture.Context);
+            _realEstatePropertyRepository = new RealEstatePropertyRepository(_fixture.Context);
+            _typeOfPropertyService = new TypeOfPropertyService(_typeOfPropertyRepository, _fixture.Mapper);
 
 
 
+        }
 
-        //}
-
-
-        //private async Task TypeOfPropertySeeds()
-        //{
-        //   var typeOfProperties = await _typeOfPropertyRepository.GetAllAsync();
-        //    if(typeOfProperties == null || typeOfProperties.Count() == 0)
-        //    {
-        //        for (int i = 20; i <= 30; i++)
-        //        {
-
-        //            var typeOfProperty = new TypeOfProperty()
-        //            {
-        //                Name = $"typeP{1}",
-        //                Description = $"This is the typeP{i}"
-        //            };
-        //            await _typeOfPropertyRepository.CreateAsync(typeOfProperty);
-
-        //        }
-
-        //    }
-
-        //}
     }
 
 }

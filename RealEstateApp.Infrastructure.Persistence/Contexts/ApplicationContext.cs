@@ -84,12 +84,14 @@ namespace RealEstateApp.Infrastructure.Persistence.Contexts
                 .HasOne(x => x.TypeProperty)
                 .WithMany(x => x.Properties)
                 .HasForeignKey(x => x.TypePropertyId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_RealEstateProperty_TypeProperty");
             //RealStateProperty - TypeOfSale
             modelBuilder.Entity<RealEstateProperty>()
                 .HasOne(x => x.TypeOfSale)
                 .WithMany(x => x.Properties)
                 .HasForeignKey(x => x.TypeOfSaleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_RealEstateProperty_TypeOfSale");
             //Upgrade - PropertyUpgrade
             modelBuilder.Entity<Upgrade>()

@@ -1,10 +1,17 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Application.Enums.Upload;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
+<<<<<<< HEAD
+=======
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using static System.Net.Mime.MediaTypeNames;
+>>>>>>> Testing
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -21,11 +28,17 @@ namespace RealEstateApp.Core.Application.Services
             _upgradeRepository = upgradeRepository;
             _favoriteRepository = favoriteRepository;
         }
-
+        
         public async Task<List<RealEstatePropertyViewModel>> GetByAgentAsync(string agentId)
         {
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
         }
+
+        public async Task<List<RealEstatePropertyViewModel>> GetByGuidAsync(string guid)
+        {
+            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByGuidAsync(guid));
+        }
+
 
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
         {
@@ -35,7 +48,7 @@ namespace RealEstateApp.Core.Application.Services
             do
             {
 
-                propertyWithSameGuid = await _repository.GetByGuid(guid);
+                propertyWithSameGuid = await _repository.GetByGuidAsync(guid);
             } while (propertyWithSameGuid != null);
             viewModel.Guid = guid;
 
@@ -187,6 +200,10 @@ namespace RealEstateApp.Core.Application.Services
 
         }
 
+        public async Task<List<RealEstatePropertyViewModel>> GetAllByFilter(RealEstatePropertyFilterViewModel filter)
+        {
+            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllByFilter(_mapper.Map<RealEstatePropertyFilterDTO>(filter)));
+        }
  
     }
 }

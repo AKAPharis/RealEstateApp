@@ -14,5 +14,9 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         {
             return await _dbSet.Where(x => x.PropertyId == propertyId).ToListAsync();
         }
+        public async Task<List<PropertyUpgrade>> GetAllByUpgrade(int upgradeId)
+        {
+            return await _dbSet.Where(x => x.UpgradeId == upgradeId).ToListAsync();
+        }
     }
 }
