@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Application.Enums.Upload;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -23,7 +25,7 @@ namespace RealEstateApp.Core.Application.Services
             _upgradeRepository = upgradeRepository;
             _favoriteRepository = favoriteRepository;
         }
-
+        
         public async Task<List<RealEstatePropertyViewModel>> GetByAgentAsync(string agentId)
         {
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
@@ -189,6 +191,10 @@ namespace RealEstateApp.Core.Application.Services
 
         }
 
+        public async Task<List<RealEstatePropertyViewModel>> GetAllByFilter(RealEstatePropertyFilterViewModel filter)
+        {
+            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllByFilter(_mapper.Map<RealEstatePropertyFilterDTO>(filter)));
+        }
  
     }
 }
