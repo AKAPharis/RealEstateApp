@@ -40,5 +40,15 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
                 (filter.NumberOfBedrooms <= 0 ? (true) : p.NumberOfBedrooms == filter.NumberOfBedrooms))
                 .ToListAsync(); 
         }
+        public async Task<int> GetTotalProperties()
+        {
+            return await _dbSet.CountAsync();
+        }
+
+        public async Task<int> GetTotalPropertiesByAgent(string agentId)
+        {
+            return await _dbSet.Where(x => x.AgentId == agentId).CountAsync();
+        }
+
     }
 }

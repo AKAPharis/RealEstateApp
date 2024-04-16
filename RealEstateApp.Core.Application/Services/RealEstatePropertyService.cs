@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Application.Enums.Upload;
 using RealEstateApp.Core.Application.Helpers;
@@ -198,6 +199,16 @@ namespace RealEstateApp.Core.Application.Services
         {
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllByFilter(_mapper.Map<RealEstatePropertyFilterDTO>(filter)));
         }
- 
+
+
+        public async Task<int> GetTotalProperties()
+        {
+            return await _repository.GetTotalProperties();
+        }
+
+        public async Task<int> GetTotalPropertiesByAgent(string agentId)
+        {
+            return await _repository.GetTotalPropertiesByAgent(agentId);
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
     {
         Task<List<RealEstatePropertyViewModel>> GetByAgentAsync(string agentId);
         Task<List<RealEstatePropertyViewModel>> GetAllByFilter(RealEstatePropertyFilterViewModel filter);
+        Task<int> GetTotalProperties();
+        Task<int> GetTotalPropertiesByAgent(string agentId);
     }
 }

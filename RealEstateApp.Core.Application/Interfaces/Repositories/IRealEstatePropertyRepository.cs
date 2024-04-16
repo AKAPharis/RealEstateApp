@@ -1,4 +1,5 @@
-﻿using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
+﻿using Microsoft.EntityFrameworkCore;
+using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Domain.Models;
 
 namespace RealEstateApp.Core.Application.Interfaces.Repositories
@@ -9,5 +10,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
         Task<RealEstateProperty> GetByGuidAsync(string guid);
         Task<RealEstateProperty> GetByIdWithIncludeAsync(int id, List<string> properties);
         Task<List<RealEstateProperty>> GetAllByFilter(RealEstatePropertyFilterDTO filter);
+        Task<int> GetTotalProperties();
+        Task<int> GetTotalPropertiesByAgent(string agentId);
     }
 }
