@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.WebApp.Models;
 using System.Diagnostics;
 
@@ -6,16 +7,16 @@ namespace RealEstateApp.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IRealEstatePropertyService _propertyService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IRealEstatePropertyService propertyService)
         {
-            _logger = logger;
+            _propertyService = propertyService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _propertyService.GetAllAsync());
         }
 
         public IActionResult Agents()
