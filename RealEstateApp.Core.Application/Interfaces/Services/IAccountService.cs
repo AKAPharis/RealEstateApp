@@ -20,8 +20,8 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin);
         Task<List<UserViewModel>> GetAll();
         Task SignOutAsync();
-        Task<int> GetActiveUsers();
-        Task<int> GetInactiveUsers();
+        Task<int> GetActiveUsers(string? role = null);
+        Task<int> GetInactiveUsers(string? role = null);
         Task DeactivateUser(string id);
         Task ActivateUser(string id);
     }

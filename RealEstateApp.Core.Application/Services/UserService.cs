@@ -41,9 +41,9 @@ namespace RealEstateApp.Core.Application.Services
             return await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
         }
 
-        public async Task<int> GetActiveUsers()
+        public async Task<int> GetActiveUsers(string? role = null)
         {
-            return await _accountService.GetActiveUsers();
+            return await _accountService.GetActiveUsers(role);
         }
 
         public async Task<List<UserViewModel>> GetAll()
@@ -76,9 +76,9 @@ namespace RealEstateApp.Core.Application.Services
             return await _accountService.GetByUsernameAsync(username);
         }
 
-        public async Task<int> GetInactiveUsers()
+        public async Task<int> GetInactiveUsers(string? role = null)
         {
-            return await _accountService.GetInactiveUsers();
+            return await _accountService.GetInactiveUsers(role);
         }
 
         public async Task<UserRegisterResponse> RegisterUserAsync(SaveUserViewModel request, string origin)
