@@ -26,6 +26,7 @@ namespace RealEstateApp.Core.Application.Mappings
             #region RealEstateProfile
 
             CreateMap<RealEstateProperty, RealEstatePropertyViewModel>()
+                .ForMember(x => x.Images, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath)))
                 .ReverseMap();
 
             CreateMap<RealEstateProperty, SaveRealEstatePropertyViewModel>()
@@ -35,31 +36,11 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap()
                 .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => MapUpgrades(src)))
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => MapImages(src)));
+            #endregion
 
-            CreateMap<RealEstateProperty, RealEstateRequest>()
+            #region User
+            CreateMap<SaveUserViewModel, UserRegisterRequest>()
                 .ReverseMap();
-
-            CreateMap<RealEstatePropertyFilterViewModel,RealEstatePropertyFilterDTO>()
-                .ReverseMap();
-
-            CreateMap<PropertyUpgrade, RealEstatePropertyViewModel>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Property.Id))
-                .ForMember(x => x.Guid, opt => opt.MapFrom(src => src.Property.Guid))
-                .ForMember(x => x.Updated, opt => opt.MapFrom(src => src.Property.Updated))
-                .ForMember(x => x.Created, opt => opt.MapFrom(src => src.Property.Created))
-                .ForMember(x => x.NumberOfBathrooms, opt => opt.MapFrom(src => src.Property.NumberOfBathrooms))
-                .ForMember(x => x.NumberOfBedrooms, opt => opt.MapFrom(src => src.Property.NumberOfBedrooms))
-                .ForMember(x => x.AgentId, opt => opt.MapFrom(src => src.Property.AgentId))
-                .ForMember(x => x.AgentName, opt => opt.MapFrom(src => src.Property.AgentName))
-                .ForMember(x => x.Description, opt => opt.MapFrom(src => src.Property.Description))
-                .ForMember(x => x.TypePropertyId, opt => opt.MapFrom(src => src.Property.TypePropertyId))
-                .ForMember(x => x.TypeOfSaleId, opt => opt.MapFrom(src => src.Property.TypeOfSaleId))
-                .ForMember(x => x.Price, opt => opt.MapFrom(src => src.Property.Price))
-                .ForMember(x => x.Size, opt => opt.MapFrom(src => src.Property.Size))
-                .ForMember(x => x.Upgrades, opt => opt.Ignore())
-                .ForMember(x => x.TypeOfSale, opt => opt.Ignore())
-                .ForMember(x => x.TypeProperty, opt => opt.Ignore());
-
             #endregion
 
             #region User
@@ -107,7 +88,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap();
 
             CreateMap<PropertyUpgrade, UpgradeViewModel>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Upgrade.Id))
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.UpgradeId))
                 .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Upgrade.Name))
                 .ForMember(x => x.Description, opt => opt.MapFrom(src => src.Upgrade.Description))
                 .ForMember(x => x.Properties, opt => opt.Ignore());
@@ -122,6 +103,7 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<FavoriteProperty, CreateFavoritePropertyViewModel>()
                 .ReverseMap();
             #endregion
+           
 
             #region CQRS
 

@@ -208,12 +208,18 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return response;
         }
 
-        public async Task<int> GetActiveUsers()
+        public async Task<int> GetActiveUsers(string? role = null)
         {
-            var users = await _userManager.Users.Where(x => x.IsActive).ToArrayAsync();
+            var users = await _userManager.Users.Where(x => x.IsActive).ToListAsync();
+            users = users.Where(x =>  role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
             return users.Count();
         }
-
+        public async Task<int> GetInactiveUsers(string? role = null)
+        {
+            var users = await _userManager.Users.Where(x => !x.IsActive).ToListAsync();
+            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
+            return users.Count();
+        }
         public async Task<List<UserViewModel>> GetAll()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -289,11 +295,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return userVm;
         }
 
-        public async Task<int> GetInactiveUsers()
-        {
-            var users = await _userManager.Users.Where(x => !x.IsActive).ToArrayAsync();
-            return users.Count();
-        }
+ 
 
         public async Task<UserRegisterResponse> RegisterUserAsync(UserRegisterRequest request, string origin)
         {

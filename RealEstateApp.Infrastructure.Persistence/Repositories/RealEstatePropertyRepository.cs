@@ -30,6 +30,15 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
             }
             return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<List<RealEstateProperty>> GetAllWithIncludeAsync()
+        {
+            return await _dbSet.Include(x => x.Upgrades)
+                .ThenInclude(x => x.Upgrade)
+                .Include(x => x.Images)
+                .Include(x => x.TypeProperty)
+                .Include(x => x.TypeOfSale)
+                .ToListAsync();
+        }
         public async Task<List<RealEstateProperty>> GetAllByFilter(RealEstatePropertyFilterDTO filter)
         {
             return await _dbSet.Where(p =>
@@ -40,5 +49,15 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
                 (filter.NumberOfBedrooms <= 0 ? (true) : p.NumberOfBedrooms == filter.NumberOfBedrooms))
                 .ToListAsync(); 
         }
+        public async Task<int> GetTotalProperties()
+        {
+            return await _dbSet.CountAsync();
+        }
+
+        public async Task<int> GetTotalPropertiesByAgent(string agentId)
+        {
+            return await _dbSet.Where(x => x.AgentId == agentId).CountAsync();
+        }
+
     }
 }
