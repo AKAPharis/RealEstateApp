@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.Account;
+using RealEstateApp.Core.Application.Helpers;
+using System.Data;
+using RealEstateApp.Core.Application.Enums.Roles;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -9,11 +13,14 @@ namespace RealEstateApp.Core.Application.Services
     {
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public UserService(IAccountService accountService, IMapper mapper)
+
+        public UserService(IAccountService accountService, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _accountService = accountService;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task ActivateUser(string id)
@@ -38,6 +45,23 @@ namespace RealEstateApp.Core.Application.Services
 
         public async Task<UserEditResponse> EditUserAsync(SaveUserViewModel request, string origin)
         {
+            var result = new UserEditResponse();
+            var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
+            if (loggedUser == null)
+            {
+
+                result.Error = "You need to be logged to edit an user";
+                result.HasError = true;
+                return result;
+            }
+
+            if (loggedUser.Roles.Contains(nameof(UserRoles.Admin)) && request.Id == loggedUser.Id)
+            {
+                result.Error = "You cannot edit yourself";
+                result.HasError = true;
+                return result;
+            }
             return await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
         }
 
