@@ -44,6 +44,7 @@ namespace RealEstateApp.Core.Application.Services
             {
 
                 propertyWithSameGuid = await _repository.GetByGuidAsync(guid);
+
             } while (propertyWithSameGuid != null);
             viewModel.Guid = guid;
 
