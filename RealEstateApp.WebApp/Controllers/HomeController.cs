@@ -16,7 +16,9 @@ namespace RealEstateApp.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _propertyService.GetAllAsync());
+            var list = await _propertyService.GetAllAsync();
+
+            return View(list);
         }
 
         public IActionResult Agents()
