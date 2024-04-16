@@ -12,5 +12,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
         Task<List<RealEstateProperty>> GetAllByFilter(RealEstatePropertyFilterDTO filter);
         Task<int> GetTotalProperties();
         Task<int> GetTotalPropertiesByAgent(string agentId);
+        Task<List<RealEstateProperty>> GetAllWithIncludeAsync();
     }
 }

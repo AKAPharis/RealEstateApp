@@ -201,7 +201,14 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllByFilter(_mapper.Map<RealEstatePropertyFilterDTO>(filter)));
         }
 
-
+        public async Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync(List<string> properties)
+        {
+            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllWithIncludeAsync(properties));
+        }
+        public async Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync()
+        {
+            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllWithIncludeAsync());
+        }
         public async Task<int> GetTotalProperties()
         {
             return await _repository.GetTotalProperties();

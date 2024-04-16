@@ -10,5 +10,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<List<RealEstatePropertyViewModel>> GetAllByFilter(RealEstatePropertyFilterViewModel filter);
         Task<int> GetTotalProperties();
         Task<int> GetTotalPropertiesByAgent(string agentId);
+        Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync(List<string> properties);
+        Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync();
     }
 }
