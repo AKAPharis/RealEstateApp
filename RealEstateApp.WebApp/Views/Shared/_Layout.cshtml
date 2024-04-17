@@ -12,7 +12,7 @@
     var isAgent = User != null ? User.Roles.Any(r => r == "RealEstateAgent") : false;
 }
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +30,7 @@
     @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css"> *@
 
 </head>
-<body>
+<body class="h-100">
     <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
 
         @if (User != null)
@@ -144,13 +144,13 @@
             </div>
         }
 
-        <div class="container-fluid p-0">
-            <main role="main" class="pb-5 mb-5">
+         <div class="container-fluid p-0">
+          <main role="main">
                 @RenderBody()
             </main>
-        </div>
+         </div>
 
-        <footer class="footer py-3 mt-auto">
+        <footer class="py-3 mt-auto">
             <div class="container d-flex flex-wrap justify-content-between align-items-center">
                 <p class="col-md-4 mb-0 text-body-secondary">© @DateTime.Now.Year Danderi, Inc</p>
 

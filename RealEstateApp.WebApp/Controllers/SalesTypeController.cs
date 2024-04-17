@@ -27,5 +27,12 @@ namespace RealEstateApp.WebApp.Controllers
             await _typeOfSaleService.CreateAsync(vm);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Edit(int Id) 
+        {
+            SaveTypeOfSaleViewModel vm = await _typeOfSaleService.GetByIdSaveViewModelAsync(Id);
+            return View("SaveSaleType", vm);
+        } 
+
     }
 }

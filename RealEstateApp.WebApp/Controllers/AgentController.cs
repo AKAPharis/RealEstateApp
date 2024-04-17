@@ -48,6 +48,6 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult EditAgent => View();
+        public IActionResult Edit => View();
     }
 }
