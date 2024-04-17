@@ -3,6 +3,7 @@ using RealEstateApp.Core.Application.ViewModels.TypeOfProperty;
 using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 using RealEstateApp.Core.Application.ViewModels.Upgrade;
 using RealEstateApp.Core.Domain.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
 {
@@ -20,7 +21,8 @@ namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
         public int TypeOfSaleId { get; set; }
         public int TypePropertyId { get; set; }
         public List<int> Upgrades { get; set; }
-        
+
+        [DataType(DataType.Upload)]
         public List<IFormFile>? Images { get; set; }
         public List<string>? ImagesPath { get; set; }
 

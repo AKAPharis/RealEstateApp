@@ -53,10 +53,38 @@ namespace RealEstateApp.WebApp.Controllers
             vm.AgentName = agent.LastName;
             if (!ModelState.IsValid)
             {
+                vm.UpgradeList = await _upgradeService.GetAllAsync();
+                vm.TypeOfPropertyList = await _typeOfPropertyService.GetAllAsync();
+                vm.TypeOfSaleList = await _typeOfSaleService.GetAllAsync();
                 return View(vm);
             }
             await _propertyService.CreateAsync(vm);
-            return RedirectToAction("AgentPropertyMaintenance");
+            return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
+        }
+
+        public async Task<IActionResult> Edit(int Id)
+        {
+            SaveRealEstatePropertyViewModel vm = await _propertyService.GetByIdSaveViewModelAsync(Id);
+            vm.UpgradeList = await _upgradeService.GetAllAsync();
+            vm.TypeOfPropertyList = await _typeOfPropertyService.GetAllAsync();
+            vm.TypeOfSaleList = await _typeOfSaleService.GetAllAsync();
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(SaveRealEstatePropertyViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.UpgradeList = await _upgradeService.GetAllAsync();
+                vm.TypeOfPropertyList = await _typeOfPropertyService.GetAllAsync();
+                vm.TypeOfSaleList = await _typeOfSaleService.GetAllAsync();
+                return View(vm);
+            }
+            
+            SaveRealEstatePropertyViewModel property = await _propertyService.GetByIdSaveViewModelAsync((Int32)vm.Id);
+            await _propertyService.UpdateAsync(vm, (Int32)property.Id);
+            return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
         }
 
     }

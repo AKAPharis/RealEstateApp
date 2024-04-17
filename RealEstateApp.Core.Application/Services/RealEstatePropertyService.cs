@@ -34,7 +34,6 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByGuidAsync(guid));
         }
 
-
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
         {
             string guid = GuidHelper.Guid();
@@ -92,8 +91,6 @@ namespace RealEstateApp.Core.Application.Services
 
             return result;
         }
-
-
 
         public override async Task<SaveRealEstatePropertyViewModel> UpdateAsync(SaveRealEstatePropertyViewModel viewModel, int id)
         {

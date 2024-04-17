@@ -67,25 +67,8 @@
                         </div>
                         <div class="col-8">
                             <div class="mb-3">
-                                <label asp-for="Images" class="form-label fw-bold">Photo 1</label>
-                                <input asp-for="Images" type="file" class="form-control inputCustomize" />
-                                <span asp-validation-for="Images" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="Images" class="form-label fw-bold">Photo 2 <span class="fw-light">(optional)</span></label>
-                                <input asp-for="Images" type="file" class="form-control inputCustomize" />
-                                <span asp-validation-for="Images" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="Images" class="form-label fw-bold">Photo 3 <span class="fw-light">(optional)</span></label>
-                                <input asp-for="Images" type="file" class="form-control inputCustomize" />
-                                <span asp-validation-for="Images" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Images" class="form-label fw-bold">Photo 4 <span class="fw-light">(optional)</span></label>
-                                <input asp-for="Images" type="file" class="form-control inputCustomize" />
+                                <label asp-for="Images" class="form-label fw-bold">Photo</label>
+                                <input asp-for="Images" multiple class="form-control" />
                                 <span asp-validation-for="Images" class="text-danger"></span>
                             </div>
 
@@ -95,6 +78,11 @@
                                 <label asp-for="Upgrades" class="form-label fw-bold me-2">Upgrades</label>
                                 <select class="selectpicker" asp-for="Upgrades" multiple aria-label="size 3 select example" asp-items="@(new MultiSelectList(Model.UpgradeList, "Id", "Name"))">
                                 </select>
+
+                                @* <label asp-for="Upgrades" class="form-label fw-bold me-2">Upgrades</label>
+                                <select multiple class="form-select" asp-for="Upgrades" id="UpgradesList" asp-items="@(new MultiSelectList(Model.UpgradeList, "Id", "Name"))">
+                                </select> *@
+                                <span asp-validation-for="Upgrades" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label asp-for="Description" class="form-label fw-bold">Property description</label>
@@ -103,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <input type="hidden" asp-for="Id"/>  
                     <div class="d-flex justify-content-center">
                         <div class="col-8">
                             <button type="submit" class="btn btn-info w-100 fw-bold">
@@ -116,3 +104,18 @@
         </div>
     </div>
 </div>
+
+@* <section>
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
+    <script>
+        new MultiSelectTag('UpgradesList'), {
+            rounded: true,    // default true
+            shadow: true,      // default false
+            placeholder: 'Search',  // default Search...
+            tagColor: {
+                textColor: '#327b2c',
+                borderColor: '#92e681',
+                bgColor: '#eaffe6',
+            }
+    </script>
+</section> *@
