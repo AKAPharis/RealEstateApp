@@ -15,6 +15,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using System.Data;
+using RealEstateApp.Core.Application.Enums.Upload;
+using RealEstateApp.Core.Application.Helpers;
 
 namespace RealEstateApp.Infrastructure.Identity.Services
 {
@@ -160,7 +162,11 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
             user.DocumentId = request.DocumentId ?? user.DocumentId;
             user.UserName = request.Username ?? user.UserName;
-            user.UserImagePath = request.UserImagePath ?? user.UserImagePath;
+            if (request.UserImage != null)
+            {
+                user.UserImagePath = UploadHelper.UploadFile(request.UserImage,user.Id,nameof(UploadEntities.User),true,user.UserImagePath);
+
+            }
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -376,14 +382,16 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 PhoneNumberConfirmed = true,
                 IsActive = request.Role != nameof(UserRoles.RealEstateAgent),
                 EmailConfirmed = request.Role != nameof(UserRoles.Customer)
-                
+
 
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
+            var createdUser = await _userManager.FindByNameAsync(user.UserName);
             if (result.Succeeded)
             {
-
+                createdUser.UserImagePath = UploadHelper.UploadFile(request.UserImage, createdUser.Id, nameof(UploadEntities.User));
+                await _userManager.UpdateAsync(createdUser);
                 await _userManager.AddToRoleAsync(user, request.Role);
 
                 if (request.Role == nameof(UserRoles.Customer))
@@ -405,7 +413,6 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 response.Error = $"An error occurred trying to register the user.";
                 return response;
             }
-            var createdUser = await _userManager.FindByNameAsync(user.UserName);
             response.Id = createdUser.Id;
             return response;
         }

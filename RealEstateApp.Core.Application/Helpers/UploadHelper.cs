@@ -11,7 +11,7 @@ namespace RealEstateApp.Core.Application.Helpers
 {
     public static class UploadHelper
     {
-        public static string UploadFile(IFormFile file, int id, string type, bool isEditMode = false, string imagePath = "")
+        public static string UploadFile(IFormFile file, string id, string type, bool isEditMode = false, string imagePath = "")
         {
             if (isEditMode)
             {
@@ -54,7 +54,7 @@ namespace RealEstateApp.Core.Application.Helpers
             return $"{basePath}/{fileName}";
         }
 
-        public static void DeleteFile(int id, string type)
+        public static void DeleteFile(string id, string type)
         {
             string basePath = BasePath(type, id);
             string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
@@ -76,7 +76,7 @@ namespace RealEstateApp.Core.Application.Helpers
             }
 
         }
-        private static string BasePath(string type, int id)
+        private static string BasePath(string type, string id)
         {
 
             string basePath = "";

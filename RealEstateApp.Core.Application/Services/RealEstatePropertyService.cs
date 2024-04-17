@@ -41,12 +41,12 @@ namespace RealEstateApp.Core.Application.Services
 
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
         {
-            string guid = GuidHelper.Guid();
             SaveRealEstatePropertyViewModel result = new();
             RealEstateProperty propertyWithSameGuid;
+            string guid;
             do
             {
-
+                guid = GuidHelper.Guid();
                 propertyWithSameGuid = await _repository.GetByGuidAsync(guid);
 
             } while (propertyWithSameGuid != null);
@@ -64,7 +64,7 @@ namespace RealEstateApp.Core.Application.Services
 
                     foreach (var image in viewModel.Images)
                     {
-                        var imagePath = UploadHelper.UploadFile(image, createdProperty.Id, nameof(UploadEntities.RealEstateProperty));
+                        var imagePath = UploadHelper.UploadFile(image, createdProperty.Id.ToString(), nameof(UploadEntities.RealEstateProperty));
                         await _imageRepository.CreateAsync(new PropertyImage
                         {
                             ImagePath = imagePath,
@@ -161,7 +161,7 @@ namespace RealEstateApp.Core.Application.Services
 
                     foreach (var image in viewModel.Images)
                     {
-                        var imagePath = UploadHelper.UploadFile(image, result.Id.Value, nameof(UploadEntities.RealEstateProperty));
+                        var imagePath = UploadHelper.UploadFile(image, result.Id.Value.ToString(), nameof(UploadEntities.RealEstateProperty));
                         if (imagePath != null && imagePath.Count() > 0)
                         {
 

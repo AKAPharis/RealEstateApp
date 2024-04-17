@@ -134,7 +134,8 @@ namespace RealEstateApp.Core.Application.Services
 
         public async Task<UserRegisterResponse> RegisterUserAsync(SaveUserViewModel request, string origin)
         {
-            return await _accountService.RegisterUserAsync(_mapper.Map<UserRegisterRequest>(request), origin);
+            var result = await _accountService.RegisterUserAsync(_mapper.Map<UserRegisterRequest>(request), origin);
+            return result;
         }
 
         public async Task SignOutAsync()

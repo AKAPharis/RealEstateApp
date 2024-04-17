@@ -16,6 +16,8 @@ namespace RealEstateApp.Core.Application.Dtos.Account
         public string Role { get; set; }
 
         public string? UserImagePath { get; set; }
+        public IFormFile? UserImage { get; set; }
+
 
     }
 }
