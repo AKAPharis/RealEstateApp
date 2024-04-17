@@ -1,10 +1,13 @@
-﻿@{
+﻿@using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
+@model RealEstatePropertyViewModel;
+@{
     ViewData["Title"] = "Details";
 }
 
 <!-- Carousel -->
 <div id="carouselExampleIndicators" class="carousel slide mb-5">
     <div class="carousel-indicators">
+        
         <button type="button"
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide-to="0"
