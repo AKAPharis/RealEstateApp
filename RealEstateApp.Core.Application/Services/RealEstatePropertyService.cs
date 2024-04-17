@@ -100,9 +100,17 @@ namespace RealEstateApp.Core.Application.Services
         public override async Task<SaveRealEstatePropertyViewModel> UpdateAsync(SaveRealEstatePropertyViewModel viewModel, int id)
         {
             SaveRealEstatePropertyViewModel result = new();
+            if (viewModel.Images.Count() + viewModel.ImagesPath.Count() > 4)
+            {
+                result.Error = "You can't have more than 4 images";
+                result.HasError = true;
+                return result;
+            }
             var originalProperty = await _repository.GetByIdWithIncludeAsync(viewModel.Id ?? 0, new List<string> { "TypeOfSale", "TypeProperty", "Upgrades", "Images" });
             if(originalProperty == null)
             {
+                result.Error = "We could't found the property to update";
+                result.HasError = true;
                 return result;
             }
             for (int i = 0; i < originalProperty.Images.Count(); i++)

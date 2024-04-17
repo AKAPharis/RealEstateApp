@@ -31,6 +31,9 @@ namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
         public List<TypeOfPropertyViewModel>? TypeOfPropertyList { get; set; }
         public List<TypeOfSaleViewModel>? TypeOfSaleList { get; set; }
 
+        public string Error {  get; set; }
+        public bool HasError { get; set; }
+
 
     }
 }
