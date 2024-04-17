@@ -24,6 +24,7 @@ namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
 
         [DataType(DataType.Upload)]
         public List<IFormFile>? Images { get; set; }
+
         public List<string>? ImagesPath { get; set; }
 
         public List<UpgradeViewModel>? UpgradeList { get; set; }

@@ -2,11 +2,12 @@
 @model SaveRealEstatePropertyViewModel;
 @{
     ViewData["Title"] = "Edit Property";
+    int i = 0;
 }
 
 <div class="container p-2 px-5 d-flex justify-content-center align-items-center">
     <div class="row inputBackground py-5 rounded border col-8">
-        <div class="d-flex justify-content-center align-items-center gap-3">
+        <div class="d-flex justify-content-center align-items-center gap-3 mb-5">
             <a asp-controller="Agent" asp-action="AgentPropertyMaintenance">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#A7A9AD"
                      class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
@@ -82,8 +83,27 @@
 
                     @foreach (string imagePath in Model.ImagesPath)
                     {
-                        int n = Model.ImagesPath.Count;
+                        i++;
+                        <div class="mb-3 image-container" data-image-path="@imagePath">
+                            <div class="mb-3">
+                                <img id="image-preview-@i" src="@imagePath" class="object-fit-cover rounded" height="200" width="100%" alt="">
+                            </div>
+                            <div class="mb-3">
+                                <span asp-validation-for="Images" class="text-danger"></span>
+                            </div>
+                            <button type="button" class="btn btn-danger remove-image">Remove Image</button>
+                            <input type="hidden" asp-for="ImagesPath" value="@imagePath" />
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <label asp-for="Images" class="form-label fw-bold">Change image</label>
+                        <input asp-for="Images" multiple class="form-control" />
+                        <span asp-validation-for="Images" class="text-danger"></span>
+                    </div>
+                    
 
+                    @* @foreach (string imagePath in Model.ImagesPath)
+                    {
                         <div class="mb-3">
                             <div class="mb-3">
                                 <img id="image-preview-1" src="@imagePath" class="object-fit-cover rounded" height="200" width="100%" alt="">
@@ -92,26 +112,27 @@
                                 <label asp-for="Images" class="form-label fw-bold">Change image</label>
                                 <input asp-for="Images" id="image-upload-1" class="form-control" data-preview-id="image-preview-1" />
                                 <span asp-validation-for="Images" class="text-danger"></span>
+                                <input type="hidden" asp-for="ImagesPath" value="@imagePath" />
                             </div>
                         </div>
-
-                        if (Model.ImagesPath.Count < 4)
-                        {
-                            for (int i = 0; n <= 4; i++)
-                            {
-                                <div class="mb-3">
-                                    <div class="mb-3">
-                                        <img id="image-preview-@i" src="" class="object-fit-cover rounded" height="200" width="100%" alt="">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label asp-for="Images" class="form-label fw-bold">Change image</label>
-                                        <input asp-for="Images" id="image-upload-1" class="form-control" data-preview-id="image-preview-@i" />
-                                        <span asp-validation-for="Images" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            }
-                        }
                     }
+                    @if (Model.ImagesPath.Count < 4)
+                    {
+                        for (int i = 1; i <= 4 - Model.ImagesPath.Count; i++)
+                        {
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <img id="image-preview-@i" src="" class="object-fit-cover rounded" height="200" width="100%" alt="">
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Images" class="form-label fw-bold">Change image</label>
+                                    <input asp-for="Images" id="image-upload-1" class="form-control" data-preview-id="image-preview-@i" />
+                                    <span asp-validation-for="Images" class="text-danger"></span>
+                                </div>
+                            </div>
+                        }
+                    } *@
+
                     <div class="mb-3">
                         <button type="submit" class="btn btn-info w-100 fw-bold">
                             Save
@@ -122,3 +143,40 @@
         </div>
     </div>
 </div>
+
+<script>
+    const imageContainers = document.querySelectorAll('.image-container');
+    imageContainers.forEach(container => {
+        const removeButton = container.querySelector('.remove-image');
+        removeButton.addEventListener('click', function () {
+            const containerToRemove = this.parentElement; // Get the entire image container
+            containerToRemove.parentNode.removeChild(containerToRemove);
+
+            // // Update the hidden input with the removed image path (if needed)
+            // const imagePathInput = containerToRemove.querySelector('input[type="hidden"]');
+            // if (imagePathInput) {
+            //     // Logic to handle updating your model or form data with the removed image path
+            //     // This might involve removing the path from an array or setting a flag
+            // }
+        });
+    });
+
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    var fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(function (input) {
+        input.addEventListener('change', function () {
+            var previewId = this.dataset.previewId;
+            previewImage(this, previewId);
+        });
+    });
+</script>

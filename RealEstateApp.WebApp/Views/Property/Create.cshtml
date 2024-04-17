@@ -1,6 +1,8 @@
 ﻿@using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 @model SaveRealEstatePropertyViewModel;
 @{
+    var a = new SelectList(Model.TypeOfPropertyList, " Id", "Name");
+    var e = Model;
     ViewData["Title"] = "Create Property";
 }
 
@@ -25,7 +27,7 @@
                             Select the type of property
                         </label>
                         <select class="form-select" asp-for="TypePropertyId"
-                                asp-items="@(new SelectList(Model.TypeOfPropertyList, " Id", "Name" ))"
+                                asp-items="@(new SelectList(Model.TypeOfPropertyList, "Id", "Name" ))"
                                 id="ptype">
                             <option value="0">Choose...</option>
                         </select>
@@ -36,7 +38,7 @@
                             Select the type of sale
                         </label>
                         <select class="form-select" asp-for="TypeOfSaleId"
-                                asp-items="@(new SelectList(Model.TypeOfSaleList, " Id", "Name" ))" id="ptype">
+                                asp-items="@(new SelectList(Model.TypeOfSaleList, "Id", "Name" ))" id="ptype">
                             <option value="0">Choose...</option>
                         </select>
                     </div>
@@ -76,7 +78,7 @@
                         <label asp-for="Upgrades" class="form-label fw-bold me-2">Upgrades</label>
                         <select class="selectpicker" asp-for="Upgrades" multiple
                                 aria-label="size 3 select example"
-                                asp-items="@(new MultiSelectList(Model.UpgradeList, " Id", "Name" ))">
+                                asp-items="@(new MultiSelectList(Model.UpgradeList, "Id", "Name" ))">
                         </select>
                         <span asp-validation-for="Upgrades" class="text-danger"></span>
                     </div>

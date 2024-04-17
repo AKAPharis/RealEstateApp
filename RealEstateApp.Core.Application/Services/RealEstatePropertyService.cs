@@ -34,6 +34,11 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByGuidAsync(guid));
         }
 
+        public override async Task<SaveRealEstatePropertyViewModel> GetByIdSaveViewModelAsync(int id)
+        {
+            return _mapper.Map<SaveRealEstatePropertyViewModel>(await _repository.GetByIdWithIncludeAsync(id,new List<string> { "Images","Upgrades"}));
+        }
+
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
         {
             string guid = GuidHelper.Guid();
@@ -103,12 +108,12 @@ namespace RealEstateApp.Core.Application.Services
             for (int i = 0; i < originalProperty.Images.Count(); i++)
             {
                 var image = originalProperty.Images.ElementAt(i);
+
                 if (viewModel.ImagesPath == null || !viewModel.ImagesPath.Contains(image.ImagePath))
                 {
                     await _imageRepository.DeleteAsync(image);
                 }
             }
-
 
             for (int i = 0; i < originalProperty.Upgrades.Count(); i++)
             {
@@ -118,6 +123,7 @@ namespace RealEstateApp.Core.Application.Services
                     await _upgradeRepository.DeleteAsync(upgrade);
                 }
             }
+
             if (viewModel.Upgrades != null && viewModel.Upgrades.Count() > 0)
             {
                 foreach (var upgrade in viewModel.Upgrades)
@@ -133,7 +139,11 @@ namespace RealEstateApp.Core.Application.Services
                     }
                 }
             }
+
             viewModel.Guid = originalProperty.Guid;
+            viewModel.AgentId = originalProperty.AgentId;
+            viewModel.AgentName = originalProperty.AgentName;
+
             result = await base.UpdateAsync(viewModel, id);
 
             if (result != null && result.Id != null)
