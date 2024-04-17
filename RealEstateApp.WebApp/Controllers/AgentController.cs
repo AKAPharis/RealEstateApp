@@ -4,6 +4,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Enums.Roles;
+using RealEstateApp.Core.Application.ViewModels.Account;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -20,7 +21,15 @@ namespace RealEstateApp.WebApp.Controllers
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
+        public async Task<IActionResult> Index()
+        {
+            List<UserViewModel> agents = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
+            foreach (UserViewModel user in agents)
+            {
+                user.PropertyCount = await _realEstatePropertyService.GetTotalPropertiesByAgent(user.Id);
+            }
+            return View(agents);
+        }
 
         public async Task<IActionResult> AgentPropertyMaintenance()
         {
