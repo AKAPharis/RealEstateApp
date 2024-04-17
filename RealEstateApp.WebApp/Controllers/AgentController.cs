@@ -21,6 +21,8 @@ namespace RealEstateApp.WebApp.Controllers
             _contextAccessor = contextAccessor;
         }
 
+        public async Task<IActionResult> AgentHome() => View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
+
         public async Task<IActionResult> Index()
         {
             List<UserViewModel> agents = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
@@ -48,6 +50,10 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit => View();
+        public async Task<IActionResult> Edit(string Id)
+        {
+            SaveUserViewModel agent = await _userService.GetByIdSaveViewModelAsync(Id);
+            return View(agent);
+        }
     }
 }

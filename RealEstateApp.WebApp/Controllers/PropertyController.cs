@@ -51,6 +51,7 @@ namespace RealEstateApp.WebApp.Controllers
             var agent = await _userService.GetByIdAsync(agentlogged.Id);
             vm.AgentId = agent.Id;
             vm.AgentName = agent.LastName;
+
             if (!ModelState.IsValid)
             {
                 vm.UpgradeList = await _upgradeService.GetAllAsync();
@@ -58,7 +59,17 @@ namespace RealEstateApp.WebApp.Controllers
                 vm.TypeOfSaleList = await _typeOfSaleService.GetAllAsync();
                 return View(vm);
             }
-            await _propertyService.CreateAsync(vm);
+            var property = await _propertyService.CreateAsync(vm);
+            if (property.HasError)
+            {
+                vm.HasError = property.HasError;
+                vm.Error = property.Error;
+                vm.UpgradeList = await _upgradeService.GetAllAsync();
+                vm.TypeOfPropertyList = await _typeOfPropertyService.GetAllAsync();
+                vm.TypeOfSaleList = await _typeOfSaleService.GetAllAsync();
+                return View(vm);
+            }
+
             return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
         }
 

@@ -1,7 +1,7 @@
 ﻿@using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 @model SaveTypeOfSaleViewModel;
 @{
-    bool editMode = Model.Id == 0 ? false : true;
+    bool editMode = Model.Id == null ? false : true;
     ViewData["Title"] = "Save Sale Type";
 }
 

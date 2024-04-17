@@ -45,7 +45,7 @@
                                    class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
                                     <img src="~/assets/images/IconHouse.png"
                                          alt="house icon"
-                                         height="25" />Danderi
+                                         height="25" />Real State App
                                 </a>
                             </li>
                             <li class="nav-item navlinks">
@@ -94,7 +94,7 @@
                                    class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
                                     <img src="~/assets/images/IconHouse.png"
                                          alt="house icon"
-                                         height="25" />Danderi
+                                         height="25" />Real State App
                                 </a>
                             </li>
                             <li class="nav-item navlinks">
@@ -104,7 +104,7 @@
                                 <a asp-controller="Agent" asp-action="AgentPropertyMaintenance" class="nav-link text-white">Property maintenance</a>
                             </li>
                             <li class="nav-item navlinks">
-                                <a asp-controller="Agent" asp-action="Edit" class="nav-link text-white">My profile</a>
+                                <a asp-controller="Agent" asp-action="Edit" asp-route-Id="@User.Id" class="nav-link text-white">My profile</a>
                             </li>
                         }
                         <li class="nav-item navlinks">
@@ -124,7 +124,7 @@
                                class="nav-link d-flex align-items-center gap-2 principalBlueText fw-bold">
                                 <img src="~/assets/images/IconHouse.png"
                                      alt="house icon"
-                                     height="25" />Danderi
+                                     height="25" />Real State App
                             </a>
                         </li>
                         <li class="nav-item navlinks">
@@ -152,7 +152,7 @@
 
         <footer class="py-3 mt-auto">
             <div class="container d-flex flex-wrap justify-content-between align-items-center">
-                <p class="col-md-4 mb-0 text-body-secondary">© @DateTime.Now.Year Danderi, Inc</p>
+                <p class="col-md-4 mb-0 text-body-secondary">© @DateTime.Now.Year Real State App, Inc</p>
 
                 <a href="#" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 41 41" fill="none">
@@ -181,7 +181,7 @@
                         <a asp-controller="Home" asp-action="Agents" class="nav-link px-2 text-body-secondary">Agents</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link px-2 text-body-secondary">Join the App</a>
+                        <a asp-controller="User" asp-action="Create" class="nav-link px-2 text-body-secondary">Join the App</a>
                     </li>
                 </ul>
             </div>
