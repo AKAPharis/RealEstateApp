@@ -85,6 +85,8 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
+      
+
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             string response = await _userService.ConfirmAccountAsync(userId, token);

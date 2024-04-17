@@ -55,5 +55,25 @@ namespace RealEstateApp.WebApp.Controllers
             SaveUserViewModel agent = await _userService.GetByIdSaveViewModelAsync(Id);
             return View(agent);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(SaveUserViewModel vm)
+        {
+            //if(!ModelState.IsValid)
+            //{
+            //    return View(vm);
+            //}
+            vm.Role = nameof(UserRoles.RealEstateAgent);
+            var origin = Request.Headers["origin"];
+            UserEditResponse response = await _userService.EditUserAsync(vm, origin);
+
+            if (response.HasError)
+            {
+                vm.HasError = response.HasError;
+                vm.Error = response.Error;
+                return View(vm);
+            }
+            return RedirectToAction("AgentHome");
+        }
     }
 }

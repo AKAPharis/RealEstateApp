@@ -7,6 +7,7 @@ using RealEstateApp.Core.Application.Helpers;
 using System.Data;
 using RealEstateApp.Core.Application.Enums.Roles;
 using Microsoft.AspNetCore.Identity;
+using RealEstateApp.Core.Application.Interfaces.Repositories;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -15,13 +16,15 @@ namespace RealEstateApp.Core.Application.Services
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IRealEstatePropertyRepository _propertyRepository;
 
 
-        public UserService(IAccountService accountService, IMapper mapper, IHttpContextAccessor contextAccessor)
+        public UserService(IAccountService accountService, IMapper mapper, IHttpContextAccessor contextAccessor, IRealEstatePropertyRepository propertyRepository)
         {
             _accountService = accountService;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
+            _propertyRepository = propertyRepository;
         }
 
         public async Task ActivateUser(string id)
@@ -48,7 +51,7 @@ namespace RealEstateApp.Core.Application.Services
         {
             var result = new UserEditResponse();
             var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-
+            
             if (loggedUser == null)
             {
 
@@ -63,7 +66,26 @@ namespace RealEstateApp.Core.Application.Services
                 result.HasError = true;
                 return result;
             }
-            return await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
+            result = await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
+            if(result == null)
+            {
+                result = new UserEditResponse();
+                result.HasError = true;
+                result.Error = "There was an error editing the user";
+                return result;
+
+            }
+            if(request.Role == nameof(UserRoles.RealEstateAgent))
+            {
+                var properties = await _propertyRepository.GetByAgentAsync(request.Id);
+                foreach (var property in properties)
+                {
+                    property.AgentName = request.FirstName;
+                    await _propertyRepository.UpdateAsync(property, property.Id);
+                }
+
+            }
+            return result;
         }
 
         public async Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput)

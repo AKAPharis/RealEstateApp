@@ -374,6 +374,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 DocumentId = request.DocumentId,
                 PhoneNumber = request.PhoneNumber,
                 PhoneNumberConfirmed = true,
+                IsActive = request.Role != nameof(UserRoles.RealEstateAgent),
+                EmailConfirmed = request.Role != nameof(UserRoles.Customer)
+                
 
             };
 
@@ -383,7 +386,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
                 await _userManager.AddToRoleAsync(user, request.Role);
 
-                if (request.Role != nameof(UserRoles.Admin) && request.Role != nameof(UserRoles.Developer))
+                if (request.Role == nameof(UserRoles.Customer))
                 {
 
                     var verificationUri = await SendVerificationEmailUri(user, origin);

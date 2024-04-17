@@ -29,6 +29,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath)))
                 .ReverseMap();
 
+
             CreateMap<RealEstateProperty, SaveRealEstatePropertyViewModel>()
                 .ForMember(x => x.ImagesPath, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath).ToList()))
                 .ForMember(x => x.Upgrades, opt => opt.MapFrom(src => src.Upgrades.Select(x => x.UpgradeId).ToList()))
@@ -62,13 +63,9 @@ namespace RealEstateApp.Core.Application.Mappings
             #region User
             CreateMap<SaveUserViewModel, UserRegisterRequest>()
                 .ReverseMap();
-            #endregion
 
-            #region User
-            CreateMap<SaveUserViewModel, UserRegisterRequest>()
-                .ReverseMap();
-
-
+            CreateMap<SaveUserViewModel, UserEditRequest>()
+                    .ReverseMap();
 
             #endregion
 
