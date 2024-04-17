@@ -13,7 +13,18 @@ namespace RealEstateApp.WebApp.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin)));
+        public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.Developer)));
 
+        public async Task<IActionResult> ActivateUser(string Id)
+        {
+            await _userService.ActivateUser(Id);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> DeactivateUser(string Id)
+        {
+            await _userService.DeactivateUser(Id);
+            return RedirectToAction("Index");
+        }
     }
 }

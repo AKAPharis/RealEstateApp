@@ -1,10 +1,12 @@
-﻿@{
+﻿@using RealEstateApp.Core.Application.ViewModels.Administrator;
+@model AdminHomeViewModel;
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="container normalText p-4 px-5">
     <div class="mb-5">
-        <h1 class="mb-0">Welcome back, <span class="fw-medium principalBlueText">@@littlestar!</span> 🦉💫</h1>
+        <h1 class="mb-0">Welcome back, <span class="fw-medium principalBlueText">@@@Model.Username!</span> 🦉💫</h1>
         <p class="fs-4 fw-light">Drink some water.</p>
     </div>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
@@ -21,7 +23,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Registered properties
                         </p>
-                        <p class="card-text fs-4 fw-bold">10</p>
+                        <p class="card-text fs-4 fw-bold">@Model.Properties</p>
                     </div>
                 </div>
             </div>
@@ -40,7 +42,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Active agents
                         </p>
-                        <p class="card-text fs-4 fw-bold">10</p>
+                        <p class="card-text fs-4 fw-bold">@Model.ActiveAgents</p>
                     </div>
                 </div>
             </div>
@@ -58,7 +60,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Inactive agents
                         </p>
-                        <p class="card-text fs-4 fw-bold">500</p>
+                        <p class="card-text fs-4 fw-bold">@Model.InactiveAgents</p>
                     </div>
                 </div>
             </div>
@@ -74,7 +76,7 @@
                     </div>
                     <div class="ms-3">
                         <p class="card-text mb-0 cardColorText">Active customers</p>
-                        <p class="card-text fs-4 fw-bold">600</p>
+                        <p class="card-text fs-4 fw-bold">@Model.ActiveCustomers</p>
                     </div>
                 </div>
             </div>
@@ -92,7 +94,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Inactive customers
                         </p>
-                        <p class="card-text fs-4 fw-bold">10</p>
+                        <p class="card-text fs-4 fw-bold">@Model.InactiveAgents</p>
                     </div>
                 </div>
             </div>
@@ -109,7 +111,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Active developers
                         </p>
-                        <p class="card-text fs-4 fw-bold">05</p>
+                        <p class="card-text fs-4 fw-bold">@Model.ActiveDevelopers</p>
                     </div>
                 </div>
             </div>
@@ -127,7 +129,7 @@
                         <p class="card-text mb-0 cardColorText">
                             Inactive developers
                         </p>
-                        <p class="card-text fs-4 fw-bold">05</p>
+                        <p class="card-text fs-4 fw-bold">@Model.InactiveDevelopers</p>
                     </div>
                 </div>
             </div>

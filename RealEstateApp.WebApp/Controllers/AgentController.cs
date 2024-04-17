@@ -36,6 +36,16 @@ namespace RealEstateApp.WebApp.Controllers
             return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
-        
+        public async Task<IActionResult> ActivateUser(string Id)
+        {
+            await _userService.ActivateUser(Id);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> DeactivateUser(string Id)
+        {
+            await _userService.DeactivateUser(Id);
+            return RedirectToAction("Index");
+        }
     }
 }

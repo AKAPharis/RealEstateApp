@@ -1,22 +1,12 @@
 ﻿@using RealEstateApp.Core.Application.ViewModels.Account;
 @model SaveUserViewModel;
 @{
-    ViewData["Title"] = "Save Admin";
+    ViewData["Title"] = "Edit profile";
 }
 
 <div class="container d-flex justify-content-center">
     <div class="row col-8">
         <div class="inputBackground py-5 cardCustomize col-12 border">
-            <div class="d-flex justify-content-center align-items-center gap-3">
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#A7A9AD"
-                         class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                              d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-                    </svg>
-                </a>
-                <h2 class="p-0 mb-0 text-center principalBlueText">New admin</h2>
-            </div>
             <div class="d-flex py-4 justify-content-center col-12">
                 <form method="post" asp-controller="User" asp-action="Register"
                       class="d-flex justify-content-center">
@@ -55,35 +45,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="Username" class="form-label fw-bold">Username</label>
-                                    <input asp-for="Username" class="form-control" />
-                                    <span asp-validation-for="Username" class="text-danger"></span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="Password" class="form-label fw-bold me-2">Password</label>
-                                    <span href="#" id="chuleria" class="text-secondary" data-bs-toggle="tooltip"
-                                          data-bs-html="true" data-bs-placement="right"
-                                          data-bs-title="Must contain one uppercase character, one lowercase character, one digit and one non-alphanumeric character. At least six characters long.">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                             fill="#A7A9AD" class="bi bi-info-circle" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                                        </svg>
-                                    </span>
-                                    <input asp-for="Password" type="password" id="passwordSign"
-                                           class="form-control" />
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="ConfirmPassword" class="form-label fw-bold">
-                                        Confirm
-                                        Password
-                                    </label>
-                                    <input asp-for="ConfirmPassword" id="ConfirmPassword"
-                                           class="form-control" />
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    <label asp-for="UserImage" class="form-label fw-bold">Photo</label>
+                                    <input asp-for="UserImage" class="form-control" />
+                                    <span asp-validation-for="UserImage" class="text-danger"></span>
                                 </div>
                             </div>
 
