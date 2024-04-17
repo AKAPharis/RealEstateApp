@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace RealEstateApp.Infrastructure.Identity.Services
 {
@@ -138,10 +139,10 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
             }
 
-            if(request.Role == nameof(UserRoles.Admin) || request.Role == nameof(UserRoles.Developer))
+            if (request.Role == nameof(UserRoles.Admin) || request.Role == nameof(UserRoles.Developer))
             {
                 response = await EditInternalUsersValidations(request);
-                if(response.HasError)
+                if (response.HasError)
                     return response;
             }
 
@@ -211,7 +212,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         public async Task<int> GetActiveUsers(string? role = null)
         {
             var users = await _userManager.Users.Where(x => x.IsActive).ToListAsync();
-            users = users.Where(x =>  role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
+            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
             return users.Count();
         }
         public async Task<int> GetInactiveUsers(string? role = null)
@@ -246,7 +247,35 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             }
             return userVm;
         }
+        public async Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput)
+        {
+            var names = nameInput.Split(' ');
+            List<UserViewModel> users = new();
+            if (names.Length == 1)
+            {
+                var result = await _userManager.Users.Where(x => x.FirstName.Contains(names[0]) || x.LastName.Contains(names[0])).ToListAsync();
+                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
+                users = _mapper.Map<List<UserViewModel>>(result);
+                foreach (UserViewModel user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+            else if (names.Length == 2)
+            {
+                var result = await _userManager.Users.Where(x => (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1])) || (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1]))).ToListAsync();
+                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
+                users = _mapper.Map<List<UserViewModel>>(result);
+                foreach (UserViewModel user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
 
+            return users;
+        }
         public async Task<UserDTO> GetByIdAsyncDTO(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -295,7 +324,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return userVm;
         }
 
- 
+
 
         public async Task<UserRegisterResponse> RegisterUserAsync(UserRegisterRequest request, string origin)
         {
@@ -327,9 +356,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
                 return response;
             }
 
-            if (!Enum.IsDefined(typeof(UserRoles),request.Role))
+            if (!Enum.IsDefined(typeof(UserRoles), request.Role))
             {
-                
+
                 response.HasError = true;
                 response.Error = $"The role {request.Role} do not exist";
                 return response;

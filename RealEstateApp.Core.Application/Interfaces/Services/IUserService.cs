@@ -23,5 +23,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<int> GetInactiveUsers(string? role = null);
         Task DeactivateUser(string id);
         Task ActivateUser(string id);
+        Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput);
     }
 }

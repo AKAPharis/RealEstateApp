@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.ViewModels.Account;
 using RealEstateApp.Infrastructure.Identity;
 using RealEstateApp.Infrastructure.Identity.Models;
 using RealEstateApp.Tests.IdentityTests.FakeServices;
@@ -44,6 +45,31 @@ namespace RealEstateApp.Tests.IdentityTests.Services
             result.Should().BeOfType(typeof(List<UserDTO>));
             result.Should().OnlyHaveUniqueItems();
             result.All(x => x.Roles.Contains(nameof(UserRoles.Developer))).Should().BeTrue();
+
+
+        }
+
+        [Fact]
+        public async void AccountService_GetAgentByNameAsync_ReturnListAgentViewModel()
+        {
+
+            //arrange
+            string firstName = "Agent";
+            string firstNameAndLastName = "Agent User";
+            //Act
+
+            var firstNameResult = await _accountService.GetAgentByNameAsync(firstName);
+            var firstNameAndLastNameResult = await _accountService.GetAgentByNameAsync(firstNameAndLastName);
+
+            //Assert
+            firstNameResult.Should().BeOfType(typeof(List<UserViewModel>));
+            firstNameAndLastNameResult.Should().BeOfType(typeof(List<UserViewModel>));
+
+            firstNameResult.Should().OnlyHaveUniqueItems();
+            firstNameAndLastNameResult.Should().OnlyHaveUniqueItems();
+
+            firstNameResult.All(x => x.Roles.Contains(nameof(UserRoles.RealEstateAgent))).Should().BeTrue();
+            firstNameAndLastNameResult.All(x => x.Roles.Contains(nameof(UserRoles.RealEstateAgent))).Should().BeTrue();
 
 
         }
@@ -766,8 +792,8 @@ namespace RealEstateApp.Tests.IdentityTests.Services
                             IsActive = true,
                             PhoneNumber = $"4444{i}9966{i}",
                             PhoneNumberConfirmed = true,
-                            FirstName = "Agent",
-                            LastName = "User",
+                            FirstName = $"Agent{i}",
+                            LastName = $"User{i}",
                             UserImagePath = $"agentimage{i}.jpg"
 
 

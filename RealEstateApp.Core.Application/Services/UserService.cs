@@ -6,6 +6,7 @@ using RealEstateApp.Core.Application.ViewModels.Account;
 using RealEstateApp.Core.Application.Helpers;
 using System.Data;
 using RealEstateApp.Core.Application.Enums.Roles;
+using Microsoft.AspNetCore.Identity;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -65,6 +66,10 @@ namespace RealEstateApp.Core.Application.Services
             return await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
         }
 
+        public async Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput)
+        {
+            return await _accountService.GetAgentByNameAsync(nameInput);
+        }
         public async Task<int> GetActiveUsers(string? role = null)
         {
             return await _accountService.GetActiveUsers(role);
