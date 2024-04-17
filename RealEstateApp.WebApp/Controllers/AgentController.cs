@@ -47,5 +47,7 @@ namespace RealEstateApp.WebApp.Controllers
             await _userService.DeactivateUser(Id);
             return RedirectToAction("Index");
         }
+
+        public IActionResult EditAgent => View();
     }
 }
