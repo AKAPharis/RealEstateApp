@@ -59,55 +59,64 @@ namespace RealEstateApp.Infrastructure.Identity
             });
 
             services.Configure<JWTSettings>(config.GetSection("JWTSettings"));
-            services.AddAuthentication();
-            services.AddAuthentication(opt =>
+            if (config.GetValue<bool>("UseBearerToken"))
             {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                services.AddAuthentication(opt =>
+                {
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            }).AddJwtBearer(opt =>
+                }).AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = true;
+                    opt.SaveToken = false;
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = config["JWTSettings:Issuer"],
+                        ValidAudience = config["JWTSettings:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSettings:Key"]))
+                    };
+                    opt.Events = new JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = c =>
+                        {
+                            c.NoResult();
+                            c.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                            c.Response.ContentType = ContentType.TextPlain.ToString();
+                            return c.Response.WriteAsync(c.Exception.ToString());
+                        },
+                        OnChallenge = c =>
+                        {
+                            c.HandleResponse();
+                            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            c.Response.ContentType = ContentType.ApplicationJson.ToString();
+                            var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not authorized" });
+                            return c.Response.WriteAsync(result);
+                        },
+                        OnForbidden = c =>
+                        {
+                            c.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            c.Response.ContentType = ContentType.ApplicationJson.ToString();
+                            var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not authorized to access this resource" });
+                            return c.Response.WriteAsync(result);
+                        }
+                    };
+
+
+                });
+
+            }
+            else
             {
-                opt.RequireHttpsMetadata = true;
-                opt.SaveToken = false;
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = config["JWTSettings:Issuer"],
-                    ValidAudience = config["JWTSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSettings:Key"]))
-                };
-                opt.Events = new JwtBearerEvents()
-                {
-                    OnAuthenticationFailed = c =>
-                    {
-                        c.NoResult();
-                        c.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        c.Response.ContentType = ContentType.TextPlain.ToString();
-                        return c.Response.WriteAsync(c.Exception.ToString());
-                    },
-                    OnChallenge = c =>
-                    {
-                        c.HandleResponse();
-                        c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        c.Response.ContentType = ContentType.ApplicationJson.ToString();
-                        var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not authorized" });
-                        return c.Response.WriteAsync(result);
-                    },
-                    OnForbidden = c =>
-                    {
-                        c.Response.StatusCode = StatusCodes.Status403Forbidden;
-                        c.Response.ContentType = ContentType.ApplicationJson.ToString();
-                        var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not authorized to access this resource" });
-                        return c.Response.WriteAsync(result);
-                    }
-                };
 
+                services.AddAuthentication();
+            }
 
-            });
             #endregion
 
             #region Services
@@ -124,7 +133,7 @@ namespace RealEstateApp.Infrastructure.Identity
             #endregion
 
             #region Mapings
-            
+
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             #endregion

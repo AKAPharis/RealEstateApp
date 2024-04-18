@@ -44,13 +44,13 @@ else
             @foreach (RealEstatePropertyViewModel property in Model)
             {
                 <div class="col">
-                    <a asp-controller="Home" asp-action="PropertyDetails" class="text-decoration-none">
+                    <a asp-controller="Home" asp-action="PropertyDetails" asp-route-Id="@property.Id" class="text-decoration-none">
                         <div class="card inputBackground cardCustomize shadow-sm">
                             <div class="image_container position-relative">
                                 <div class="image-tittle p-2 ms-4 mt-4 px-3 position-absolute">
                                     <p class="mb-0 text-black fw-bold text-center">@property.TypeOfSale.Name</p>
                                 </div>
-                                <img src="@property.Images.First()"
+                                <img src="@(property.Images.Count > 0 ? property.Images.First() : "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg")"
                                      class="card-img-top object-fit-cover"
                                      width="100%"
                                      height="225"

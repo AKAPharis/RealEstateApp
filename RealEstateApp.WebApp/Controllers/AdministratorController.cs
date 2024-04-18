@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RealEstateApp.WebApp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AdministratorController : Controller
     {
         private readonly IUserService _userService;
@@ -23,11 +23,11 @@ namespace RealEstateApp.WebApp.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin)));
 
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> AdminHome()
         {
             AdminHomeViewModel adminHome = new();
