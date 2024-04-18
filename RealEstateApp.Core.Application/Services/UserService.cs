@@ -32,7 +32,12 @@ namespace RealEstateApp.Core.Application.Services
 
         public async Task ActivateUser(string id)
         {
-            await _accountService.ActivateUser(id);
+            var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            if (loggedUser != null || loggedUser.Id != id)
+            {
+
+                await _accountService.ActivateUser(id);
+            }
         }
 
         public async Task<UserDeleteResponse> DeleteUser(string id)
@@ -61,7 +66,12 @@ namespace RealEstateApp.Core.Application.Services
 
         public async Task DeactivateUser(string id)
         {
-            await _accountService.DeactivateUser(id);
+            var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            if (loggedUser != null || loggedUser.Id != id)
+            {
+
+                await _accountService.DeactivateUser(id);
+            }
         }
 
         public async Task<UserEditResponse> EditUserAsync(SaveUserViewModel request, string origin)
