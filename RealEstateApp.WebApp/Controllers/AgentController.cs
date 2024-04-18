@@ -26,8 +26,11 @@ namespace RealEstateApp.WebApp.Controllers
         }
 
         //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
-        public async Task<IActionResult> AgentHome() => View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
-
+        public async Task<IActionResult> AgentHome()
+        {
+            var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
+            return View(properties.OrderByDescending(d => d.Created));
+        }
 
         //[Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> Index()
@@ -84,10 +87,10 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("AgentHome");
         }
 
-        //public async Task<IActionResult> Delete(string Id)
-        //{
-        //    await _userService.DeleteAsync(Id);
-        //    return RedirectToAction("Index");
-        //}
+        public async Task<IActionResult> Delete(string Id)
+        {
+            await _userService.DeleteUser(Id);
+            return RedirectToAction("Index");
+        }
     }
 }

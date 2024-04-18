@@ -30,12 +30,14 @@ namespace RealEstateApp.WebApp.Controllers
 
         public async Task<IActionResult> AgentProperty(string Id)
         {
-            return View(await _propertyService.GetByAgentAsync(Id));
+            var properties = await _propertyService.GetByAgentAsync(Id);
+            return View(properties.OrderByDescending(d => d.Created));
         }
 
         public async Task<IActionResult> CustomerProperties()
         {
-            return View(await _favoritePropertyService.GetAllPropertyByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
+            var properties = await _favoritePropertyService.GetAllPropertyByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
+            return View(properties.OrderByDescending(d => d.Created));
         }
 
         public async Task<IActionResult> Create()

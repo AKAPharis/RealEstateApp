@@ -30,7 +30,8 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> Index(RealEstatePropertyFilterViewModel filter)
         {
             ViewBag.TypeOfProperty = await _typeOfProperty.GetAllAsync();
-            return View(await _propertyService.GetAllByFilter(filter));
+            var list = await _propertyService.GetAllByFilter(filter);
+            return View(list.OrderByDescending(f => f.Created));
         }
 
         public async Task<IActionResult> Agents() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
@@ -66,7 +67,7 @@ namespace RealEstateApp.WebApp.Controllers
             RealEstatePropertyCustomerViewModel list = new();
             list.Properties = properties;
             list.FavoriteProperties = await _favoritePropertyService.GetAllPropertyIdByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
-            return View(list);
+            return View(list.Properties.OrderByDescending(f => f.Created));
         }
 
         public async Task<IActionResult> AddFavoriteProperty(int Id)

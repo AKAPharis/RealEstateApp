@@ -5,16 +5,16 @@
 }
 
 <div class="container p-2 px-5 d-flex justify-content-center align-items-center">
-    <div class="row inputBackground py-5 rounded border col-8">
+    <div class="row inputBackground py-5 rounded-5 border col-8">
         <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
             <a asp-controller="Agent" asp-action="AgentPropertyMaintenance">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#A7A9AD"
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#47FFE9"
                      class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                           d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
                 </svg>
             </a>
-            <h2 class="p-0 mb-0 text-center principalBlueText">New property</h2>
+            <h2 class="p-0 mb-0 text-center fw-bold">New property</h2>
         </div>
         @if (Model.TypeOfSaleList.Count == 0)
         {
@@ -62,7 +62,7 @@
                                 <span asp-validation-for="Price" class="text-danger"></span>
                             </div>
                             <div class="col-6">
-                                <label asp-for="Size" class="form-label fw-bold">Size (m^2)</label>
+                                <label asp-for="Size" class="form-label fw-bold">Size (mt)</label>
                                 <input asp-for="Size" class="form-control" />
                                 <span asp-validation-for="Size" class="text-danger"></span>
                             </div>
