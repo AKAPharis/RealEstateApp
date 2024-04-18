@@ -24,7 +24,13 @@ namespace RealEstateApp.WebApp.Controllers
         }
 
         [Authorize(Roles = nameof(UserRoles.Admin))]
-        public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin)));
+        public async Task<IActionResult> Index() 
+        {
+            var currentUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            var listAdmin = await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin));
+            var filteredUsers = listAdmin.Where(u => u.Id != currentUser.Id);
+            return View(filteredUsers.ToList());
+        } 
 
 
         [Authorize(Roles = nameof(UserRoles.Admin))]
