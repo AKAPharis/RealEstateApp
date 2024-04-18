@@ -5,14 +5,17 @@
 }
 
 <div class="container d-flex justify-content-center">
-    <div class="row col-8">
-        <div class="inputBackground py-5 cardCustomize col-12 border">
+    <div class="row col-8 d-flex justify-content-center">
+        <div class="inputBackground rounded-5 py-5 cardCustomize col-8 border">
             <div class="d-flex py-4 justify-content-center col-12">
                 <form method="post" asp-controller="Agent" asp-action="Edit"
                       class="d-flex justify-content-center">
                     <div class="col-12">
                         <div class="mb-4 d-flex justify-content-center gap-4 col-12">
                             <div class="col-10">
+                                <div class="mb-3 d-flex justify-content-center">
+                                    <img src="@Model.UserImagePath" class="rounded-circle" width="200" height="200" alt="Alternate Text" />
+                                </div>
                                 <div class="mb-3">
                                     <label asp-for="FirstName" class="form-label fw-bold">FirstName</label>
                                     <input asp-for="FirstName" class="form-control" />

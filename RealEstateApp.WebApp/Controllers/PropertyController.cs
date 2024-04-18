@@ -101,5 +101,11 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
         }
 
+        public async Task<IActionResult> Delete(int Id)
+        {
+            await _propertyService.DeleteAsync(Id);
+            return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
+        }
+
     }
 }
