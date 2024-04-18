@@ -104,11 +104,11 @@ namespace RealEstateApp.Core.Application.Services
             }
             if (request.Role == nameof(UserRoles.RealEstateAgent))
             {
-                var properties = await _realEstatePropertyService.GetByAgentAsync(request.Id);
+                var properties = await _propertyRepository.GetByAgentAsync(request.Id);
                 foreach (var property in properties)
                 {
                     property.AgentName = request.FirstName;
-                    await _realEstatePropertyService.UpdateAsync(_mapper.Map<SaveRealEstatePropertyViewModel>(property), property.Id);
+                    await _propertyRepository.UpdateAsync(property, property.Id);
                 }
 
             }
