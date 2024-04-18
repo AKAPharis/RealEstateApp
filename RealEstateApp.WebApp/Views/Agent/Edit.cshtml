@@ -14,7 +14,7 @@
                         <div class="mb-4 d-flex justify-content-center gap-4 col-12">
                             <div class="col-10">
                                 <div class="mb-3 d-flex justify-content-center">
-                                    <img src="@Model.UserImagePath" class="rounded-circle" width="200" height="200" alt="Alternate Text" />
+                                    <img src="@(Model.UserImage != null ? Model.UserImagePath : "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg")" class="rounded-circle object-fit-cover" width="200" height="200" alt="Alternate Text" />
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="FirstName" class="form-label fw-bold">FirstName</label>
