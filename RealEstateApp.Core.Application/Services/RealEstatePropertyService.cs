@@ -100,7 +100,7 @@ namespace RealEstateApp.Core.Application.Services
         public override async Task<SaveRealEstatePropertyViewModel> UpdateAsync(SaveRealEstatePropertyViewModel viewModel, int id)
         {
             SaveRealEstatePropertyViewModel result = new();
-            if (viewModel.Images.Count() + (viewModel.ImagesPath?.Count() ?? 0) > 4)
+            if ((viewModel.Images?.Count() ?? 0) + (viewModel.ImagesPath?.Count() ?? 0) > 4)
             {
                 result.Error = "You can't have more than 4 images";
                 result.HasError = true;
