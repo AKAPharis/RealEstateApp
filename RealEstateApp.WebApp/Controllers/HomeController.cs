@@ -35,6 +35,13 @@ namespace RealEstateApp.WebApp.Controllers
        
         public async Task<IActionResult> Agents() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
 
+        public async Task<IActionResult> SearchAgent(string agentName)
+        {
+            var a = await _userService.GetAgentByNameAsync(agentName);
+            return View("Agents", a);
+
+        }
+
         public async Task<IActionResult> PropertyDetails(int Id)
         {
             RealStatePropertyDetailsViewModel property = new();

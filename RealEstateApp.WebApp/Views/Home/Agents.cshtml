@@ -6,14 +6,15 @@
 
 <div class="container mt-5 mb-5">
     <h2 class="fw-bold text-center mb-4">Search Our Agent Directory</h2>
-    <form method="post" class="mb-5">
+    <form method="post" class="mb-5" asp-controller="Home" asp-action="SearchAgent">
         <div class="col-12 d-flex justify-content-center">
             <div class="col-8 d-flex gap-2">
                 <input type="text"
+                       name="agentName"
                        class="form-control inputBackground"
                        placeholder="Search agent name..." />
                 <button class="btn btn-info fw-bold border-0 principalBlue btnPrincipalBlueHover d-flex gap-2 align-items-center"
-                        type="button">
+                        type="submit">
                     Search
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="14"
@@ -33,7 +34,7 @@
         @foreach (UserViewModel agent in Model)
         {
             <div class="col">
-                <a asp-controller="Agent" asp-action="AgentProperty" asp-route-Id="@agent.Id" class="text-decoration-none">
+                <a asp-controller="Property" asp-action="AgentProperty" asp-route-Id="@agent.Id" class="text-decoration-none">
                     <div class="p-4 bg-body-tertiary cardCustomize border">
                         <div class="d-flex justify-content-center mb-3">
                             <img src="@agent.UserImagePath" class="object-fit-cover rounded-circle" width="120" height="120" alt="">
