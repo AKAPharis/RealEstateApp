@@ -76,6 +76,7 @@ namespace RealEstateApp.Core.Application.Mappings
             #region TypeOfPropertyProfile
 
             CreateMap<TypeOfProperty, TypeOfPropertyViewModel>()
+                .ForMember(x => x.QuantityOfProperties, opt => opt.MapFrom(src => src.Properties.Count()))
                 .ReverseMap();
 
             CreateMap<TypeOfProperty, SaveTypeOfPropertyViewModel>()
@@ -90,6 +91,7 @@ namespace RealEstateApp.Core.Application.Mappings
             #region TypeOfSaleProfile
 
             CreateMap<TypeOfSale, TypeOfSaleViewModel>()
+                .ForMember(x => x.QuantityOfProperties, opt => opt.MapFrom(src => src.Properties.Count()))
                 .ReverseMap();
 
             CreateMap<TypeOfSale, SaveTypeOfSaleViewModel>()

@@ -7,6 +7,7 @@ namespace RealEstateApp.Core.Application.ViewModels.TypeOfProperty
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int QuantityOfProperties { get; set; }
         public ICollection<RealEstatePropertyViewModel> Properties { get; set; }
     }
 }

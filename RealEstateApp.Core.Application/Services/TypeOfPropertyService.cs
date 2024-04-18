@@ -11,5 +11,10 @@ namespace RealEstateApp.Core.Application.Services
         public TypeOfPropertyService(ITypeOfPropertyRepository repo, IMapper mapper) : base(repo, mapper)
         {
         }
+        public async Task<List<TypeOfPropertyViewModel>> GetAllWithIncludeAsync(List<string> properties)
+        {
+            return _mapper.Map<List<TypeOfPropertyViewModel>>(await _repo.GetAllWithIncludeAsync(properties));
+
+        }
     }
 }
