@@ -22,11 +22,20 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
 
         public async Task<List<RealEstateProperty>> GetAllPropertyByUser(string userId)
         {
-            return await _dbSet
+            var result = await _dbSet
                 .Include(x => x.Property)
+                .ThenInclude(x => x.Upgrades)
+                .ThenInclude(x => x.Upgrade)
+                .Include(x => x.Property)
+                .ThenInclude(x => x.Images)
+                .Include(x => x.Property)
+                .ThenInclude(x => x.TypeProperty)
+                .Include(x => x.Property)
+                .ThenInclude(x => x.TypeOfSale)
                 .Where(x => x.UserId == userId)
                 .Select(x => x.Property)
                 .ToListAsync();
+            return result;
         }
         public async Task<List<int>> GetAllPropertyIdByUser(string userId)
         {
