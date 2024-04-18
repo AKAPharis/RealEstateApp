@@ -29,7 +29,7 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> AgentHome()
         {
             var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
-            return View(properties.OrderByDescending(d => d.Created));
+            return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
         //[Authorize(Roles = nameof(UserRoles.Admin))]
@@ -46,7 +46,10 @@ namespace RealEstateApp.WebApp.Controllers
         //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> AgentPropertyMaintenance()
         {
-            return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
+            var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
+            return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
+
+            //return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
         //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]

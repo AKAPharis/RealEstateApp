@@ -5,6 +5,8 @@ using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
+using NuGet.Protocol.Core.Types;
+using RealEstateApp.Core.Application.ViewModels.Account;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -31,7 +33,7 @@ namespace RealEstateApp.WebApp.Controllers
         {
             ViewBag.TypeOfProperty = await _typeOfProperty.GetAllAsync();
             var list = await _propertyService.GetAllByFilter(filter);
-            return View(list.OrderByDescending(f => f.Created));
+            return View(list.Count() > 0 ? list.OrderByDescending(f => f.Created).ToList() : list);
         }
 
         public async Task<IActionResult> Agents() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
@@ -50,14 +52,24 @@ namespace RealEstateApp.WebApp.Controllers
             {
                 property.Agent = await _userService.GetByIdAsync(property.Property.AgentId);
             }
-            return View(property);
+            else
+            {
+                property.Property = new();
+                property.Agent = new();
+            }
+            return View(property); 
+
         }
 
         [HttpPost]
         public async Task<IActionResult> GetPropertyByGuid(string guid)
         {
             var property = await _propertyService.GetByGuidAsync(guid);
-            return RedirectToAction("PropertyDetails", new { Id = property.Id });
+            if (property == null)
+            {
+                return RedirectToAction("Index", new { filter = new RealEstatePropertyFilterViewModel() });
+            }
+            return RedirectToAction("PropertyDetails", new { Id = property.Id});
         }
 
         public async Task<IActionResult> CustomerHome(RealEstatePropertyFilterViewModel filter)
@@ -67,7 +79,7 @@ namespace RealEstateApp.WebApp.Controllers
             RealEstatePropertyCustomerViewModel list = new();
             list.Properties = properties;
             list.FavoriteProperties = await _favoritePropertyService.GetAllPropertyIdByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
-            return View(list.Properties.OrderByDescending(f => f.Created));
+            return View(list.Properties.Count > 0 ? list.Properties.OrderByDescending(f => f.Created).ToList() : list);
         }
 
         public async Task<IActionResult> AddFavoriteProperty(int Id)

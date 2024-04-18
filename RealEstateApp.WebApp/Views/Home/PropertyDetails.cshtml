@@ -5,6 +5,7 @@
     int carouselCount1 = 1;
     int carouselCount2 = 2;
     ViewData["Title"] = "Details";
+
 }
 
 <!-- Carousel -->
@@ -18,7 +19,7 @@
                 aria-current="true"
                 aria-label="Slide 1"></button>
 
-        @if (Model.Property.Images.Count > 1)
+        @if (Model.Property.Images != null && Model.Property.Images.Count > 1)
         {
             @for (int i = 1; i < Model.Property.Images.Count; i++)
             {
@@ -168,7 +169,7 @@
                         <h4 class="text-center fw-light">Are you interested in this property? <span class="fw-bold principalBlueText">Ask for advice</span> </h4>
                     </div>
                     <div class="d-flex justify-content-center mb-3">
-                        <img src="@Model.Agent.UserImagePath" class="object-fit-cover rounded-circle" width="150" height="150" alt="">
+                        <img src="@(Model.Agent.UserImagePath != null && Model.Agent.UserImagePath != string.Empty ? Model.Agent.UserImagePath : "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg")" class="object-fit-cover rounded-circle" width="150" height="150" alt="">
                     </div>
                     <div>
                         <div class="d-flex justify-content-center mb-3">

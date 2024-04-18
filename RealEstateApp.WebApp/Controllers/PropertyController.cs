@@ -31,13 +31,13 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> AgentProperty(string Id)
         {
             var properties = await _propertyService.GetByAgentAsync(Id);
-            return View(properties.OrderByDescending(d => d.Created));
+            return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
         public async Task<IActionResult> CustomerProperties()
         {
             var properties = await _favoritePropertyService.GetAllPropertyByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
-            return View(properties.OrderByDescending(d => d.Created));
+            return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
         public async Task<IActionResult> Create()

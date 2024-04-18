@@ -82,6 +82,10 @@ namespace RealEstateApp.WebApp.Controllers
         //[Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> Edit(SaveUserViewModel vm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("SaveAdmin", vm);
+            }
             vm.Role = nameof(UserRoles.Admin);
             var origin = Request.Headers["origin"];
             UserEditResponse response = await _userService.EditUserAsync(vm, origin);
