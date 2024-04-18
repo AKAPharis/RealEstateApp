@@ -1,131 +1,19 @@
 ﻿@using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-@model RealEstatePropertyCustomerViewModel;
+@model List<RealEstatePropertyViewModel>;
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Properties";
 }
 
-<!-- Banner -->
-<div class="container-fluid p-0 mb-5">
-    <div class="p-4 p-md-5 mb-4 text-body-emphasis bg-body-secondary banner d-flex align-items-center">
-        <div class="col-lg-6 px-0 textbanner">
-            <p class="lead mb-4">
-                <a href="#"
-                   class="fw-bold principalBlue p-3 text-decoration-none gap-2 d-flex justify-content-center col-8 col-lg-4 col-md-4 col-sm-6 align-items-center aaa text-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="18"
-                         height="18"
-                         fill="currentColor"
-                         class="bi bi-house-door-fill"
-                         viewBox="0 0 16 16">
-                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
-                    </svg>Real State Agency
-                </a>
-            </p>
-            <h1 class="display-4 tittleFont fw-bold col-9">
-                Find the perfect place to live with your family
-            </h1>
-        </div>
-    </div>
-</div>
-
-<!-- Filters -->
-<div class="container mb-5">
-    <div class="col-md-12">
-        <div class="h-100 px-5 py-4 bg-body-tertiary border rounded-3">
-            <form class="row g-3 row-cols-md-6 flex-wrap">
-                <div class="col">
-                    <select class="form-select inputBackground" name="TypeOfProperty" asp-items="@(new SelectList(ViewBag.TypeOfProperty, "Id", "Name"))">
-                        <option value="0">All types</option>
-                    </select>
-                </div>
-
-                <div class="col">
-                    <select class="form-select inputBackground" name="NumberOfBathrooms">
-                        <option value="0">Baths</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                    </select>
-                </div>
-
-                <div class="col">
-                    <select class="form-select inputBackground" name="NumberOfBedrooms">
-                        <option value="0">Beds</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                    </select>
-                </div>
-
-                <div class="col">
-                    <input type="text"
-                           class="form-control inputBackground"
-                           name="MinPrice"
-                           placeholder="$ Min" />
-                </div>
-
-                <div class="col">
-                    <input type="text"
-                           class="form-control inputBackground"
-                           name="MaxPrice"
-                           placeholder="$ Max" />
-                </div>
-
-                <div class="col">
-                    <button class="btn btn-info w-100 fw-bold border-0 principalBlue btnPrincipalBlueHover"
-                            type="submit">
-                        Filter
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Search by code -->
+<!-- Tittle -->
 <div class="container mb-5">
     <h2 class="text-center principalBlueText fw-bold">Properties</h2>
-    <div class="col-12">
-        <form method="post" asp-controller="Home" asp-action="GetPropertyByGuid">
-            <div class="col-12 d-flex justify-content-end">
-                <div class="col-3 d-flex gap-2">
-                    <input type="text"
-                           class="form-control inputBackground"
-                           placeholder="Search code..." />
-                    <button class="btn btn-info fw-bold border-0 principalBlue btnPrincipalBlueHover d-flex gap-2 align-items-center"
-                            type="button">
-                        Search
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="14"
-                             height="14"
-                             fill="currentColor"
-                             class="bi bi-search"
-                             viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
 
 <!-- List of properties -->
 <div class="container mb-5">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
 
-
-        @foreach (RealEstatePropertyViewModel property in Model.Properties)
+        @foreach (RealEstatePropertyViewModel property in Model)
         {
             <div class="col">
                 <a asp-controller="Home" asp-action="PropertyDetails" asp-route-Id="@property.Id" class="text-decoration-none">
@@ -154,25 +42,11 @@
                         <div class="card-body px-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <p class="card-text fw-bold small mb-0 text-white">@property.TypeProperty.Name</p>
-
-                                @if (Model.FavoriteProperties.Contains(property.Id))
-                                {
-                                    <a asp-controller="Home" asp-action="RemoveFavoriteProperty" asp-route-Id="@property.Id">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#47FFE9" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-                                        </svg>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a asp-controller="Home" asp-action="AddFavoriteProperty" asp-route-Id="@property.Id">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#47FFE9" class="bi bi-heart"
-                                             viewBox="0 0 16 16">
-                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
-                                        </svg>
-                                    </a>
-                                }
-
+                                <a asp-controller="Home" asp-action="RemoveFavoriteProperty" asp-route-Id="@property.Id">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#47FFE9" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                                    </svg>
+                                </a>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <p class="card-text text-muted small mb-0 d-flex align-items-center gap-1">
@@ -234,16 +108,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if (ViewBag.CreateResponse != null)
-                            {
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="alert alert-danger alert-dismissible mt-3 fade show" role="alert">
-                                        <p class="mb-0">@ViewBag.CreateResponse.Error</p>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                </div>
-                            }
                         </div>
                     </div>
                 </a>
@@ -251,3 +115,4 @@
         }
     </div>
 </div>
+
