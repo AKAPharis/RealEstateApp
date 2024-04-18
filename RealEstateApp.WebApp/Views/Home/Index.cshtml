@@ -114,7 +114,7 @@
         @foreach (RealEstatePropertyViewModel property in Model)
         {
             <div class="col">
-                <a asp-controller="Home" asp-action="PropertyDetails" class="text-decoration-none">
+                <a asp-controller="Home" asp-action="PropertyDetails" asp-route-Id="@property.Id" class="text-decoration-none">
                     <div class="card inputBackground cardCustomize shadow-sm">
                         <div class="image_container position-relative">
                             <div class="image-tittle p-2 ms-4 mt-4 px-3 position-absolute">

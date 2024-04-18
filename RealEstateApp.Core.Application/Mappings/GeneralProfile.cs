@@ -29,6 +29,11 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath)))
                 .ReverseMap();
 
+            CreateMap<RealEstatePropertyViewModel, RealStatePropertyDetailsViewModel>()
+                .ForMember(src => src.AgentLastName, opt => opt.Ignore())
+                .ForMember(src => src.AgentPhoneNumber, opt => opt.Ignore())
+                .ForMember(src => src.AgentEmail, opt => opt.Ignore())
+                .ReverseMap();
 
             CreateMap<RealEstateProperty, SaveRealEstatePropertyViewModel>()
                 .ForMember(x => x.ImagesPath, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath).ToList()))
@@ -40,6 +45,7 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<RealEstatePropertyFilterViewModel, RealEstatePropertyFilterDTO>()
                 .ReverseMap();
+
             CreateMap<PropertyUpgrade, RealEstatePropertyViewModel>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(src => src.PropertyId))
                 .ForMember(x => x.AgentId, opt => opt.MapFrom(src => src.Property.AgentId))
@@ -64,8 +70,8 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<SaveUserViewModel, UserRegisterRequest>()
                 .ReverseMap();
 
-            CreateMap<SaveUserViewModel, UserEditRequest>()
-                    .ReverseMap();
+            CreateMap<SaveUserViewModel, UserRegisterRequest>()
+                .ReverseMap();
 
             #endregion
 
@@ -121,7 +127,6 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<FavoriteProperty, CreateFavoritePropertyViewModel>()
                 .ReverseMap();
             #endregion
-
 
             #region CQRS
 
