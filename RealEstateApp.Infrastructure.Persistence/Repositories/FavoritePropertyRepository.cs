@@ -28,6 +28,13 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
                 .Select(x => x.Property)
                 .ToListAsync();
         }
+        public async Task<List<int>> GetAllPropertyIdByUser(string userId)
+        {
+            return await _dbSet
+                .Where(x => x.UserId == userId)
+                .Select(x => x.PropertyId)
+                .ToListAsync();
+        }
 
         public async Task<List<FavoriteProperty>> GetAllByProperty(int propertyId)
         {
