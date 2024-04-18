@@ -99,11 +99,12 @@
         <form method="post" asp-controller="Home" asp-action="GetPropertyByGuid">
             <div class="col-12 d-flex justify-content-end">
                 <div class="col-3 d-flex gap-2">
-                    <input type="text"
+                    <input name="guid"
+                           type="text"
                            class="form-control inputBackground"
                            placeholder="Search code..." />
                     <button class="btn btn-info fw-bold border-0 principalBlue btnPrincipalBlueHover d-flex gap-2 align-items-center"
-                            type="button">
+                            type="submit">
                         Search
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="14"

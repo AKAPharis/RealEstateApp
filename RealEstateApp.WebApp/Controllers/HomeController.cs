@@ -50,7 +50,7 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> GetPropertyByGuid(string guid)
         {
             var property = await _propertyService.GetByGuidAsync(guid);
-            return RedirectToAction("PropertyDetails", property.Id);
+            return RedirectToAction("PropertyDetails", new { Id = property.Id });
         }
 
         public IActionResult CustomerHome()
