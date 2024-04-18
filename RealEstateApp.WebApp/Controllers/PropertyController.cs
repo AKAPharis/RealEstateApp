@@ -28,11 +28,6 @@ namespace RealEstateApp.WebApp.Controllers
             _favoritePropertyService = favoritePropertyService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> AgentProperty(string Id)
         {
             return View(await _propertyService.GetByAgentAsync(Id));

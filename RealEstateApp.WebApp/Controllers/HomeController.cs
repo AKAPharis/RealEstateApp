@@ -88,5 +88,21 @@ namespace RealEstateApp.WebApp.Controllers
             }
             return RedirectToAction("CustomerHome");
         }
+
+        public async Task<IActionResult> RemoveFavoriteProperty(int Id)
+        {
+            CreateFavoritePropertyViewModel favProperty = new();
+            var response = await _favoritePropertyService.DeleteAsync(favProperty);
+            if (response.HasError)
+            {
+                ViewBag.CreateResponse = new
+                {
+                    response.Error,
+                    hasError = response.HasError
+                };
+                return RedirectToAction("CustomerHome");
+            }
+            return RedirectToAction("CustomerHome");
+        }
     }
 }
