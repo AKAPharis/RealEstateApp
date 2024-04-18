@@ -67,7 +67,7 @@ namespace RealEstateApp.Core.Application.Services
         public async Task DeactivateUser(string id)
         {
             var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            if (loggedUser != null || loggedUser.Id != id)
+            if (loggedUser != null && loggedUser.Id != id)
             {
 
                 await _accountService.DeactivateUser(id);
