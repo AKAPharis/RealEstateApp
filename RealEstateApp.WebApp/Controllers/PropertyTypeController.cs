@@ -15,7 +15,7 @@ namespace RealEstateApp.WebApp.Controllers
             _typeOfPropertyService = typeOfPropertyService;
         }
 
-        public async Task<IActionResult> Index() => View(await _typeOfPropertyService.GetAllAsync());
+        public async Task<IActionResult> Index() => View(await _typeOfPropertyService.GetAllWithIncludeAsync(new List<string> { "Properties" }));
 
         public IActionResult Create() => View("SavePropertyType", new SaveTypeOfPropertyViewModel());
         

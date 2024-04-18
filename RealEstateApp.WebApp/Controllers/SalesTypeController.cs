@@ -13,7 +13,7 @@ namespace RealEstateApp.WebApp.Controllers
             _typeOfSaleService = typeOfSaleService;
         }
 
-        public async Task<IActionResult> Index() => View(await _typeOfSaleService.GetAllAsync());
+        public async Task<IActionResult> Index() => View(await _typeOfSaleService.GetAllWithIncludeAsync(new List<string> { "Properties" }));
 
         public IActionResult Create() => View("SaveSaleType", new SaveTypeOfSaleViewModel());
 
