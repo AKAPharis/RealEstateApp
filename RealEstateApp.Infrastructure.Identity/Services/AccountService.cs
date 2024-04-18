@@ -162,6 +162,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
             user.DocumentId = request.DocumentId ?? user.DocumentId;
             user.UserName = request.Username ?? user.UserName;
+            user.Email = request.Email ?? user.Email;
             if (request.UserImage != null)
             {
                 user.UserImagePath = UploadHelper.UploadFile(request.UserImage, user.Id, nameof(UploadEntities.User), true, user.UserImagePath);
@@ -454,6 +455,21 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         {
             await _signInManager.SignOutAsync();
         }
+
+        public async Task<UserDeleteResponse> DeleteAsync(string id)
+        {
+            UserDeleteResponse response = new();
+            var user = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = "We couldn't delete the user";
+                return response;
+            }
+            return response;
+        }
+
         public async Task<List<UserViewModel>> GetAllByRoleViewModel(string role)
         {
             var users = await _userManager.Users.ToListAsync();

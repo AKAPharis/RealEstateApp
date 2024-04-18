@@ -87,11 +87,20 @@ body {
     font-size: 15px;
 }
 
+.btn-outline-customize {
+    border: 1px solid #47FFE9;
+    color: #47FFE9;
+}
+
+    .btn-outline-customize:hover {
+        background-color: #47FFE9;
+        border: 1px solid #47FFE9;
+        color: #212529;
+    }
+
 .image-tittle {
     background-color: #47FFE9;
     border-radius: 10px;
-    width: 87px;
-    height: 35px;
 }
 
 .cardCustomize {

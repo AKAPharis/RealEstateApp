@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
+using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 using RealEstateApp.Core.Application.ViewModels.Upgrade;
 
 namespace RealEstateApp.WebApp.Controllers
@@ -24,6 +26,29 @@ namespace RealEstateApp.WebApp.Controllers
                 return View("SaveUpgrade", vm);
             }
             await _upgradeService.CreateAsync(vm);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(int Id)
+        {
+            SaveUpgradeViewModel vm = await _upgradeService.GetByIdSaveViewModelAsync(Id);
+            return View("SaveUpgrade", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(SaveUpgradeViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("SaveUpgrade", vm);
+            }
+            await _upgradeService.UpdateAsync(vm, (Int32)vm.Id);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int Id)
+        {
+            await _upgradeService.DeleteAsync(Id);
             return RedirectToAction("Index");
         }
     }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RealEstateApp.Core.Application.ViewModels.RealEstateProperty
 {
-    public class RealStatePropertyDetailsViewModel
+    public class RealEstatePropertyDetailsViewModel
     {
         public RealEstatePropertyViewModel Property { get; set; }
         public UserViewModel Agent { get; set; }

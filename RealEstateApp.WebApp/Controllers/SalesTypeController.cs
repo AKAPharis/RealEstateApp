@@ -13,7 +13,7 @@ namespace RealEstateApp.WebApp.Controllers
             _typeOfSaleService = typeOfSaleService;
         }
 
-        public async Task<IActionResult> Index() => View(await _typeOfSaleService.GetAllAsync());
+        public async Task<IActionResult> Index() => View(await _typeOfSaleService.GetAllWithIncludeAsync(new List<string> { "Properties" }));
 
         public IActionResult Create() => View("SaveSaleType", new SaveTypeOfSaleViewModel());
 
@@ -32,7 +32,23 @@ namespace RealEstateApp.WebApp.Controllers
         {
             SaveTypeOfSaleViewModel vm = await _typeOfSaleService.GetByIdSaveViewModelAsync(Id);
             return View("SaveSaleType", vm);
-        } 
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(SaveTypeOfSaleViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("SaveSaleType", vm);
+            }
+            await _typeOfSaleService.UpdateAsync(vm, (Int32)vm.Id);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int Id)
+        {
+            await _typeOfSaleService.DeleteAsync(Id);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IFavoritePropertyService
     {
-        Task<CreateFavoriteResponse> CreateSaveFavoriteAsync(CreateFavoritePropertyViewModel vm);
+        Task<CreateFavoriteResponse> CreateFavoriteAsync(CreateFavoritePropertyViewModel vm);
         Task<DeleteFavoriteResponse> DeleteAsync(int favoriteId);
         Task<List<RealEstatePropertyViewModel>> GetAllPropertyByUser(string userId);
         Task<List<string>> GetAllUserIdByProperty(int propertyId);
