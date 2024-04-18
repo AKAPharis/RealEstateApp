@@ -10,6 +10,7 @@ namespace RealEstateApp.Infrastructure.Identity.Seeds
         {
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin.ToString()));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Customer.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.Developer.ToString()));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.RealEstateAgent.ToString()));
         }
     }
