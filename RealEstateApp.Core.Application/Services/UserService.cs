@@ -8,6 +8,7 @@ using System.Data;
 using RealEstateApp.Core.Application.Enums.Roles;
 using Microsoft.AspNetCore.Identity;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -17,19 +18,35 @@ namespace RealEstateApp.Core.Application.Services
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IRealEstatePropertyRepository _propertyRepository;
+        private readonly IRealEstatePropertyService _realEstatePropertyService;
 
 
-        public UserService(IAccountService accountService, IMapper mapper, IHttpContextAccessor contextAccessor, IRealEstatePropertyRepository propertyRepository)
+        public UserService(IAccountService accountService, IMapper mapper, IHttpContextAccessor contextAccessor, IRealEstatePropertyRepository propertyRepository, IRealEstatePropertyService realEstatePropertyService)
         {
             _accountService = accountService;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
             _propertyRepository = propertyRepository;
+            _realEstatePropertyService = realEstatePropertyService;
         }
 
         public async Task ActivateUser(string id)
         {
             await _accountService.ActivateUser(id);
+        }
+
+        public async Task<UserDeleteResponse> DeleteUser(string id)
+        {
+            var user = await _accountService.GetByIdAsync(id);
+            var result = await _accountService.DeleteAsync(id);
+            if (!result.HasError)
+            {
+                if (user.Roles.Contains(nameof(UserRoles.RealEstateAgent)))
+                {
+                    await _realEstatePropertyService.DeleteAsync(id);
+                }
+            }
+            return result;
         }
 
         public async Task<AuthenticationResponse> AuthenticateAsync(LoginViewModel request)
@@ -51,7 +68,7 @@ namespace RealEstateApp.Core.Application.Services
         {
             var result = new UserEditResponse();
             var loggedUser = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            
+
             if (loggedUser == null)
             {
 
@@ -67,7 +84,7 @@ namespace RealEstateApp.Core.Application.Services
                 return result;
             }
             result = await _accountService.EditUserAsync(_mapper.Map<UserEditRequest>(request), origin);
-            if(result == null)
+            if (result == null)
             {
                 result = new UserEditResponse();
                 result.HasError = true;
@@ -75,13 +92,13 @@ namespace RealEstateApp.Core.Application.Services
                 return result;
 
             }
-            if(request.Role == nameof(UserRoles.RealEstateAgent))
+            if (request.Role == nameof(UserRoles.RealEstateAgent))
             {
-                var properties = await _propertyRepository.GetByAgentAsync(request.Id);
+                var properties = await _realEstatePropertyService.GetByAgentAsync(request.Id);
                 foreach (var property in properties)
                 {
                     property.AgentName = request.FirstName;
-                    await _propertyRepository.UpdateAsync(property, property.Id);
+                    await _realEstatePropertyService.UpdateAsync(_mapper.Map<SaveRealEstatePropertyViewModel>(property), property.Id);
                 }
 
             }
