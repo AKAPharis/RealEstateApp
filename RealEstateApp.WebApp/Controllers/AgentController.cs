@@ -10,9 +10,10 @@ namespace RealEstateApp.WebApp.Controllers
 {
     public class AgentController : Controller
     {
-        private readonly IRealEstatePropertyService _realEstatePropertyService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IRealEstatePropertyService _realEstatePropertyService;
+
 
         public AgentController(IRealEstatePropertyService realEstatePropertyService, IUserService userService, IHttpContextAccessor contextAccessor)
         {

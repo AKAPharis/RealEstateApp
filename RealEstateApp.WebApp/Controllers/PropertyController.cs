@@ -3,6 +3,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Dtos.Account;
+using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -14,8 +15,9 @@ namespace RealEstateApp.WebApp.Controllers
         private readonly IUpgradeService _upgradeService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
+        private readonly IFavoritePropertyService _favoritePropertyService;
 
-        public PropertyController(IRealEstatePropertyService propertyService, ITypeOfPropertyService typeOfPropertyService, ITypeOfSaleService typeOfSaleService, IUpgradeService upgradeService, IHttpContextAccessor contextAccessor, IUserService userService)
+        public PropertyController(IRealEstatePropertyService propertyService, ITypeOfPropertyService typeOfPropertyService, ITypeOfSaleService typeOfSaleService, IUpgradeService upgradeService, IHttpContextAccessor contextAccessor, IUserService userService, IFavoritePropertyService favoritePropertyService)
         {
             _propertyService = propertyService;
             _typeOfPropertyService = typeOfPropertyService;
@@ -23,6 +25,7 @@ namespace RealEstateApp.WebApp.Controllers
             _upgradeService = upgradeService;
             _contextAccessor = contextAccessor;
             _userService = userService;
+            _favoritePropertyService = favoritePropertyService;
         }
 
         public IActionResult Index()
@@ -33,6 +36,11 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> AgentProperty(string Id)
         {
             return View(await _propertyService.GetByAgentAsync(Id));
+        }
+
+        public async Task<IActionResult> CustomerProperties()
+        {
+            return View(await _favoritePropertyService.GetAllPropertyByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
         public async Task<IActionResult> Create()

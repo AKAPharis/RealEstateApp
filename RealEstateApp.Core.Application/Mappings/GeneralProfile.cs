@@ -29,7 +29,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath)))
                 .ReverseMap();
 
-            CreateMap<RealEstatePropertyViewModel, RealStatePropertyDetailsViewModel>()
+            CreateMap<RealEstatePropertyViewModel, RealEstatePropertyDetailsViewModel>()
                 .ForMember(src => src.Agent, opt => opt.Ignore())
                 .ReverseMap();
 
