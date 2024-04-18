@@ -151,6 +151,7 @@ namespace RealEstateApp.Core.Application.Services
             viewModel.Guid = originalProperty.Guid;
             viewModel.AgentId = originalProperty.AgentId;
             viewModel.AgentName = originalProperty.AgentName;
+            viewModel.Address = originalProperty.Address;
 
             result = await base.UpdateAsync(viewModel, id);
 
@@ -179,6 +180,13 @@ namespace RealEstateApp.Core.Application.Services
                 }
 
 
+            }
+            else
+            {
+                result = new();
+                result.Error = "There was an error editing the property";
+                result.HasError = true;
+                return result;
             }
 
 
