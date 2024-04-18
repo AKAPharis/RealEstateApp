@@ -37,8 +37,8 @@ namespace RealEstateApp.WebApp.Controllers
 
         public async Task<IActionResult> SearchAgent(string agentName)
         {
-            var a = await _userService.GetAgentByNameAsync(agentName);
-            return View("Agents", a);
+            var agents = await _userService.GetAgentByNameAsync(agentName);
+            return View("Agents", agents);
 
         }
 
