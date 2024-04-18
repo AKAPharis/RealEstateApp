@@ -30,9 +30,9 @@ namespace RealEstateApp.WebApp.Controllers
             return View();
         }
 
-        public IActionResult AgentProperty()
+        public async Task<IActionResult> AgentProperty(string Id)
         {
-            return View();
+            return View(await _propertyService.GetByAgentAsync(Id));
         }
 
         public async Task<IActionResult> Create()

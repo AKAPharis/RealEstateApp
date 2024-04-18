@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Application.Enums.Upload;
 using RealEstateApp.Core.Application.Helpers;
@@ -29,9 +28,9 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
         }
 
-        public async Task<List<RealEstatePropertyViewModel>> GetByGuidAsync(string guid)
+        public async Task<RealEstatePropertyViewModel> GetByGuidAsync(string guid)
         {
-            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByGuidAsync(guid));
+            return _mapper.Map<RealEstatePropertyViewModel>(await _repository.GetByGuidAsync(guid));
         }
 
         public override async Task<SaveRealEstatePropertyViewModel> GetByIdSaveViewModelAsync(int id)
@@ -159,7 +158,6 @@ namespace RealEstateApp.Core.Application.Services
             {
                 if (viewModel.Images != null && viewModel.Images.Count() > 0)
                 {
-
                     foreach (var image in viewModel.Images)
                     {
                         var imagePath = UploadHelper.UploadFile(image, result.Id.Value.ToString(), nameof(UploadEntities.RealEstateProperty));
@@ -178,8 +176,6 @@ namespace RealEstateApp.Core.Application.Services
                         }
                     }
                 }
-
-
             }
             else
             {
@@ -191,7 +187,6 @@ namespace RealEstateApp.Core.Application.Services
 
 
             return result;
-
         }
 
         public override async Task DeleteAsync(int id)

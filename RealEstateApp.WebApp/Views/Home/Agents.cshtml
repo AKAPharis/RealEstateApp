@@ -33,7 +33,7 @@
         @foreach (UserViewModel agent in Model)
         {
             <div class="col">
-                <a href="#" class="text-decoration-none">
+                <a asp-controller="Agent" asp-action="AgentProperty" asp-route-Id="@agent.Id" class="text-decoration-none">
                     <div class="p-4 bg-body-tertiary cardCustomize border">
                         <div class="d-flex justify-content-center mb-3">
                             <img src="@agent.UserImagePath" class="object-fit-cover rounded-circle" width="120" height="120" alt="">

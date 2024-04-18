@@ -34,43 +34,56 @@
         <div class="h-100 px-5 py-4 bg-body-tertiary border rounded-3">
             <form class="row g-3 row-cols-md-6 flex-wrap">
                 <div class="col">
-                    <select class="form-select inputBackground" id="country">
+                    <select class="form-select inputBackground" name="TypeOfProperty" asp-items="@(new SelectList(ViewBag.TypeOfProperty, "Id", "Name"))">
                         <option value="0">All types</option>
-                        <option>United States</option>
                     </select>
                 </div>
 
                 <div class="col">
-                    <select class="form-select inputBackground" id="country">
-                        <option value="">Baths</option>
-                        <option>United States</option>
+                    <select class="form-select inputBackground" name="NumberOfBathrooms">
+                        <option value="0">Baths</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
                     </select>
                 </div>
 
                 <div class="col">
-                    <select class="form-select inputBackground" id="country">
-                        <option value="">Beds</option>
-                        <option>United States</option>
+                    <select class="form-select inputBackground" name="NumberOfBedrooms">
+                        <option value="0">Beds</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
                     </select>
                 </div>
 
                 <div class="col">
                     <input type="text"
                            class="form-control inputBackground"
-                           id="address"
+                           name="MinPrice"
                            placeholder="$ Min" />
                 </div>
 
                 <div class="col">
                     <input type="text"
                            class="form-control inputBackground"
-                           id="address"
+                           name="MaxPrice"
                            placeholder="$ Max" />
                 </div>
 
                 <div class="col">
                     <button class="btn btn-info w-100 fw-bold border-0 principalBlue btnPrincipalBlueHover"
-                            type="button">
+                            type="submit">
                         Filter
                     </button>
                 </div>
@@ -83,7 +96,7 @@
 <div class="container mb-5">
     <h2 class="text-center principalBlueText fw-bold">Properties</h2>
     <div class="col-12">
-        <form method="post" class="">
+        <form method="post" asp-controller="Home" asp-action="GetPropertyByGuid">
             <div class="col-12 d-flex justify-content-end">
                 <div class="col-3 d-flex gap-2">
                     <input type="text"
