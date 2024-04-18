@@ -60,6 +60,11 @@ namespace RealEstateApp.WebApp.Controllers
 
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> LogOutAsync()
         {
             await _userService.SignOutAsync();
@@ -87,8 +92,6 @@ namespace RealEstateApp.WebApp.Controllers
             }
             return RedirectToAction("Index");
         }
-
-      
 
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
