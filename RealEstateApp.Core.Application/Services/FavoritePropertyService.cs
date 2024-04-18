@@ -18,7 +18,7 @@ namespace RealEstateApp.Core.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<CreateFavoriteResponse> CreateSaveFavoriteAsync(CreateFavoritePropertyViewModel vm)
+        public async Task<CreateFavoriteResponse> CreateFavoriteAsync(CreateFavoritePropertyViewModel vm)
         {
             CreateFavoriteResponse response = new();
             var creationResponse = await _repository.CreateAsync(_mapper.Map<FavoriteProperty>(vm));
@@ -27,10 +27,8 @@ namespace RealEstateApp.Core.Application.Services
                 response.Error = "Was an error while saving your favorite";
                 response.HasError = true;
                 return response;
-
             }
             return response;
-        
         }
 
         public async Task<DeleteFavoriteResponse> DeleteAsync(int favoriteId)

@@ -32,7 +32,7 @@ namespace RealEstateApp.Tests.ApplicationTest.Services
             };
 
 
-            var result = await _favoriteService.CreateSaveFavoriteAsync(viewModel);
+            var result = await _favoriteService.CreateFavoriteAsync(viewModel);
             result.Should().BeOfType<CreateFavoriteResponse>();
             result.HasError.Should().BeFalse();
             result.Error.Should().BeNullOrWhiteSpace();
