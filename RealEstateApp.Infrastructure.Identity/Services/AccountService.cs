@@ -164,7 +164,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.UserName = request.Username ?? user.UserName;
             if (request.UserImage != null)
             {
-                user.UserImagePath = UploadHelper.UploadFile(request.UserImage,user.Id,nameof(UploadEntities.User),true,user.UserImagePath);
+                user.UserImagePath = UploadHelper.UploadFile(request.UserImage, user.Id, nameof(UploadEntities.User), true, user.UserImagePath);
 
             }
 
@@ -388,10 +388,14 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
             var result = await _userManager.CreateAsync(user, request.Password);
             var createdUser = await _userManager.FindByNameAsync(user.UserName);
-            if (result.Succeeded)
+            if (result.Succeeded && createdUser != null)
             {
-                createdUser.UserImagePath = UploadHelper.UploadFile(request.UserImage, createdUser.Id, nameof(UploadEntities.User));
-                await _userManager.UpdateAsync(createdUser);
+                if (request.UserImage != null)
+                {
+                    createdUser.UserImagePath = UploadHelper.UploadFile(request.UserImage, createdUser.Id, nameof(UploadEntities.User));
+                    await _userManager.UpdateAsync(createdUser);
+
+                }
                 await _userManager.AddToRoleAsync(user, request.Role);
 
                 if (request.Role == nameof(UserRoles.Customer))
