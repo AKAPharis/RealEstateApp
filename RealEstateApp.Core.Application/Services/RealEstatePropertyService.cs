@@ -22,10 +22,11 @@ namespace RealEstateApp.Core.Application.Services
             _upgradeRepository = upgradeRepository;
             _favoriteRepository = favoriteRepository;
         }
-        
+
         public async Task<List<RealEstatePropertyViewModel>> GetByAgentAsync(string agentId)
         {
-            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
+            var result = _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
+            return result;
         }
 
         public async Task<RealEstatePropertyViewModel> GetByGuidAsync(string guid)
@@ -35,7 +36,7 @@ namespace RealEstateApp.Core.Application.Services
 
         public override async Task<SaveRealEstatePropertyViewModel> GetByIdSaveViewModelAsync(int id)
         {
-            return _mapper.Map<SaveRealEstatePropertyViewModel>(await _repository.GetByIdWithIncludeAsync(id,new List<string> { "Images","Upgrades"}));
+            return _mapper.Map<SaveRealEstatePropertyViewModel>(await _repository.GetByIdWithIncludeAsync(id, new List<string> { "Images", "Upgrades" }));
         }
 
         public async override Task<SaveRealEstatePropertyViewModel> CreateAsync(SaveRealEstatePropertyViewModel viewModel)
@@ -106,7 +107,7 @@ namespace RealEstateApp.Core.Application.Services
                 return result;
             }
             var originalProperty = await _repository.GetByIdWithIncludeAsync(viewModel.Id ?? 0, new List<string> { "TypeOfSale", "TypeProperty", "Upgrades", "Images" });
-            if(originalProperty == null)
+            if (originalProperty == null)
             {
                 result.Error = "We could't found the property to update";
                 result.HasError = true;
@@ -171,7 +172,7 @@ namespace RealEstateApp.Core.Application.Services
                             });
                             if (result.ImagesPath == null)
                                 result.ImagesPath = new();
-                            
+
                             result.ImagesPath.Add(imagePath);
                         }
                     }
@@ -212,6 +213,35 @@ namespace RealEstateApp.Core.Application.Services
             }
             await base.DeleteAsync(id);
 
+        }
+        public async Task DeleteAsync(string agentId)
+        {
+            var properties = await _repository.GetByAgentAsync(agentId);
+            foreach (var property in properties)
+            {
+
+                var images = await _imageRepository.GetAllByProperty(property.Id);
+                if (images != null && images.Count() > 0)
+                {
+
+                    for (int i = 0; i < images.Count; i++)
+                    {
+                        await _imageRepository.DeleteAsync(images[i]);
+                    }
+                }
+                var upgrades = await _upgradeRepository.GetAllByProperty(property.Id);
+                for (int i = 0; i < upgrades.Count; i++)
+                {
+                    await _upgradeRepository.DeleteAsync(upgrades[i]);
+                }
+                var favorite = await _favoriteRepository.GetAllByProperty(property.Id);
+                for (int i = 0; i < favorite.Count; i++)
+                {
+                    await _favoriteRepository.DeleteAsync(favorite[i]);
+                }
+                await base.DeleteAsync(property.Id);
+
+            }
         }
 
         public async Task<List<RealEstatePropertyViewModel>> GetAllByFilter(RealEstatePropertyFilterViewModel filter)

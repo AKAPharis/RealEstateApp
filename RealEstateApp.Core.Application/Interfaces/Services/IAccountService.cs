@@ -25,5 +25,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task DeactivateUser(string id);
         Task ActivateUser(string id);
         Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput);
+        Task<UserDeleteResponse> DeleteAsync(string id);
     }
 }
