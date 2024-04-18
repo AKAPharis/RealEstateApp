@@ -30,9 +30,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap();
 
             CreateMap<RealEstatePropertyViewModel, RealStatePropertyDetailsViewModel>()
-                .ForMember(src => src.AgentLastName, opt => opt.Ignore())
-                .ForMember(src => src.AgentPhoneNumber, opt => opt.Ignore())
-                .ForMember(src => src.AgentEmail, opt => opt.Ignore())
+                .ForMember(src => src.Agent, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<RealEstateProperty, SaveRealEstatePropertyViewModel>()

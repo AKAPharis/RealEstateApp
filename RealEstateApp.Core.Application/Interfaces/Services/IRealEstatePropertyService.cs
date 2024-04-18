@@ -1,5 +1,4 @@
 ﻿using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 using RealEstateApp.Core.Domain.Models;
 
 namespace RealEstateApp.Core.Application.Interfaces.Services
@@ -12,7 +11,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<int> GetTotalPropertiesByAgent(string agentId);
         Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync(List<string> properties);
         Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync();
-        Task<List<RealEstatePropertyViewModel>> GetByGuidAsync(string guid);
+        Task<RealEstatePropertyViewModel> GetByGuidAsync(string guid);
         Task<RealEstatePropertyViewModel> GetAllByIdWithIncludeAsync(int id);
     }
 }

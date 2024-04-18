@@ -8,6 +8,7 @@ namespace RealEstateApp.Core.Domain.Models
         public string Description { get; set; }
         public double Price { get; set; }
         public double Size { get; set; }
+        public string Address { get; set; }
         public int NumberOfBedrooms { get; set; }
         public int NumberOfBathrooms { get; set; }
         public string AgentId { get; set; }

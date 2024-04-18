@@ -69,6 +69,12 @@
                     </div>
 
                     <div class="mb-3">
+                        <label asp-for="Address" class="form-label fw-bold">Address</label>
+                        <input asp-for="Address" multiple class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="Description" class="form-label fw-bold">Property description</label>
                         <textarea asp-for="Description" class="form-control" style="height: 100px"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
@@ -100,38 +106,6 @@
                         <input asp-for="Images" multiple class="form-control" />
                         <span asp-validation-for="Images" class="text-danger"></span>
                     </div>
-                    
-
-                    @* @foreach (string imagePath in Model.ImagesPath)
-                    {
-                        <div class="mb-3">
-                            <div class="mb-3">
-                                <img id="image-preview-1" src="@imagePath" class="object-fit-cover rounded" height="200" width="100%" alt="">
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Images" class="form-label fw-bold">Change image</label>
-                                <input asp-for="Images" id="image-upload-1" class="form-control" data-preview-id="image-preview-1" />
-                                <span asp-validation-for="Images" class="text-danger"></span>
-                                <input type="hidden" asp-for="ImagesPath" value="@imagePath" />
-                            </div>
-                        </div>
-                    }
-                    @if (Model.ImagesPath.Count < 4)
-                    {
-                        for (int i = 1; i <= 4 - Model.ImagesPath.Count; i++)
-                        {
-                            <div class="mb-3">
-                                <div class="mb-3">
-                                    <img id="image-preview-@i" src="" class="object-fit-cover rounded" height="200" width="100%" alt="">
-                                </div>
-                                <div class="mb-3">
-                                    <label asp-for="Images" class="form-label fw-bold">Change image</label>
-                                    <input asp-for="Images" id="image-upload-1" class="form-control" data-preview-id="image-preview-@i" />
-                                    <span asp-validation-for="Images" class="text-danger"></span>
-                                </div>
-                            </div>
-                        }
-                    } *@
 
                     @if (Model.HasError)
                     {

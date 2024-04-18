@@ -47,15 +47,34 @@ namespace RealEstateApp.Core.Application.Services
 
             return response;
         }
+        public async Task<DeleteFavoriteResponse> DeleteAsync(int propertyId, string userId)
+        {
+            DeleteFavoriteResponse response = new();
+            var propertyFavorite = await _repository.GetFavorite(propertyId,userId);
+            if (propertyFavorite == null)
+            {
+                response.Error = $"There's no favorite property that fulfil the conditions";
+                response.HasError = true;
+                return response;
+            }
+            await _repository.DeleteAsync(propertyFavorite);
+
+            return response;
+        }
 
         public async Task<List<string>> GetAllUserIdByProperty(int propertyId)
         {
             return await _repository.GetAllUserIdByProperty(propertyId);
         }
 
-        public async Task<List<RealEstatePropertyViewModel>> GetAllByUser(string userId)
+        public async Task<List<RealEstatePropertyViewModel>> GetAllPropertyByUser(string userId)
         {
             return  _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllPropertyByUser(userId));
+        }
+
+        public async Task<List<int>> GetAllPropertyIdByUser(string userId)
+        {
+            return await _repository.GetAllPropertyIdByUser(userId);
         }
     }
 }

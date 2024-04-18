@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Dtos.Entities.RealEstateProperty;
 using RealEstateApp.Core.Application.Enums.Upload;
 using RealEstateApp.Core.Application.Helpers;
@@ -29,9 +28,9 @@ namespace RealEstateApp.Core.Application.Services
             return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByAgentAsync(agentId));
         }
 
-        public async Task<List<RealEstatePropertyViewModel>> GetByGuidAsync(string guid)
+        public async Task<RealEstatePropertyViewModel> GetByGuidAsync(string guid)
         {
-            return _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetByGuidAsync(guid));
+            return _mapper.Map<RealEstatePropertyViewModel>(await _repository.GetByGuidAsync(guid));
         }
 
         public override async Task<SaveRealEstatePropertyViewModel> GetByIdSaveViewModelAsync(int id)
@@ -151,6 +150,7 @@ namespace RealEstateApp.Core.Application.Services
             viewModel.Guid = originalProperty.Guid;
             viewModel.AgentId = originalProperty.AgentId;
             viewModel.AgentName = originalProperty.AgentName;
+            viewModel.Address = originalProperty.Address;
 
             result = await base.UpdateAsync(viewModel, id);
 
@@ -158,7 +158,6 @@ namespace RealEstateApp.Core.Application.Services
             {
                 if (viewModel.Images != null && viewModel.Images.Count() > 0)
                 {
-
                     foreach (var image in viewModel.Images)
                     {
                         var imagePath = UploadHelper.UploadFile(image, result.Id.Value.ToString(), nameof(UploadEntities.RealEstateProperty));
@@ -177,13 +176,17 @@ namespace RealEstateApp.Core.Application.Services
                         }
                     }
                 }
-
-
+            }
+            else
+            {
+                result = new();
+                result.Error = "There was an error editing the property";
+                result.HasError = true;
+                return result;
             }
 
 
             return result;
-
         }
 
         public override async Task DeleteAsync(int id)
