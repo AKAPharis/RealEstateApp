@@ -35,6 +35,13 @@ namespace RealEstateApp.WebApp.Controllers
 
         public async Task<IActionResult> Agents() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
 
+        public async Task<IActionResult> SearchAgent(string agentName)
+        {
+            var agents = await _userService.GetAgentByNameAsync(agentName);
+            return View("Agents", agents);
+
+        }
+
         public async Task<IActionResult> PropertyDetails(int Id)
         {
             RealStatePropertyDetailsViewModel property = new();
@@ -50,7 +57,7 @@ namespace RealEstateApp.WebApp.Controllers
         public async Task<IActionResult> GetPropertyByGuid(string guid)
         {
             var property = await _propertyService.GetByGuidAsync(guid);
-            return RedirectToAction("PropertyDetails", property.Id);
+            return RedirectToAction("PropertyDetails", new { Id = property.Id });
         }
 
         public async Task<IActionResult> CustomerHome(RealEstatePropertyFilterViewModel filter)

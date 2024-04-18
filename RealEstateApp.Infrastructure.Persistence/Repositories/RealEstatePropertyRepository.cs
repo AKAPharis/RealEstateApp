@@ -25,7 +25,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
 
         public async Task<RealEstateProperty> GetByGuidAsync(string guid)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.Guid == guid);
+            return await _dbSet.Include(x => x.Upgrades)
+                .ThenInclude(x => x.Upgrade)
+                .Include(x => x.Images)
+                .Include(x => x.TypeProperty)
+                .Include(x => x.TypeOfSale)
+                .FirstOrDefaultAsync(x => x.Guid == guid);
         }
         public virtual async Task<RealEstateProperty> GetByIdWithIncludeAsync(int id,List<string> properties)
         {
@@ -56,7 +61,12 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         }
         public async Task<List<RealEstateProperty>> GetAllByFilter(RealEstatePropertyFilterDTO filter)
         {
-            return await _dbSet.Where(p =>
+            return await _dbSet.Include(x => x.Upgrades)
+                .ThenInclude(x => x.Upgrade)
+                .Include(x => x.Images)
+                .Include(x => x.TypeProperty)
+                .Include(x => x.TypeOfSale)
+                .Where(p =>
                 (filter.TypeOfProperty <= 0 ? (true) : p.TypePropertyId == filter.TypeOfProperty) &&
                 (filter.MinPrice <= 0 ? (true) : p.Price >= filter.MinPrice) &&
                 (filter.MaxPrice <= 0 ? (true) : p.Price <= filter.MaxPrice) &&

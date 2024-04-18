@@ -51,9 +51,14 @@ namespace RealEstateApp.Core.Application.Services
             return await _repository.GetAllUserIdByProperty(propertyId);
         }
 
-        public async Task<List<RealEstatePropertyViewModel>> GetAllByUser(string userId)
+        public async Task<List<RealEstatePropertyViewModel>> GetAllPropertyByUser(string userId)
         {
             return  _mapper.Map<List<RealEstatePropertyViewModel>>(await _repository.GetAllPropertyByUser(userId));
+        }
+
+        public async Task<List<int>> GetAllPropertyIdByUser(string userId)
+        {
+            return await _repository.GetAllPropertyIdByUser(userId);
         }
     }
 }
