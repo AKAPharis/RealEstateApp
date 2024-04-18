@@ -68,7 +68,7 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<SaveUserViewModel, UserRegisterRequest>()
                 .ReverseMap();
 
-            CreateMap<SaveUserViewModel, UserRegisterRequest>()
+            CreateMap<SaveUserViewModel, UserEditRequest>()
                 .ReverseMap();
 
             #endregion

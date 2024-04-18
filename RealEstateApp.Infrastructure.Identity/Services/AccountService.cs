@@ -162,6 +162,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
             user.DocumentId = request.DocumentId ?? user.DocumentId;
             user.UserName = request.Username ?? user.UserName;
+            user.Email = request.Email ?? user.Email;
             if (request.UserImage != null)
             {
                 user.UserImagePath = UploadHelper.UploadFile(request.UserImage, user.Id, nameof(UploadEntities.User), true, user.UserImagePath);
