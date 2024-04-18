@@ -49,12 +49,12 @@ namespace RealEstateApp.Infrastructure.Identity.Services
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
             AuthenticationResponse response = new();
-
-            var user = await _userManager.FindByNameAsync(request.Username);
+            RealEstateUser user;
+            user = request.Input.Contains("@") ? await _userManager.FindByEmailAsync(request.Input)  : await _userManager.FindByNameAsync(request.Input);
             if (user == null)
             {
                 response.HasError = true;
-                response.Error = $"No Accounts registered with {request.Username}";
+                response.Error = $"No Accounts registered with {request.Input}";
                 return response;
             }
 
@@ -62,19 +62,19 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             if (!result.Succeeded)
             {
                 response.HasError = true;
-                response.Error = $"Invalid credentials for {request.Username}";
+                response.Error = $"Invalid credentials for {request.Input}";
                 return response;
             }
             if (!user.EmailConfirmed)
             {
                 response.HasError = true;
-                response.Error = $"Account no confirmed for {request.Username}";
+                response.Error = $"Account no confirmed for {request.Input}";
                 return response;
             }
             if (!user.IsActive)
             {
                 response.HasError = true;
-                response.Error = $"Account no actived for {request.Username}";
+                response.Error = $"Account no actived for {request.Input}";
                 return response;
             }
 

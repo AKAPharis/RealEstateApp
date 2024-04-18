@@ -4,9 +4,9 @@ namespace RealEstateApp.Core.Application.ViewModels.Account
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Please fill the username input")]
+        [Required(ErrorMessage = "Please fill the authentication input")]
         [DataType(DataType.Text)]
-        public string Username { get; set; }
+        public string Input { get; set; }
         [Required(ErrorMessage = "Please fill the password input")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
