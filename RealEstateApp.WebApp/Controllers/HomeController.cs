@@ -7,6 +7,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using NuGet.Protocol.Core.Types;
 using RealEstateApp.Core.Application.ViewModels.Account;
+using System.Collections.Generic;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -36,7 +37,11 @@ namespace RealEstateApp.WebApp.Controllers
             return View(list.Count() > 0 ? list.OrderByDescending(f => f.Created).ToList() : list);
         }
 
-        public async Task<IActionResult> Agents() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent)));
+        public async Task<IActionResult> Agents() 
+        {
+            var users = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
+            return View(users.Count() > 0 ? users.OrderBy(f => f.FirstName).ToList() : users);
+        } 
 
         public async Task<IActionResult> SearchAgent(string agentName)
         {
