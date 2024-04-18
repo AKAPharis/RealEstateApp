@@ -45,6 +45,15 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
                 .Include(x => x.TypeOfSale)
                 .ToListAsync();
         }
+        public async Task<RealEstateProperty> GetByIdWithIncludeAsync(int id)
+        {
+            return await _dbSet.Include(x => x.Upgrades)
+                .ThenInclude(x => x.Upgrade)
+                .Include(x => x.Images)
+                .Include(x => x.TypeProperty)
+                .Include(x => x.TypeOfSale)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
         public async Task<List<RealEstateProperty>> GetAllByFilter(RealEstatePropertyFilterDTO filter)
         {
             return await _dbSet.Where(p =>

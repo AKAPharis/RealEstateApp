@@ -13,5 +13,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
         Task<int> GetTotalProperties();
         Task<int> GetTotalPropertiesByAgent(string agentId);
         Task<List<RealEstateProperty>> GetAllWithIncludeAsync();
+        Task<RealEstateProperty> GetByIdWithIncludeAsync(int id);
     }
 }

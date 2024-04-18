@@ -13,5 +13,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync(List<string> properties);
         Task<List<RealEstatePropertyViewModel>> GetAllWithIncludeAsync();
         Task<List<RealEstatePropertyViewModel>> GetByGuidAsync(string guid);
+        Task<RealEstatePropertyViewModel> GetAllByIdWithIncludeAsync(int id);
     }
 }
