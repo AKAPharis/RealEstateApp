@@ -12,6 +12,13 @@ namespace RealEstateApp.Infrastructure.Persistence.Repositories
         {
         }
 
+        public async Task<FavoriteProperty> GetFavorite(int propertyId, string userId)
+        {
+
+            return await _dbSet
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.PropertyId == propertyId);
+        }
+
         public async Task<List<string>> GetAllUserIdByProperty(int propertyId)
         {
             return await _dbSet

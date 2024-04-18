@@ -47,6 +47,20 @@ namespace RealEstateApp.Core.Application.Services
 
             return response;
         }
+        public async Task<DeleteFavoriteResponse> DeleteAsync(int propertyId, string userId)
+        {
+            DeleteFavoriteResponse response = new();
+            var propertyFavorite = await _repository.GetFavorite(propertyId,userId);
+            if (propertyFavorite == null)
+            {
+                response.Error = $"There's no favorite property that fulfil the conditions";
+                response.HasError = true;
+                return response;
+            }
+            await _repository.DeleteAsync(propertyFavorite);
+
+            return response;
+        }
 
         public async Task<List<string>> GetAllUserIdByProperty(int propertyId)
         {
