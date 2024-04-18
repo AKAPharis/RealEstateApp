@@ -5,9 +5,12 @@ using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.ViewModels.Account;
+using Microsoft.AspNetCore.Authorization;
+using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.WebApp.Controllers
 {
+    //[Authorize]
     public class AgentController : Controller
     {
         private readonly IUserService _userService;
@@ -22,8 +25,11 @@ namespace RealEstateApp.WebApp.Controllers
             _contextAccessor = contextAccessor;
         }
 
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> AgentHome() => View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
 
+
+        //[Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> Index()
         {
             List<UserViewModel> agents = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
@@ -34,23 +40,27 @@ namespace RealEstateApp.WebApp.Controllers
             return View(agents);
         }
 
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> AgentPropertyMaintenance()
         {
             return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> ActivateUser(string Id)
         {
             await _userService.ActivateUser(Id);
             return RedirectToAction("Index");
         }
 
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> DeactivateUser(string Id)
         {
             await _userService.DeactivateUser(Id);
             return RedirectToAction("Index");
         }
 
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> Edit(string Id)
         {
             SaveUserViewModel agent = await _userService.GetByIdSaveViewModelAsync(Id);
@@ -58,12 +68,9 @@ namespace RealEstateApp.WebApp.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> Edit(SaveUserViewModel vm)
         {
-            //if(!ModelState.IsValid)
-            //{
-            //    return View(vm);
-            //}
             vm.Role = nameof(UserRoles.RealEstateAgent);
             var origin = Request.Headers["origin"];
             UserEditResponse response = await _userService.EditUserAsync(vm, origin);
@@ -76,5 +83,11 @@ namespace RealEstateApp.WebApp.Controllers
             }
             return RedirectToAction("AgentHome");
         }
+
+        //public async Task<IActionResult> Delete(string Id)
+        //{
+        //    await _userService.DeleteAsync(Id);
+        //    return RedirectToAction("Index");
+        //}
     }
 }

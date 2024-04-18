@@ -91,8 +91,7 @@ namespace RealEstateApp.WebApp.Controllers
 
         public async Task<IActionResult> RemoveFavoriteProperty(int Id)
         {
-            CreateFavoritePropertyViewModel favProperty = new();
-            var response = await _favoritePropertyService.DeleteAsync(favProperty);
+            var response = await _favoritePropertyService.DeleteAsync(Id, _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
             if (response.HasError)
             {
                 ViewBag.CreateResponse = new

@@ -3,6 +3,7 @@ using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.Account;
 using RealEstateApp.Core.Application.Helpers;
+using RealEstateApp.WebApp.Middlewares;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -16,13 +17,15 @@ namespace RealEstateApp.WebApp.Controllers
             _userService = userService;
             _contextAccessor = contextAccessor;
         }
-
+        
+        [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Index()
         {
             return View(new LoginViewModel());
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(LoginAuthorize))]
         public async Task<IActionResult> Index(LoginViewModel vm)
         {
             if (!ModelState.IsValid)
