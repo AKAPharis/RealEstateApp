@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RealEstateApp.Core.Application.Dtos.Account;
+using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-using RealEstateApp.Core.Application.Helpers;
-using RealEstateApp.Core.Application.Dtos.Account;
-using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.WebApp.Controllers
 {
+    [Authorize]
     public class PropertyController : Controller
     {
         private readonly IRealEstatePropertyService _propertyService;
@@ -34,12 +35,14 @@ namespace RealEstateApp.WebApp.Controllers
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CustomerProperties()
         {
             var properties = await _favoritePropertyService.GetAllPropertyByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> Create()
         {
             SaveRealEstatePropertyViewModel vm = new();
@@ -49,6 +52,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         [HttpPost]
         public async Task<IActionResult> Create(SaveRealEstatePropertyViewModel vm)
         {
@@ -78,6 +82,7 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> Edit(int Id)
         {
             SaveRealEstatePropertyViewModel vm = await _propertyService.GetByIdSaveViewModelAsync(Id);
@@ -87,6 +92,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         [HttpPost]
         public async Task<IActionResult> Edit(SaveRealEstatePropertyViewModel vm)
         {
@@ -103,6 +109,7 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToRoute(new { controller = "Agent", action = "AgentPropertyMaintenance" });
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> Delete(int Id)
         {
             await _propertyService.DeleteAsync(Id);

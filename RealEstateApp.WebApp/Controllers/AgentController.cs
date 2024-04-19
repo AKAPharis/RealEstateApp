@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Account;
-using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Enums.Roles;
+using RealEstateApp.Core.Application.Helpers;
+using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.Account;
-using Microsoft.AspNetCore.Authorization;
-using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.WebApp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AgentController : Controller
     {
         private readonly IUserService _userService;
@@ -25,14 +23,14 @@ namespace RealEstateApp.WebApp.Controllers
             _contextAccessor = contextAccessor;
         }
 
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> AgentHome()
         {
             var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> Index()
         {
             List<UserViewModel> agents = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
@@ -43,7 +41,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(agents);
         }
 
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> AgentPropertyMaintenance()
         {
             var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
@@ -52,29 +50,29 @@ namespace RealEstateApp.WebApp.Controllers
             //return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> ActivateUser(string Id)
         {
             await _userService.ActivateUser(Id);
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> DeactivateUser(string Id)
         {
             await _userService.DeactivateUser(Id);
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
+        [Authorize(Roles = "RealEstateAgent")]
         public async Task<IActionResult> Edit(string Id)
         {
             SaveUserViewModel agent = await _userService.GetByIdSaveViewModelAsync(Id);
             return View(agent);
         }
 
+        [Authorize(Roles = "RealEstateAgent")]
         [HttpPost]
-        //[Authorize(Roles = nameof(UserRoles.RealEstateAgent))]
         public async Task<IActionResult> Edit(SaveUserViewModel vm)
         {
             vm.Role = nameof(UserRoles.RealEstateAgent);
@@ -90,6 +88,7 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("AgentHome");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string Id)
         {
             await _userService.DeleteUser(Id);
