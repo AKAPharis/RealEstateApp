@@ -30,7 +30,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
-        [Authorize(Roles = "RealEstateAgent")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             List<UserViewModel> agents = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
@@ -46,8 +46,6 @@ namespace RealEstateApp.WebApp.Controllers
         {
             var properties = await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
-
-            //return View(await _realEstatePropertyService.GetByAgentAsync(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id));
         }
 
         [Authorize(Roles = "RealEstateAgent")]
