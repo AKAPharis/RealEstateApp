@@ -72,9 +72,11 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToRoute(new { controller = "User", action = "Index" });
         }
 
+        [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Create() => View("SaveUser", new SaveUserViewModel());
 
         [HttpPost]
+        [ServiceFilter(typeof(LoginAuthorize))]
         public async Task<IActionResult> Create(SaveUserViewModel vm)
         {
             if(!ModelState.IsValid)

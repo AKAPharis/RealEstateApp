@@ -139,7 +139,7 @@ else
                             </div>
                             <div class="d-flex justify-content-end align-items-center gap-2 flex-wrap">
                                 <a asp-controller="Property" asp-action="Edit" asp-route-Id="@property.Id" class="px-4 py-1 cardCustomize normalColorButton fw-bold text-decoration-none text-white">Edit</a>
-                                <a data-bs-toggle="modal" data-bs-target="#@modalDeleteId" class="px-3 py-1 cardCustomize normalColorButton fw-bold text-decoration-none text-white">Delete</a>
+                                <a data-bs-toggle="modal" data-bs-target="#@modalDeleteId" type="button" class="px-3 py-1 cardCustomize normalColorButton fw-bold text-decoration-none text-white">Delete</a>
 
                                 <!-- Modal - Delete Product -->
                                 <div class="modal fade p-4 py-md-5" tabindex="-1" role="dialog" id="@modalDeleteId" data-bs-backdrop="static">
