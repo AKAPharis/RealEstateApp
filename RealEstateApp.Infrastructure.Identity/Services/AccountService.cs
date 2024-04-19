@@ -36,6 +36,8 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             _mapper = mapper;
             _jwtSettings = jwtSettings.Value;
         }
+
+        #region Activate and Deactivate
         public async Task ActivateUser(string id)
         {
             RealEstateUser user = await _userManager.FindByIdAsync(id);
@@ -46,11 +48,24 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             }
         }
 
+        public async Task DeactivateUser(string id)
+        {
+            RealEstateUser user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                user.IsActive = false;
+                await _userManager.UpdateAsync(user);
+            }
+        }
+        #endregion
+
+        #region Login
+
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
             AuthenticationResponse response = new();
             RealEstateUser user;
-            user = request.Input.Contains("@") ? await _userManager.FindByEmailAsync(request.Input)  : await _userManager.FindByNameAsync(request.Input);
+            user = request.Input.Contains("@") ? await _userManager.FindByEmailAsync(request.Input) : await _userManager.FindByNameAsync(request.Input);
             if (user == null)
             {
                 response.HasError = true;
@@ -96,242 +111,20 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return response;
         }
 
-        public async Task<string> ConfirmAccountAsync(string userId, string token)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return $"No accounts registered with this user";
-            }
+        #endregion
 
-            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-            {
-                return $"Account confirmed for {user.Email}. You can now use the app";
-            }
-            else
-            {
-                return $"An error occurred while confirming {user.Email}.";
-            }
+        #region Logout
+
+        public async Task SignOutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
 
-        public async Task DeactivateUser(string id)
-        {
-            RealEstateUser user = await _userManager.FindByIdAsync(id);
-            if (user != null)
-            {
-                user.IsActive = false;
-                await _userManager.UpdateAsync(user);
-            }
-        }
+        #endregion
 
-        public async Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin)
-        {
-            UserEditResponse response = new()
-            {
-                HasError = false
-            };
+        #region Registers
 
-            if (!Enum.IsDefined(typeof(UserRoles), request.Role))
-            {
-
-                response.HasError = true;
-                response.Error = $"The role {request.Role} do not exist";
-                return response;
-            }
-
-            if (request.Role == nameof(UserRoles.Admin) || request.Role == nameof(UserRoles.Developer))
-            {
-                response = await EditInternalUsersValidations(request);
-                if (response.HasError)
-                    return response;
-            }
-
-
-            RealEstateUser user = await _userManager.FindByIdAsync(request.Id);
-            if (user == null)
-            {
-                response.HasError = true;
-                response.Error = $"We couldn't be able to find your user.";
-                return response;
-
-            }
-            user.FirstName = request.FirstName ?? user.FirstName;
-            user.LastName = request.LastName ?? user.LastName;
-            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
-            user.DocumentId = request.DocumentId ?? user.DocumentId;
-            user.UserName = request.Username ?? user.UserName;
-            user.Email = request.Email ?? user.Email;
-            if (request.UserImage != null)
-            {
-                user.UserImagePath = UploadHelper.UploadFile(request.UserImage, user.Id, nameof(UploadEntities.User), true, user.UserImagePath);
-
-            }
-
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-
-                response.HasError = true;
-                response.Error = $"An error occurred trying to edit the user.";
-                return response;
-            }
-
-            if (request.Password != null)
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await _userManager.ResetPasswordAsync(user, token, request.Password);
-            }
-
-            return response;
-        }
-
-        public async Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
-        {
-            ForgotPasswordResponse response = new()
-            {
-                HasError = false
-            };
-
-            var user = await _userManager.FindByNameAsync(request.Username);
-
-            if (user == null)
-            {
-                response.HasError = true;
-                response.Error = $"No Accounts registered with {request.Username}";
-                return response;
-            }
-
-            var verificationUri = await SendForgotPasswordUri(user, origin);
-
-            await _emailService.SendAsync(new Core.Application.Dtos.Email.EmailRequest()
-            {
-                To = user.Email,
-                Body = $"Please reset your account visiting this URL {verificationUri}",
-                Subject = "reset password"
-            });
-
-
-            return response;
-        }
-
-        public async Task<int> GetActiveUsers(string? role = null)
-        {
-            var users = await _userManager.Users.Where(x => x.IsActive).ToListAsync();
-            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
-            return users.Count();
-        }
-        public async Task<int> GetInactiveUsers(string? role = null)
-        {
-            var users = await _userManager.Users.Where(x => !x.IsActive).ToListAsync();
-            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
-            return users.Count();
-        }
-        public async Task<List<UserViewModel>> GetAll()
-        {
-            var users = await _userManager.Users.ToListAsync();
-            var usersVm = _mapper.Map<List<UserViewModel>>(users);
-            if (users != null && users.Count > 0)
-            {
-                foreach (UserViewModel user in usersVm)
-                {
-                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
-                    user.Roles = roles.ToList();
-                }
-            }
-            return usersVm;
-        }
-
-        public async Task<UserViewModel> GetByIdAsync(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<UserViewModel>(user);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userVm.Roles = roles.ToList();
-            }
-            return userVm;
-        }
-        public async Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput)
-        {
-            var names = nameInput.Split(' ');
-            List<UserViewModel> users = new();
-            if (names.Length == 1)
-            {
-                var result = await _userManager.Users.Where(x => x.FirstName.Contains(names[0]) || x.LastName.Contains(names[0])).ToListAsync();
-                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
-                users = _mapper.Map<List<UserViewModel>>(result);
-                foreach (UserViewModel user in users)
-                {
-                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
-                    user.Roles = roles.ToList();
-                }
-            }
-            else if (names.Length == 2)
-            {
-                var result = await _userManager.Users.Where(x => (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1])) || (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1]))).ToListAsync();
-                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
-                users = _mapper.Map<List<UserViewModel>>(result);
-                foreach (UserViewModel user in users)
-                {
-                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
-                    user.Roles = roles.ToList();
-                }
-            }
-
-            return users;
-        }
-        public async Task<UserDTO> GetByIdAsyncDTO(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<UserDTO>(user);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userVm.Roles = roles.ToList();
-            }
-            return userVm;
-        }
-
-        public async Task<SaveUserViewModel> GetByIdSaveViewModelAsync(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<SaveUserViewModel>(user);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userVm.Role = roles.First();
-            }
-            return userVm;
-        }
-
-        public async Task<UserViewModel> GetByUsernameAsync(string username)
-        {
-            var user = await _userManager.FindByNameAsync(username);
-            var userVm = _mapper.Map<UserViewModel>(user);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userVm.Roles = roles.ToList();
-            }
-            return userVm;
-        }
-
-        public async Task<UserDTO> GetByIdRoleAsync(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            var userVm = _mapper.Map<UserDTO>(user);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userVm.Roles = roles.ToList();
-            }
-            return userVm;
-        }
-
-
+        #region General
 
         public async Task<UserRegisterResponse> RegisterUserAsync(UserRegisterRequest request, string origin)
         {
@@ -422,6 +215,295 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return response;
         }
 
+        #endregion
+
+        #endregion
+
+        #region Edit User
+
+        public async Task<UserEditResponse> EditUserAsync(UserEditRequest request, string origin)
+        {
+            UserEditResponse response = new()
+            {
+                HasError = false
+            };
+
+            if (!Enum.IsDefined(typeof(UserRoles), request.Role))
+            {
+
+                response.HasError = true;
+                response.Error = $"The role {request.Role} do not exist";
+                return response;
+            }
+
+            if (request.Role == nameof(UserRoles.Admin) || request.Role == nameof(UserRoles.Developer))
+            {
+                response = await EditInternalUsersValidations(request);
+                if (response.HasError)
+                    return response;
+            }
+
+
+            RealEstateUser user = await _userManager.FindByIdAsync(request.Id);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"We couldn't be able to find your user.";
+                return response;
+
+            }
+            user.FirstName = request.FirstName ?? user.FirstName;
+            user.LastName = request.LastName ?? user.LastName;
+            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+            user.DocumentId = request.DocumentId ?? user.DocumentId;
+            user.UserName = request.Username ?? user.UserName;
+            user.Email = request.Email ?? user.Email;
+            if (request.UserImage != null)
+            {
+                user.UserImagePath = UploadHelper.UploadFile(request.UserImage, user.Id, nameof(UploadEntities.User), true, user.UserImagePath);
+
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+
+                response.HasError = true;
+                response.Error = $"An error occurred trying to edit the user.";
+                return response;
+            }
+
+            if (request.Password != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _userManager.ResetPasswordAsync(user, token, request.Password);
+            }
+
+            return response;
+        }
+
+        #endregion
+
+        #region Confirm User
+
+        public async Task<string> ConfirmAccountAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return $"No accounts registered with this user";
+            }
+
+            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return $"Account confirmed for {user.Email}. You can now use the app";
+            }
+            else
+            {
+                return $"An error occurred while confirming {user.Email}.";
+            }
+        }
+
+        #endregion
+
+        #region Gets
+
+        #region GetsDTO
+
+        public async Task<UserDTO> GetByIdAsyncDTO(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<UserDTO>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
+        public async Task<UserDTO> GetByIdRoleAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<UserDTO>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
+        public async Task<List<UserDTO>> GetAllByRoleDTO(string role)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var usersDtos = _mapper.Map<List<UserDTO>>(users);
+            if (users != null && users.Count > 0)
+            {
+                foreach (UserDTO user in usersDtos)
+                {
+                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+            usersDtos = usersDtos.Where(x => x.Roles.Contains(role)).ToList();
+            return usersDtos;
+        }
+
+        #endregion
+
+        #region GetsViewModels
+
+        public async Task<SaveUserViewModel> GetByIdSaveViewModelAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<SaveUserViewModel>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Role = roles.First();
+            }
+            return userVm;
+        }
+
+        public async Task<UserViewModel> GetByUsernameAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var userVm = _mapper.Map<UserViewModel>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
+        public async Task<List<UserViewModel>> GetAll()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var usersVm = _mapper.Map<List<UserViewModel>>(users);
+            if (users != null && users.Count > 0)
+            {
+                foreach (UserViewModel user in usersVm)
+                {
+                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+            return usersVm;
+        }
+
+        public async Task<UserViewModel> GetByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userVm = _mapper.Map<UserViewModel>(user);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userVm.Roles = roles.ToList();
+            }
+            return userVm;
+        }
+
+        public async Task<List<UserViewModel>> GetAgentByNameAsync(string nameInput)
+        {
+            var names = nameInput.Split(' ');
+            List<UserViewModel> users = new();
+            if (names.Length == 1)
+            {
+                var result = await _userManager.Users.Where(x => x.FirstName.Contains(names[0]) || x.LastName.Contains(names[0])).ToListAsync();
+                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
+                users = _mapper.Map<List<UserViewModel>>(result);
+                foreach (UserViewModel user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+            else if (names.Length == 2)
+            {
+                var result = await _userManager.Users.Where(x => (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1])) || (x.FirstName.Contains(names[0]) && x.LastName.Contains(names[1]))).ToListAsync();
+                result = result.Where(x => _userManager.GetRolesAsync(x).Result.Contains(nameof(UserRoles.RealEstateAgent))).ToList();
+                users = _mapper.Map<List<UserViewModel>>(result);
+                foreach (UserViewModel user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(result.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+
+            return users;
+        }
+
+        public async Task<List<UserViewModel>> GetAllByRoleViewModel(string role)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var usersVm = _mapper.Map<List<UserViewModel>>(users);
+            if (users != null && users.Count > 0)
+            {
+                foreach (UserViewModel user in usersVm)
+                {
+                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
+                    user.Roles = roles.ToList();
+                }
+            }
+            usersVm = usersVm.Where(x => x.Roles.Contains(role)).ToList();
+            return usersVm;
+        }
+
+        #endregion
+
+        public async Task<int> GetActiveUsers(string? role = null)
+        {
+            var users = await _userManager.Users.Where(x => x.IsActive).ToListAsync();
+            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
+            return users.Count();
+        }
+
+        public async Task<int> GetInactiveUsers(string? role = null)
+        {
+            var users = await _userManager.Users.Where(x => !x.IsActive).ToListAsync();
+            users = users.Where(x => role != null ? _userManager.GetRolesAsync(x).Result.Contains(role) : true).ToList();
+            return users.Count();
+        }
+
+        
+
+        #endregion
+
+        #region Password
+
+        public async Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
+        {
+            ForgotPasswordResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByNameAsync(request.Username);
+
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"No Accounts registered with {request.Username}";
+                return response;
+            }
+
+            var verificationUri = await SendForgotPasswordUri(user, origin);
+
+            await _emailService.SendAsync(new Core.Application.Dtos.Email.EmailRequest()
+            {
+                To = user.Email,
+                Body = $"Please reset your account visiting this URL {verificationUri}",
+                Subject = "reset password"
+            });
+
+
+            return response;
+        }
+
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
         {
             ResetPasswordResponse response = new()
@@ -451,56 +533,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             return response;
         }
 
-        public async Task SignOutAsync()
-        {
-            await _signInManager.SignOutAsync();
-        }
+        #endregion
 
-        public async Task<UserDeleteResponse> DeleteAsync(string id)
-        {
-            UserDeleteResponse response = new();
-            var user = await _userManager.FindByIdAsync(id);
-            var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
-            {
-                response.HasError = true;
-                response.Error = "We couldn't delete the user";
-                return response;
-            }
-            return response;
-        }
-
-        public async Task<List<UserViewModel>> GetAllByRoleViewModel(string role)
-        {
-            var users = await _userManager.Users.ToListAsync();
-            var usersVm = _mapper.Map<List<UserViewModel>>(users);
-            if (users != null && users.Count > 0)
-            {
-                foreach (UserViewModel user in usersVm)
-                {
-                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
-                    user.Roles = roles.ToList();
-                }
-            }
-            usersVm = usersVm.Where(x => x.Roles.Contains(role)).ToList();
-            return usersVm;
-        }
-
-        public async Task<List<UserDTO>> GetAllByRoleDTO(string role)
-        {
-            var users = await _userManager.Users.ToListAsync();
-            var usersDtos = _mapper.Map<List<UserDTO>>(users);
-            if (users != null && users.Count > 0)
-            {
-                foreach (UserDTO user in usersDtos)
-                {
-                    var roles = await _userManager.GetRolesAsync(users.FirstOrDefault(y => y.Id == user.Id));
-                    user.Roles = roles.ToList();
-                }
-            }
-            usersDtos = usersDtos.Where(x => x.Roles.Contains(role)).ToList();
-            return usersDtos;
-        }
+        #region Private methods
 
         private async Task<JwtSecurityToken> GenerateJWToken(RealEstateUser user)
         {
@@ -586,10 +621,9 @@ namespace RealEstateApp.Infrastructure.Identity.Services
 
             return response;
         }
+
         private async Task<string> SendVerificationEmailUri(RealEstateUser user, string origin)
         {
-
-
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "User/ConfirmEmail";
@@ -598,6 +632,7 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "token", code);
             return verificationUri;
         }
+
         private async Task<string> SendForgotPasswordUri(RealEstateUser user, string origin)
         {
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -608,6 +643,26 @@ namespace RealEstateApp.Infrastructure.Identity.Services
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "username", user.UserName);
             return verificationUri;
         }
+
+        #endregion
+
+        #region Delete User
+
+        public async Task<UserDeleteResponse> DeleteAsync(string id)
+        {
+            UserDeleteResponse response = new();
+            var user = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = "We couldn't delete the user";
+                return response;
+            }
+            return response;
+        }
+
+        #endregion
 
     }
 }

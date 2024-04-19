@@ -31,7 +31,7 @@ namespace RealEstateApp.WebApi.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("register")]
+        [HttpPost("registerAdmin")]
         [SwaggerOperation(
             Summary = "Creacion de administrador",
             Description = "Recibe los parametros necesarios para crear un usuario con el rol de administrador"
@@ -43,7 +43,7 @@ namespace RealEstateApp.WebApi.Controllers
             return Ok(await _accountService.RegisterUserAsync(request, origin));
         }
 
-        [HttpPost("register")]
+        [HttpPost("registerDev")]
         [SwaggerOperation(
             Summary = "Creacion de desarrollador",
             Description = "Recibe los parametros necesarios para crear un usuario con el rol desarrollador"
