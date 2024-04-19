@@ -43,7 +43,10 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<RealEstatePropertyFilterViewModel, RealEstatePropertyFilterDTO>()
                 .ReverseMap();
-
+            CreateMap<RealEstateProperty, RealEstateRequest>()
+                .ForMember(x => x.Images, opt => opt.MapFrom(src => src.Images.Select(x => x.ImagePath)))
+                .ReverseMap();
+            
             CreateMap<PropertyUpgrade, RealEstatePropertyViewModel>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(src => src.PropertyId))
                 .ForMember(x => x.AgentId, opt => opt.MapFrom(src => src.Property.AgentId))
@@ -150,6 +153,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
 
+            CreateMap<TypeOfSale, TypeSaleRequest>().ReverseMap();
             #endregion
 
             #region CQRS TypeOfProperty
@@ -166,6 +170,10 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
 
+            CreateMap<TypeOfProperty, TypePropertyRequest>().ReverseMap();
+
+
+
             #endregion
 
             #region CQRS Upgrade
@@ -181,6 +189,13 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<UpgradeUpdateResponse, Upgrade>()
                 .ForMember(x => x.Properties, opt => opt.Ignore())
                 .ReverseMap();
+
+
+            CreateMap<PropertyUpgrade, UpgradeRequest>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Upgrade.Name))
+                .ForMember(x => x.Description, opt => opt.MapFrom(src => src.Upgrade.Description));
+
+
 
             #endregion
 

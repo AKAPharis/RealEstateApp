@@ -49,7 +49,7 @@ namespace RealEstateApp.WebApi.Controllers.v1
         }
 
         [Authorize(Roles = "Admin, Developer")]
-        [HttpGet("ByCode/{id}")]
+        [HttpGet("ByCode")]
         [SwaggerOperation(
             Summary = "Propiedades por el codigo",
             Description = "Obtienes las propiedades mediante el codigo de la propiedad"
