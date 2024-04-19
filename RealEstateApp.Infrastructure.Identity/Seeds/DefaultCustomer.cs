@@ -21,7 +21,7 @@ namespace RealEstateApp.Infrastructure.Identity.Seeds
             defaultUser.LastName = "Customer";
             defaultUser.DocumentId = "001-7811235-2";
             defaultUser.PhoneNumber = "809-1905-634";
-            defaultUser.UserImagePath = "photocustomer.jpg";
+            defaultUser.UserImagePath = "https://images7.memedroid.com/images/UPLOADED322/634084e6e7085.jpeg";
             defaultUser.EmailConfirmed = true;
             defaultUser.PhoneNumberConfirmed = true;
             defaultUser.IsActive = true;

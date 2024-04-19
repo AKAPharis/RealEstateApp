@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -29,50 +30,29 @@ namespace RealEstateApp.WebApi.Controllers
             return Ok(await _accountService.AuthenticateAsync(request));
         }
 
-        [HttpPost("register")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("registerAdmin")]
         [SwaggerOperation(
-            Summary = "Creacion de usuario",
-            Description = "Recibe los parametros necesarios para crear un usuario con el rol basico"
+            Summary = "Creacion de administrador",
+            Description = "Recibe los parametros necesarios para crear un usuario con el rol de administrador"
         )]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> RegisterAsync(UserRegisterRequest request)
+        public async Task<IActionResult> RegisterAdminAsync(UserRegisterRequest request)
         {
             var origin = Request.Headers["origin"];
             return Ok(await _accountService.RegisterUserAsync(request, origin));
         }
 
-        [HttpGet("confirm-email")]
+        [HttpPost("registerDev")]
         [SwaggerOperation(
-          Summary = "Confirmacion de usuario",
-          Description = "Permite activar un usuario nuevo"
+            Summary = "Creacion de desarrollador",
+            Description = "Recibe los parametros necesarios para crear un usuario con el rol desarrollador"
         )]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> RegisterAsync([FromQuery] string userId, [FromQuery] string token)
-        {
-            return Ok(await _accountService.ConfirmAccountAsync(userId, token));
-        }
-
-        [HttpPost("forgot-password")]
-        [SwaggerOperation(
-             Summary = "Recordar contraseña",
-             Description = "Permite al usuario iniciar el proceso para obtener una nueva contraseña"
-         )]
-        [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequest request)
+        public async Task<IActionResult> RegisterDeveloperAsync(UserRegisterRequest request)
         {
             var origin = Request.Headers["origin"];
-            return Ok(await _accountService.ForgotPasswordAsync(request, origin));
-        }
-
-        [HttpPost("reset-password")]
-        [SwaggerOperation(
-            Summary = "Reinicio de contraseña",
-            Description = "Permite al usuario cambiar su contraseña actual por una nueva"
-        )]
-        [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest request)
-        {
-            return Ok(await _accountService.ResetPasswordAsync(request));
+            return Ok(await _accountService.RegisterUserAsync(request, origin));
         }
     }
 }

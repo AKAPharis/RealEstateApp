@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @using RealEstateApp.Core.Application.Helpers;
+@using RealEstateApp.Core.Application.Enums.Roles;
 @using RealEstateApp.Core.Application.Dtos.Account;
 @using RealEstateApp.Core.Application.ViewModels.Account
 @using RealEstateApp.Core.Application.Interfaces.Services;
@@ -7,9 +8,10 @@
 @inject IUserService userService;
 @{
     var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-    var isAdmin = User != null ? User.Roles.Any(r => r == "Admin") : false;
-    var isCustomer = User != null ? User.Roles.Any(r => r == "Customer") : false;
-    var isAgent = User != null ? User.Roles.Any(r => r == "RealEstateAgent") : false;
+    var isAdmin = User != null ? User.Roles.Any(r => r == nameof(UserRoles.Admin)) : false;
+    var isCustomer = User != null ? User.Roles.Any(r => r == nameof(UserRoles.Customer)) : false;
+    var isAgent = User != null ? User.Roles.Any(r => r == nameof(UserRoles.RealEstateAgent)) : false;
+    var isDeveloper = User != null ? User.Roles.Any(r => r == nameof(UserRoles.Developer)) : false;
 }
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark" class="h-100">
@@ -86,6 +88,10 @@
                                     <li><a asp-controller="Upgrade" asp-action="Index" class="dropdown-item small text-white">Upgrades</a></li>
                                 </ul>
                             </li>
+                        }
+                        else if(isDeveloper)
+                        {
+
                         }
                         else
                         {
@@ -261,6 +267,10 @@
                             <a asp-controller="Property" asp-action="CustomerProperties" asp-route-Id="@User.Id" class="nav-link px-2 text-body-secondary">My properties</a>
                         </li>
                     </ul>
+                }
+                else if (isDeveloper)
+                {
+
                 }
                 else
                 {

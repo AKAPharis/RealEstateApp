@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Account;
 using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Interfaces.Services;
@@ -6,6 +7,7 @@ using RealEstateApp.Core.Application.ViewModels.Account;
 
 namespace RealEstateApp.WebApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DeveloperController : Controller
     {
         private readonly IUserService _userService;

@@ -8,6 +8,7 @@
 @{
     var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
     var isAdmin = User != null ? User.Roles.Any(r => r == "Admin") : false;
+    var isDeveloper = User != null ? User.Roles.Any(r => r == "Developer") : false;
     var isCustomer = User != null ? User.Roles.Any(r => r == "Customer") : false;
     var isAgent = User != null ? User.Roles.Any(r => r == "RealEstateAgent") : false;
 }﻿
@@ -41,9 +42,13 @@
                             {
                                 <a asp-controller="Agent" asp-action="AgentHome" class="btn btn-outline-light rounded-5">Back to home</a>
                             } 
-                            else
+                            else if (isCustomer)
                             {
                                 <a asp-controller="Home" asp-action="CustomerHome" class="btn btn-outline-light rounded-5">Back to home</a>
+                            }
+                            else if (isDeveloper)
+                            {
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light rounded-5">Back to home</a>
                             }
                         </div>
                     </div>

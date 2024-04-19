@@ -15,7 +15,7 @@ namespace RealEstateApp.Infrastructure.Identity.Seeds
             defaultUser.LastName = "Agent";
             defaultUser.DocumentId = "001-0153089-1";
             defaultUser.PhoneNumber = "809-1235-234";
-            defaultUser.UserImagePath = "photo.jpg";
+            defaultUser.UserImagePath = "https://www.elsoldetijuana.com.mx/incoming/7h4hk6-kesikesiperrito.jpg/ALTERNATES/LANDSCAPE_768/Kesikesiperrito.jpg";
             defaultUser.EmailConfirmed = true;
             defaultUser.PhoneNumberConfirmed = true;
             defaultUser.IsActive = true;

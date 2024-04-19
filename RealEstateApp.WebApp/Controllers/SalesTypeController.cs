@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.TypeOfSale;
 
 namespace RealEstateApp.WebApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SalesTypeController : Controller
     {
         private readonly ITypeOfSaleService _typeOfSaleService;

@@ -23,11 +23,17 @@ namespace RealEstateApp.WebApp.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [Authorize(Roles = nameof(UserRoles.Admin))]
-        public async Task<IActionResult> Index() => View(await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin)));
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index() 
+        {
+            var currentUser = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            var listAdmin = await _userService.GetAllByRoleViewModel(nameof(UserRoles.Admin));
+            var filteredUsers = listAdmin.Where(u => u.Id != currentUser.Id);
+            return View(filteredUsers.ToList());
+        }
 
 
-        [Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminHome()
         {
             AdminHomeViewModel adminHome = new();
@@ -44,7 +50,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(adminHome);
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             SaveUserViewModel vm = new();
@@ -52,7 +58,7 @@ namespace RealEstateApp.WebApp.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(SaveUserViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -71,15 +77,15 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string Id)
         {
             SaveUserViewModel admin = await _userService.GetByIdSaveViewModelAsync(Id);
             return View("SaveAdmin", admin);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
         public async Task<IActionResult> Edit(SaveUserViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -99,14 +105,14 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActivateUser(string Id)
         {
             await _userService.ActivateUser(Id);
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = nameof(UserRoles.Admin))]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateUser(string Id)
         {
             await _userService.DeactivateUser(Id);

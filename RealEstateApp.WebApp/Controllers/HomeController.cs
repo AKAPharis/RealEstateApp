@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Core.Application.Helpers;
-using RealEstateApp.Core.Application.Enums.Roles;
 using RealEstateApp.Core.Application.Dtos.Account;
+using RealEstateApp.Core.Application.Enums.Roles;
+using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModels.RealEstateProperty;
-using NuGet.Protocol.Core.Types;
-using RealEstateApp.Core.Application.ViewModels.Account;
-using System.Collections.Generic;
 
 namespace RealEstateApp.WebApp.Controllers
 {
@@ -85,6 +83,7 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("PropertyDetails", new { Id = property.Id});
         }
 
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CustomerHome(RealEstatePropertyFilterViewModel filter)
         {
             ViewBag.TypeOfProperty = await _typeOfProperty.GetAllAsync();
@@ -95,6 +94,7 @@ namespace RealEstateApp.WebApp.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddFavoriteProperty(int Id)
         {
             CreateFavoritePropertyViewModel favProperty = new()
@@ -115,6 +115,7 @@ namespace RealEstateApp.WebApp.Controllers
             return RedirectToAction("CustomerHome");
         }
 
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> RemoveFavoriteProperty(int Id)
         {
             var response = await _favoritePropertyService.DeleteAsync(Id, _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
