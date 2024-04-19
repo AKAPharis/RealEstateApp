@@ -34,12 +34,20 @@ namespace RealEstateApp.WebApp.Controllers
         {
             ViewBag.TypeOfProperty = await _typeOfProperty.GetAllAsync();
             var list = await _propertyService.GetAllByFilter(filter);
+            if(list == null)
+            {
+                return View(list);
+            }
             return View(list.Count() > 0 ? list.OrderByDescending(f => f.Created).ToList() : list);
         }
 
         public async Task<IActionResult> Agents() 
         {
             var users = await _userService.GetAllByRoleViewModel(nameof(UserRoles.RealEstateAgent));
+            if(users == null)
+            {
+                return View(users);
+            }
             return View(users.Count() > 0 ? users.OrderBy(f => f.FirstName).ToList() : users);
         } 
 
@@ -82,9 +90,9 @@ namespace RealEstateApp.WebApp.Controllers
             ViewBag.TypeOfProperty = await _typeOfProperty.GetAllAsync();
             var properties = await _propertyService.GetAllByFilter(filter);
             RealEstatePropertyCustomerViewModel list = new();
-            list.Properties = properties;
+            list.Properties = properties != null && properties.Count() > 0 ? properties.OrderByDescending(f => f.Created).ToList() : properties;
             list.FavoriteProperties = await _favoritePropertyService.GetAllPropertyIdByUser(_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Id);
-            return View(list.Properties.Count > 0 ? list.Properties.OrderByDescending(f => f.Created).ToList() : list);
+            return View(list);
         }
 
         public async Task<IActionResult> AddFavoriteProperty(int Id)
