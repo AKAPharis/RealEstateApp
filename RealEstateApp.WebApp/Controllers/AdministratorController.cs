@@ -41,9 +41,9 @@ namespace RealEstateApp.WebApp.Controllers
             adminHome.Username = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user").Username;
             adminHome.Properties = await _realEstatePropertyService.GetTotalProperties();
             adminHome.ActiveCustomers = await _userService.GetActiveUsers(nameof(UserRoles.Customer));
-            adminHome.ActiveCustomers = await _userService.GetActiveUsers(nameof(UserRoles.Customer));
+            adminHome.InactiveCustomers = await _userService.GetInactiveUsers(nameof(UserRoles.Customer));
             adminHome.ActiveDevelopers = await _userService.GetActiveUsers(nameof(UserRoles.Developer));
-            adminHome.InactiveCustomers = await _userService.GetInactiveUsers(nameof(UserRoles.Developer));
+            adminHome.InactiveDevelopers = await _userService.GetInactiveUsers(nameof(UserRoles.Developer));
             adminHome.ActiveAgents = await _userService.GetActiveUsers(nameof(UserRoles.RealEstateAgent));
             adminHome.InactiveAgents = await _userService.GetInactiveUsers(nameof(UserRoles.RealEstateAgent));
 

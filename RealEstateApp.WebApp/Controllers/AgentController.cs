@@ -48,14 +48,14 @@ namespace RealEstateApp.WebApp.Controllers
             return View(properties.Count() > 0 ? properties.OrderByDescending(d => d.Created).ToList() : properties);
         }
 
-        [Authorize(Roles = "RealEstateAgent")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActivateUser(string Id)
         {
             await _userService.ActivateUser(Id);
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "RealEstateAgent")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateUser(string Id)
         {
             await _userService.DeactivateUser(Id);
